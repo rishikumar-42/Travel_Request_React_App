@@ -1,0 +1,335 @@
+.form-container {
+    max-width: 1000px; /* Increased width for better fit */
+    margin: 50px auto;
+    padding: 30px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.travel-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+}
+
+.form-group {
+    flex: 1;
+    margin-right: 10px;
+    min-width: 48%; /* Adjusted for increased width */
+}
+
+.form-group:last-child {
+    margin-right: 0;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+input {
+    width: 91%;
+    padding: 8px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+button {
+    margin-top: 20px;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    background-color: #007bff;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.form-single {
+    margin-bottom: 20px; /* Adds space between each field */
+}
+
+.form-single label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-single input {
+    width: 45%; /* Reduces the input field width to 85% */
+    padding: 8px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.form-longtext {
+    margin-bottom: 20px; /* Adds space between each field */
+}
+
+.form-longtext label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-longtext input {
+    width: 96%; /* Reduces the input field width to 85% */
+    padding: 15px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.form-longtext textarea {
+    width: 96%; /* Adjust the width as needed */
+    padding: 15px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: none; /* Prevents manual resizing */
+    overflow: hidden; /* Hides scrollbars */
+}
+
+
+
+.form-row-checkbox {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.half-width {
+    width: 48%; /* Adjusts the width to fit two columns */
+    display: flex;
+    align-items: center; /* Vertically aligns the checkbox with the label */
+}
+
+input[type="checkbox"] {
+    margin-right: 8px; /* Adds some space between the checkbox and the label */
+}
+
+
+
+/* dropdown */
+/* Styles for the container of the dropdown */
+.form-dropdown-container {
+    margin-bottom: 15px; /* Add margin to the bottom for spacing */
+}
+
+/* Styles for the dropdown to make it wider */
+.wide-dropdown {
+    width: 100%; /* Makes the dropdown take the full width of its container */
+    max-width: 400px; /* Optionally limit the maximum width */
+    padding: 8px; /* Add padding inside the dropdown for better aesthetics */
+    border: 1px solid #ccc; /* Add a border around the dropdown */
+    border-radius: 4px; /* Optional: round the corners of the dropdown */
+    font-size: 16px; /* Increase font size for better readability */
+    box-sizing: border-box; /* Ensure padding and border are included in the element's width */
+}
+
+
+.separator {
+    border: none;
+    border-top: 1px solid #ccc; /* Light gray color */
+    margin: 20px 0; /* Space around the separator */
+    width: 100%; /* Ensures it spans the full width of the container */
+}
+
+.form-heading {
+    text-align: center;
+    font-size: 24px; /* Adjust font size as needed */
+    font-weight: normal;
+    margin-bottom: 20px; /* Space below the heading */
+    color: #323131; /* Optional: Change color if desired */
+}
+
+.form-heading-flight{
+    text-align: left;
+    font-size: 24px; /* Adjust font size as needed */
+    font-weight: normal;
+    margin-bottom: 20px; /* Space below the heading */
+    color: #323131; /* Optional: Change color if desired */
+}
+
+
+/* Toggle*/
+
+.form-row-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.toggle-label {
+    margin-right: 15px;
+    font-size: 16px; /* Adjust as needed */
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 24px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 24px; /* Makes the slider rounded */
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 20px;
+    width: 20px;
+    left: 2px;
+    bottom: 2px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: #007bff; /* Color when toggle is on */
+}
+
+input:checked + .slider:before {
+    transform: translateX(26px);
+}
+
+
+/*form grup car Rental*/
+.form-group-car{
+    flex: 1;
+    margin-right: 10px;
+    min-width: 48%; /* Adjusted for increased width */
+}
+.form-group-car input{
+    width: 91%;
+    padding: 8px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+.form-group-car label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.modal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5); /* Black background with opacity */
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 60%; /* Adjust the width of the modal */
+    border-radius: 10px;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.itinerary-table {
+    margin-top: 20px;
+}
+
+.itinerary-table table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.itinerary-table th, .itinerary-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.itinerary-table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+.total-price {
+    margin-top: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: right;
+}
+
+
+/* Media Query for smaller laptop screens or tablets */
+@media (max-width: 1024px) {
+    .form-container {
+        max-width: 90%; /* Ensure it still fits well on smaller screens */
+        padding: 20px;
+    }
+
+    .form-row {
+        flex-direction: column;
+    }
+
+    .form-group {
+        margin-right: 0;
+        margin-bottom: 15px;
+    }
+    /* .form-single {
+        flex: 1;
+        margin-right: 10px;
+        min-width: 48%; /* Adjusted for increased width */
+    
+    
+}

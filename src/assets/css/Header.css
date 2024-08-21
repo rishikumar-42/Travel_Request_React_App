@@ -1,0 +1,14 @@
+.header {
+    background-color: #0b4d94;
+    color: #fff;
+    text-align: center;
+    font-size: 15px;
+    height: 50px;
+    line-height: 50px;  /* Vertically centers text within the header */
+    display: flex;
+    align-items: center; /* Ensures content is vertically centered */
+    justify-content: center; /* Centers content horizontally */
+    margin: 0; /* Removes any default margin */
+    padding: 0; /* Removes any default padding */
+    box-sizing: border-box; /* Ensures padding and border are included in the height */
+}
