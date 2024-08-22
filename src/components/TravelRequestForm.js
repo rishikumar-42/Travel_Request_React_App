@@ -19,9 +19,9 @@ function TravelRequestForm() {
     const [userList, setUserList] = useState([]);
     const [reasonList, setReasonList] = useState([]);
     const [flightTypeList, setFlightTypeList] = useState([]);
-    const [flightTypeValue, setFlightTypeValue] = useState([]);
+    const [flightTypeValue, setFlightTypeValue] = useState({});
     const [trainTypeList, setTrainTypeList] = useState([]);
-    const [trainTypeValue, setTrainTypeValue] = useState([]);
+    const [trainTypeValue, setTrainTypeValue] = useState({});
     const [reasonValue, setReasonValue] = useState([]);
     const [itineraries, setItineraries] = useState([]);
     const [newItinerary, setNewItinerary] = useState({
@@ -173,12 +173,36 @@ function TravelRequestForm() {
         setPerCarDetails(event.target.checked);
     };
 
-    const handleTrainToggleChange = (event) => {
-        setTrainDetails(event.target.checked);
+    useEffect(() => {
+
+    }, [])
+
+    const initialFlightTicket = () => {
+        console.log("trainTypeList data : ", trainTypeList);
+        const firstFlightType = flightTypeList[0];
+        console.log("firstTrainType data : ", firstFlightType);
+        setFlightTypeValue(firstFlightType);
+        setFormData(prevFormData => ({
+            ...prevFormData, // Spread the existing formData
+            flightTicketType : {
+                key: firstFlightType.key,
+                name: firstFlightType.name // Update the trainTicketType properties
+            }
+        }));
     };
 
     const handleflightToggleChange = (event) => {
+        const isChecked = event.target.checked;
         setFlightTicket(event.target.checked);
+        if (isChecked) {
+            initialFlightTicket();
+        }else{
+            setFormData(prevFormData => ({
+                ...prevFormData, // Spread the existing formData
+                flightTicketType: {},
+                flightTicketReason: {}
+            }));
+        }
     };
 
     const handleAddItineraryClick = () => {
@@ -211,6 +235,60 @@ function TravelRequestForm() {
         hotelNumberOfNights: 0,
         participants: ""
     });
+
+    // const initialTrainTicket = () => {
+    //     console.log("trainTypeList data : ", trainTypeList);
+    //     const firstTrainType = trainTypeList[0];
+    //     console.log("firstTrainType data : ", firstTrainType);
+    //     setTrainTypeValue(firstTrainType);
+    //     setFormData(formData => ({
+    //         ...formData, // Spread the existing formData
+    //         trainTicketType: {
+    //             key: firstTrainType.key,
+    //             name: firstTrainType.name // Update only the firstName property
+    //         }
+    //     }));
+    //     console.log("form data : ", JSON.stringify(formData));
+    // };
+
+    // const handleTrainToggleChange = async (event) => {
+    //     setTrainDetails(event.target.checked);
+    //     if (event.target.checked) {
+    //         initialTrainTicket();
+    //     }
+    // };
+
+    const initialTrainTicket = () => {
+        console.log("trainTypeList data : ", trainTypeList);
+        const firstTrainType = trainTypeList[0];
+        console.log("firstTrainType data : ", firstTrainType);
+        setTrainTypeValue(firstTrainType);
+        setFormData(prevFormData => ({
+            ...prevFormData, // Spread the existing formData
+            trainTicketType: {
+                key: firstTrainType.key,
+                name: firstTrainType.name // Update the trainTicketType properties
+            }
+        }));
+    };
+    
+    // Handle toggling of train details
+    const handleTrainToggleChange = async (event) => {
+        const isChecked = event.target.checked;
+        setTrainDetails(isChecked);
+        if (isChecked) {
+            initialTrainTicket();
+        }else{
+            setFormData(prevFormData => ({
+                ...prevFormData, // Spread the existing formData
+                trainTicketType: {}
+            }));
+        }
+    };
+    
+    useEffect(() => {
+        console.log("Updated formData: ", JSON.stringify(formData));
+    }, [formData]);
 
     // Handle form submission
     const handleSubmit = async (e) => {
@@ -393,10 +471,10 @@ function TravelRequestForm() {
                                                     setFlightTypeValue(e.value)
                                                     setFormData({
                                                         ...formData, // Spread the existing formData
-                                                        flightTicketType: JSON.stringify({
+                                                        flightTicketType: {
                                                             key: e.value.key,
                                                             name: e.value.name // Update only the firstName property
-                                                        })
+                                                        }
                                                     });
                                                     console.log("radio : ", formData)
                                                 }
@@ -421,7 +499,16 @@ function TravelRequestForm() {
                         <p>Note: Kindly attach the 3 quotes/routes provided by Travel Agent for comparison. If the least cost-saving route is not taken, kindly provide the reason below.</p>
                         <div className="form-dropdown-container">
                             <label htmlFor="reason">Reason</label>
-                            <Dropdown inputId="dd-city" value={reasonValue} onChange={(e) => setReasonValue(e.value)} options={reasonList} optionLabel="name" className="w-full" />
+                            <Dropdown inputId="dd-city" value={reasonValue} onChange={(e) => {
+                                setReasonValue(e.value);
+                                setFormData({
+                                    ...formData, // Spread the existing formData
+                                    flightTicketReason: {
+                                        key: e.value.key,
+                                        name: e.value.name // Update only the firstName property
+                                    }
+                                });
+                            }} options={reasonList} optionLabel="name" className="w-full" />
 
                         </div>
                     </div>
@@ -548,10 +635,10 @@ function TravelRequestForm() {
                                                 setTrainTypeValue(e.value)
                                                 setFormData({
                                                     ...formData, // Spread the existing formData
-                                                    trainTicketType: JSON.stringify({
+                                                    trainTicketType: {
                                                         key: e.value.key,
                                                         name: e.value.name // Update only the firstName property
-                                                    })
+                                                    }
                                                 });
                                                 console.log("radio : ", formData)
                                             }
