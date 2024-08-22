@@ -5,6 +5,7 @@ import 'primereact/resources/themes/saga-blue/theme.css'; // Theme
 import 'primereact/resources/primereact.min.css';
 import { AutoComplete } from "primereact/autocomplete";
 import { Dropdown } from 'primereact/dropdown';
+import { RadioButton } from "primereact/radiobutton";
 
 function TravelRequestForm() {
     const [showNights, setShowNights] = useState(false);
@@ -13,10 +14,14 @@ function TravelRequestForm() {
     const [showTrainDetails, setTrainDetails] = useState(false);
     const [showItinerary, setShowItinerary] = useState(false);
     const [showFlightTicket, setFlightTicket] = useState(false);
-    const [firstName, setFirstName] = useState("");
-    const [suggestions, setSuggestions] = useState([]);
+    // const [firstName, setFirstName] = useState("");
+    // const [suggestions, setSuggestions] = useState([]);
     const [userList, setUserList] = useState([]);
     const [reasonList, setReasonList] = useState([]);
+    const [flightTypeList, setFlightTypeList] = useState([]);
+    const [flightTypeValue, setFlightTypeValue] = useState([]);
+    const [trainTypeList, setTrainTypeList] = useState([]);
+    const [trainTypeValue, setTrainTypeValue] = useState([]);
     const [reasonValue, setReasonValue] = useState([]);
     const [itineraries, setItineraries] = useState([]);
     const [newItinerary, setNewItinerary] = useState({
@@ -33,17 +38,26 @@ function TravelRequestForm() {
     const [selectedItem, setSelectedItem] = useState(null);
     const [dropDownSuggestions2, setdropDownSuggestions2] = useState([]);
     const [selectedItem2, setSelectedItem2] = useState(null);
+    const [employeeDropDownSuggestions, setEmployeeDropDownSuggestions] = useState([]);
+    const [selectedEmployee, setSelectedEmployee] = useState(null);
+
+    const searchEmployee = (event) => {
+        const query = event.query.toLowerCase();
+        setEmployeeDropDownSuggestions(
+            userList.filter(item => item.email.toLowerCase().includes(query))
+        );
+    };
 
     const searchItem = (event) => {
         const query = event.query.toLowerCase();
         setdropDownSuggestions(
-            userList.filter(item => item.email.toLowerCase().includes(query))
+            userList.filter(item => item.email.toLowerCase().includes(query) && (item.email.toLowerCase() !== selectedEmployee.email.toLowerCase()))
         );
     };
     const searchItem2 = (event) => {
         const query = event.query.toLowerCase();
         setdropDownSuggestions2(
-            userList.filter(item => item.email.toLowerCase().includes(query) && (item.email.toLowerCase() !== selectedItem.email.toLowerCase()))
+            userList.filter(item => item.email.toLowerCase().includes(query) && (item.email.toLowerCase() !== selectedItem.email.toLowerCase()) && (item.email.toLowerCase() !== selectedEmployee.email.toLowerCase()))
         );
     };
 
@@ -55,6 +69,14 @@ function TravelRequestForm() {
         );
     };
 
+    // const employeeTemplate = (item) => {
+    //     return (
+    //         <div className="p-d-flex p-ai-center">
+    //             <div className="p-mr-2">{item.firstName}</div>
+    //         </div>
+    //     );
+    // };
+
     useEffect(() => {
         const getAllUsers = async () => {
             try {
@@ -65,7 +87,7 @@ function TravelRequestForm() {
                 console.error("Error fetching suggestions", error);
             }
         };
-        
+
         getAllUsers();
     }, []);
 
@@ -81,6 +103,34 @@ function TravelRequestForm() {
         };
 
         getAllReasons();
+    }, []);
+
+    useEffect(() => {
+        const getAllFlightTypes = async () => {
+            try {
+                const flightTypes = await TravelRequestFormService.fetchFlightTypePicklist();
+                setFlightTypeList(flightTypes);
+                console.log("flight types :", flightTypes);
+            } catch (error) {
+                console.error("Error fetching flight ", error);
+            }
+        };
+
+        getAllFlightTypes();
+    }, []);
+
+    useEffect(() => {
+        const getAllTrainTypes = async () => {
+            try {
+                const trainTypes = await TravelRequestFormService.fetchTrainTicketTypePicklist();
+                setTrainTypeList(trainTypes);
+                console.log("train types :", trainTypes);
+            } catch (error) {
+                console.error("Error fetching train ", error);
+            }
+        };
+
+        getAllTrainTypes();
     }, []);
 
     const handleInputChange = (e) => {
@@ -140,45 +190,27 @@ function TravelRequestForm() {
     };
 
     const [formData, setFormData] = useState({
+        firstName: "",
         lastName: "",
         employeeNumber: "",
-        costCentre: "",
+        costCenter: "",
         entity: "",
         positionTitle: "",
+        carRentalFrom: "",
+        carRentalTo: "",
+        flightTicketReason: {},
+        itineraryTotal: "",
+        travelPurpose: "",
+        personalCarDrivingLicenseNumber: "",
+        carDrivingLicense: "",
+        placesVisited: "",
+        carRentalCategory: "",
+        personalCarRegistrationNumber: "",
+        flightTicketType: {},
+        trainTicketType: {},
+        hotelNumberOfNights: 0,
+        participants: ""
     });
-
-    // Handle the input change in the First Name field
-    const handleFirstNameChange = async (e) => {
-        const name = e.target.value;
-        setFirstName(name);
-        if (name.length >= 2) {
-            try {
-                const users = await TravelRequestFormService.fetchUserDetails();
-
-                setSuggestions(users);
-                console.log("Suggestions updated:", users);
-            } catch (error) {
-                console.error("Error fetching suggestions", error);
-            }
-        } else {
-            setSuggestions([]);
-        }
-    };
-
-    // Handle user selection from suggestions
-    const handleSuggestionClick = (user) => {
-
-        console.log("User selected:", user);
-        setFormData({
-            lastName: user.familyName,
-            employeeNumber: user.id, // Use the actual field for employee number
-            costCentre: user.customFields?.costCentre || "", // Adjust this if you have custom fields
-            entity: user.customFields?.entity || "",
-            positionTitle: user.jobTitle || "",
-        });
-        setFirstName(user.givenName);
-        setSuggestions([]); // Clear suggestions after selection
-    };
 
     // Handle form submission
     const handleSubmit = async (e) => {
@@ -211,24 +243,34 @@ function TravelRequestForm() {
                 <h2 className="form-heading">Traveller Identification</h2>
                 <div className="form-row">
                     <div className="form-group">
-                        <label htmlFor="firstName">First Name:</label>
-                        <input
-                            type="text"
-                            id="firstName"
-                            name="firstName"
-                            value={firstName}
-                            onChange={handleFirstNameChange}
-                            required
+                        <label htmlFor="employeeEmail">Email:</label>
+                        <AutoComplete
+                            value={selectedEmployee}
+                            suggestions={employeeDropDownSuggestions}
+                            completeMethod={searchEmployee}
+                            field="email"
+                            onChange={(e) => setSelectedEmployee(e.value)}
+                            onSelect={(e) => {
+                                setSelectedEmployee(e.value);
+                                setFormData({
+                                    ...formData, // Spread the existing formData
+                                    firstName: e.value.firstName, // Update only the firstName property
+                                    lastName: e.value.lastName,
+                                    employeeNumber: e.value.employeeNumber,
+                                    costCenter: e.value.costCenter,
+                                    entity: e.value.entity,
+                                    positionTitle: e.value.positionTitle
+                                });
+                                console.log("value : " + JSON.stringify(formData));
+                            }}
+                            itemTemplate={itemTemplate}
                         />
-                        {suggestions.length > 0 && (
-                            <ul className="suggestions">
-                                {suggestions.map((user, index) => (
-                                    <li key={index} onClick={() => handleSuggestionClick(user)}>
-                                        {user.givenName} {user.familyName}
-                                    </li>
-                                ))}
-                            </ul>
-                        )}
+                    </div>
+                </div>
+                <div className="form-row">
+                    <div className="form-group">
+                        <label htmlFor="firstName">First Name:</label>
+                        <input type="text" id="firstName" name="firstName" value={formData.firstName} required readOnly />
                     </div>
                     <div className="form-group">
                         <label htmlFor="lastName">Last Name:</label>
@@ -241,8 +283,8 @@ function TravelRequestForm() {
                         <input type="text" id="employeeNumber" name="employeeNumber" value={formData.employeeNumber} required readOnly />
                     </div>
                     <div className="form-group">
-                        <label htmlFor="costCentre">Cost Centre:</label>
-                        <input type="text" id="costCentre" name="costCentre" value={formData.costCentre} required readOnly />
+                        <label htmlFor="costCenter">Cost Centre:</label>
+                        <input type="text" id="costCenter" name="costCenter" value={formData.costCenter} required readOnly />
                     </div>
                 </div>
                 <div className="form-row">
@@ -257,17 +299,35 @@ function TravelRequestForm() {
                 </div>
                 <div className="form-longtext">
                     <label htmlFor="travelPurpose">Travel Purpose</label>
-                    <textarea id="travelPurpose" name="travelPurpose" rows="1"></textarea>
+                    <textarea id="travelPurpose" name="travelPurpose"
+                        value={formData.travelPurpose}
+                        onChange={(e) => setFormData({
+                            ...formData, // Spread the existing formData
+                            travelPurpose: e.target.value // Update only the firstName property
+                        })}
+                        rows="1">
+                    </textarea>
                 </div>
 
                 <div className="form-longtext">
                     <label htmlFor="placeVisited">Place Visited</label>
-                    <input type="text" id="placeVisited" name="placeVisited" required />
+                    <input type="text" id="placeVisited" name="placeVisited" required
+                        value={formData.placesVisited}
+                        onChange={(e) => setFormData({
+                            ...formData, // Spread the existing formData
+                            placesVisited: e.target.value // Update only the firstName property
+                        })}
+                    />
                 </div>
 
                 <div className="form-longtext">
                     <label htmlFor="participants">Participants (ACS, customer, supplier …)</label>
-                    <textarea id="participants" name="participants" rows="1"></textarea>
+                    <textarea id="participants" name="participants" rows="1"
+                        value={formData.participants}
+                        onChange={(e) => setFormData({
+                            ...formData, // Spread the existing formData
+                            participants: e.target.value // Update only the firstName property
+                        })}></textarea>
                 </div>
                 <hr className="separator" />
 
@@ -275,33 +335,34 @@ function TravelRequestForm() {
                     <div className="form-group">
                         <label htmlFor="entity">Manager</label>
                         <AutoComplete
-                                value={selectedItem}
-                                suggestions={dropDownSuggestions}
-                                completeMethod={searchItem}
-                                field="email"
-                                onChange={(e) => setSelectedItem(e.value)}
-                                onSelect={(e) => {
-                                    setSelectedItem(e.value);
-                                    console.log("value : " + JSON.stringify(e.value.email));
-                                }}
-                                itemTemplate={itemTemplate}
-                            />
+                            value={selectedItem}
+                            suggestions={dropDownSuggestions}
+                            completeMethod={searchItem}
+                            field="email"
+                            onChange={(e) => setSelectedItem(e.value)}
+                            onSelect={(e) => {
+                                setSelectedItem(e.value);
+                                console.log("value : " + JSON.stringify(e.value.email));
+                            }}
+                            itemTemplate={itemTemplate}
+                            disabled={selectedEmployee === null}
+                        />
                     </div>
                     <div className="form-group">
                         <label htmlFor="positionTitle">Head Of Department/GM/VP</label>
                         <AutoComplete
-                                value={selectedItem2}
-                                suggestions={dropDownSuggestions2}
-                                completeMethod={searchItem2}
-                                field="email"
-                                onChange={(e) => setSelectedItem2(e.value)}
-                                onSelect={(e) => {
-                                    setSelectedItem2(e.value);
-                                    console.log("value : " + JSON.stringify(e.value.email));
-                                }}
-                                itemTemplate={itemTemplate}
-                                disabled={selectedItem === null}
-                            />
+                            value={selectedItem2}
+                            suggestions={dropDownSuggestions2}
+                            completeMethod={searchItem2}
+                            field="email"
+                            onChange={(e) => setSelectedItem2(e.value)}
+                            onSelect={(e) => {
+                                setSelectedItem2(e.value);
+                                console.log("value : " + JSON.stringify(e.value.email));
+                            }}
+                            itemTemplate={itemTemplate}
+                            disabled={selectedItem === null}
+                        />
                     </div>
                 </div>
                 <hr className="separator" />
@@ -321,7 +382,33 @@ function TravelRequestForm() {
 
                 {showFlightTicket && (
                     <div>
-                        <div className="form-row-checkbox">
+                        <div className="card flex justify-content-center">
+                            <div className="flex flex-column gap-3">
+                                {flightTypeList.map((category) => {
+                                    return (
+                                        <div key={category.key} className="flex align-items-center">
+                                            <RadioButton inputId={category.key} name="category" value={category}
+                                                // onChange={(e) => set(e.value)} 
+                                                onChange={(e) => {
+                                                    setFlightTypeValue(e.value)
+                                                    setFormData({
+                                                        ...formData, // Spread the existing formData
+                                                        flightTicketType: JSON.stringify({
+                                                            key: e.value.key,
+                                                            name: e.value.name // Update only the firstName property
+                                                        })
+                                                    });
+                                                    console.log("radio : ", formData)
+                                                }
+                                                }
+                                                checked={flightTypeValue.key === category.key} />
+                                            <label htmlFor={category.key} className="ml-2">{category.name}</label>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                        {/* <div className="form-row-checkbox">
                             <div className="half-width">
                                 <label htmlFor="businessClass">Business Class</label>
                                 <input type="checkbox" id="businessClass" name="class" required />
@@ -330,22 +417,10 @@ function TravelRequestForm() {
                                 <label htmlFor="economyClass">Economy Class</label>
                                 <input type="checkbox" id="economyClass" name="class" required />
                             </div>
-                        </div>
+                        </div> */}
                         <p>Note: Kindly attach the 3 quotes/routes provided by Travel Agent for comparison. If the least cost-saving route is not taken, kindly provide the reason below.</p>
                         <div className="form-dropdown-container">
                             <label htmlFor="reason">Reason</label>
-                            {/* <select id="reason" name="reason" className="wide-dropdown" required>
-                                <option value="">--Select--</option>
-                                <option value="PaxAuthorisedToTravelOutsidePolicy">Pax Authorised To Travel Outside Policy</option>
-                                <option value="LowestFareAccepted">Lowest Fare Accepted</option>
-                                <option value="PaxDeclineRestrictiveFare">Pax Decline Restrictive Fare</option>
-                                <option value="ScheduleNotGood">Schedule Not Good</option>
-                                <option value="Security Reason">Security Reason</option>
-                                <option value="Travelling With Client">Travelling With Client</option>
-                                <option value="ReqSpecificCarrierAndTiming">Req. Specific Carrier And Timing</option>
-                                <option value="No Saving">No Saving</option>
-                                <option value="Training/Conference/Meeting">Training / Conference / Meeting</option>
-                            </select> */}
                             <Dropdown inputId="dd-city" value={reasonValue} onChange={(e) => setReasonValue(e.value)} options={reasonList} optionLabel="name" className="w-full" />
 
                         </div>
@@ -462,14 +537,30 @@ function TravelRequestForm() {
                     </label>
                 </div>
                 {showTrainDetails && (
-                    <div className="form-row-checkbox">
-                        <div className="half-width">
-                            <label htmlFor="firstClass">First Class</label>
-                            <input type="checkbox" id="firstClass" name="class" required />
-                        </div>
-                        <div className="half-width">
-                            <label htmlFor="secondClass">Second Class</label>
-                            <input type="checkbox" id="secondClass" name="class" required />
+                    <div className="card flex justify-content-center">
+                        <div className="flex flex-column gap-3">
+                            {trainTypeList.map((category) => {
+                                return (
+                                    <div key={category.key} className="flex align-items-center">
+                                        <RadioButton inputId={category.key} name="category" value={category}
+                                            // onChange={(e) => set(e.value)} 
+                                            onChange={(e) => {
+                                                setTrainTypeValue(e.value)
+                                                setFormData({
+                                                    ...formData, // Spread the existing formData
+                                                    trainTicketType: JSON.stringify({
+                                                        key: e.value.key,
+                                                        name: e.value.name // Update only the firstName property
+                                                    })
+                                                });
+                                                console.log("radio : ", formData)
+                                            }
+                                            }
+                                            checked={trainTypeValue.key === category.key} />
+                                        <label htmlFor={category.key} className="ml-2">{category.name}</label>
+                                    </div>
+                                );
+                            })}
                         </div>
                     </div>
                 )}

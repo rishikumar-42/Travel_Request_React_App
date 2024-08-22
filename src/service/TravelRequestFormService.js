@@ -58,6 +58,30 @@ const TravelRequestFormServiceLayer = {
             throw error;
         }
     },
+    fetchFlightTypePicklist: async () => {
+        try {
+            const response = await axios.get(`o/headless-admin-list-type/v1.0/list-type-definitions/by-external-reference-code/${process.env.REACT_APP_API_FLIGHT_TYPE_PICKLIST}`);
+            const reasonList = response.data.listTypeEntries || [];
+            console.log("type list : ", response.data); 
+            return reasonList;
+           
+        } catch (error) {
+            console.error("Error fetching flight type details", error);
+            throw error;
+        }
+    },
+    fetchTrainTicketTypePicklist: async () => {
+        try {
+            const response = await axios.get(`o/headless-admin-list-type/v1.0/list-type-definitions/by-external-reference-code/${process.env.REACT_APP_API_TRAIN_TICKET_PICKLIST}`);
+            const reasonList = response.data.listTypeEntries || [];
+            console.log("tain ticket type list : ", response.data); 
+            return reasonList;
+           
+        } catch (error) {
+            console.error("Error fetching train ticket type details", error);
+            throw error;
+        }
+    },
 
     // Submit form data to the backend
     submitFormData: async (formData) => {
