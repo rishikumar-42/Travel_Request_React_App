@@ -404,7 +404,7 @@ function TravelRequestForm() {
                     {/* This is a blank  */}
                 <div className="form-single-special" style={{ opacity: 0 }} >
 <label htmlFor="positionTitle"><strong></strong></label>
-                        <input type="text" id="positionTitle" name="positionTitle" value={formData.positionTitle} required readOnly />
+                        <input type="text" id="positionTitle" name="positionTitle"/>
 </div>
 {/* end of blank */}
                 <div className="form-single-special">
