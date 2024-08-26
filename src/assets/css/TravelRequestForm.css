@@ -1,11 +1,44 @@
 .form-container {
-    max-width: 1000px; /* Increased width for better fit */
+    max-width: auto; /* Increased width for better fit */
     margin: 50px auto;
-    padding: 30px;
-    border: 1px solid #ddd;
+    padding: 10px;
+    /* border: 1px solid #ddd; */
     border-radius: 5px;
     box-sizing: border-box;
+    margin-top: 1%;
+    padding-top: 0%;
 }
+.travel-form {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    gap: 1rem; /* Space between the header and form fields */
+    padding: 0.5rem;
+    background-color: white;
+    border-radius: 12px; /* Smoothed edges */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: Adds a subtle shadow for depth */
+}
+
+.header-strip {
+    /* grid-row: 1 / 2; */
+    text-align: left; 
+    background-color: #51829B !important; /* Your desired color */
+    color: white;
+    border-radius: 12px 12px 0 0; /* Smoothed top edges only */
+}
+.header-text{
+    margin-left: 1%;
+}
+input[type="text"] {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    padding: 0.5rem;
+}
+/* .header-strip {
+    background-color: #007bff; 
+    color: white;
+    padding: 1rem;
+    text-align: center;
+} */
 
 h1 {
     text-align: center;
@@ -17,12 +50,12 @@ h1 {
     flex-direction: column;
 }
 
-.form-row {
+/* .form-row {
     display: flex;
     justify-content: space-between;
     margin-bottom: 15px;
     flex-wrap: wrap;
-}
+} */
 
 .form-group {
     flex: 1;
@@ -63,22 +96,45 @@ button:hover {
 }
 
 .form-single {
-    margin-bottom: 20px; /* Adds space between each field */
+    margin-left: auto;
+    margin-right: auto;
+    width: 30%; /* Adjust the width to fill the available space */
 }
-
+.form-single-special {
+    margin-left: auto;
+    margin-right: auto;
+    width: 30%; /* Adjust the width to fill the available space */
+}
+.form-row {
+    display: flex;
+    gap: 10px; /* Space between columns */
+    justify-content: space-between; /* Adjusts spacing */
+    align-items: center; /* Aligns items vertically */
+}
 .form-single label {
     display: block;
     margin-bottom: 5px;
 }
 
-.form-single input {
-    width: 45%; /* Reduces the input field width to 85% */
+/* .form-single input {
+    width: 45%; 
     padding: 8px;
     box-sizing: border-box;
     border: 1px solid #ccc;
     border-radius: 4px;
+} */
+.form-single input {
+    width: 100%; /* Make the input fields fill the entire width of their container */
+    padding: 10px; /* Add padding to make the input boxes bigger */
+    font-size: 16px; /* Increase font size for larger inputs */
+    box-sizing: border-box; /* Ensure padding doesn't affect the width */
 }
-
+.form-single-special input {
+    width: 90%; /* Make the input fields fill the entire width of their container */
+    padding: 10px; /* Add padding to make the input boxes bigger */
+    font-size: 16px; /* Increase font size for larger inputs */
+    box-sizing: border-box; /* Ensure padding doesn't affect the width */
+}
 .form-longtext {
     margin-bottom: 20px; /* Adds space between each field */
 }
@@ -146,19 +202,39 @@ input[type="checkbox"] {
 
 .separator {
     border: none;
-    border-top: 1px solid #ccc; /* Light gray color */
-    margin: 20px 0; /* Space around the separator */
+    border-top: 2px solid #ccc; /* Light gray color */
+    margin: -6px 0; /* Space around the separator */
     width: 100%; /* Ensures it spans the full width of the container */
 }
 
 .form-heading {
-    text-align: center;
-    font-size: 24px; /* Adjust font size as needed */
+    text-align: initial;
+    font-size: 18px; /* Adjust font size as needed */
     font-weight: normal;
-    margin-bottom: 20px; /* Space below the heading */
+    margin-bottom: 0%; /* Space below the heading */
     color: #323131; /* Optional: Change color if desired */
+    margin-top: 0%;
 }
+.reducedInputSize{
+    width: 98%;
+}
+.form-row-travellerID{
+    display: flex;
+    gap: 4px; /* Space between columns */
+    justify-content: space-between; /* Adjusts spacing */
+    margin-left: 1%;
+    flex-direction: row;
+    
 
+}
+.form-row-travellerID-row2{
+    display: flex;
+    gap: 4px; /* Space between columns */
+    justify-content: left; /* Adjusts spacing */
+    margin-left: 1%;
+    flex-direction: row;
+    
+}
 .form-heading-flight{
     text-align: left;
     font-size: 24px; /* Adjust font size as needed */

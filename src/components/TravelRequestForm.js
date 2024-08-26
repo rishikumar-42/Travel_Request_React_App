@@ -336,23 +336,30 @@ function TravelRequestForm() {
     return (
         <div className="form-container">
             <form className="travel-form" onSubmit={handleFormSubmit}>
+            <div className="header-strip">
+        <h2 className="header-text">Travel Request Form </h2>
+    </div>
+                <div className="form-row">   
                 <div className="form-single">
-                    <label htmlFor="issuer">Issuer:</label>
-                    <input type="text" id="issuer" name="issuer"  />
+                <label htmlFor="issuer"><strong>Issuer</strong></label>
+                <input type="text" id="issuer" name="issuer"  />
                 </div>
                 <div className="form-single">
-                    <label htmlFor="issuerDate">Issue Date:</label>
+                    <label htmlFor="issuerDate"><strong>Issue Date:</strong></label>
                     <input type="date" id="issuerDate" name="issuerDate"  />
                 </div>
                 <div className="form-single">
-                    <label htmlFor="telephoneNumber">Telephone Number</label>
+                    <label htmlFor="telephoneNumber"><strong>Telephone Number</strong></label>
                     <input type="text" id="telephoneNumber" name="telephoneNumber"  />
                 </div>
+                </div>
+                <h2 className="form-heading"><strong>Traveller Identification</strong></h2>
                 <hr className="separator" />
-                <h2 className="form-heading">Traveller Identification</h2>
                 <div className="form-row">
                     <div className="form-group">
-                        <label htmlFor="employeeEmail">Email:</label>
+                    <div className="form-row-travellerID">
+                    <div className="form-single">
+                        <label htmlFor="employeeEmail"><strong>Email</strong></label>
                         <AutoComplete
                             value={selectedEmployee}
                             suggestions={employeeDropDownSuggestions}
@@ -373,38 +380,47 @@ function TravelRequestForm() {
                                 console.log("value : " + JSON.stringify(formData));
                             }}
                             itemTemplate={itemTemplate}
-                        />
-                    </div>
-                </div>
-                <div className="form-row">
-                    <div className="form-group">
-                        <label htmlFor="firstName">First Name:</label>
-                        <input type="text" id="firstName" name="firstName" value={formData.firstName} required readOnly />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="lastName">Last Name:</label>
+                        />    
+                        </div>                     
+                         <div className="form-single-special">
+                          <label htmlFor="firstName"><strong>First Name</strong></label>
+                        <input  type="text" id="firstName" name="firstName" value={formData.firstName} required readOnly />
+                        </div>
+
+                        <div className="form-single-special">
+                        <label htmlFor="lastName"><strong>Last Name</strong></label>
+                        
                         <input type="text" id="lastName" name="lastName" value={formData.lastName} required readOnly />
-                    </div>
-                </div>
-                <div className="form-row">
-                    <div className="form-group">
-                        <label htmlFor="employeeNumber">Employee Number:</label>
+                        </div>
+                        <div className="form-single-special">
+                        <label htmlFor="employeeNumber"><strong>Employee Number</strong></label>
                         <input type="text" id="employeeNumber" name="employeeNumber" value={formData.employeeNumber} required readOnly />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="costCenter">Cost Centre:</label>
-                        <input type="text" id="costCenter" name="costCenter" value={formData.costCenter} required readOnly />
+                       </div>
                     </div>
                 </div>
-                <div className="form-row">
-                    <div className="form-group">
-                        <label htmlFor="entity">Entity:</label>
-                        <input type="text" id="entity" name="entity" value={formData.entity} required readOnly />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="positionTitle">Position Title:</label>
+              
+                </div>
+                <div className="form-row-travellerID-row2">
+                    {/* This is a blank  */}
+                <div className="form-single-special" style={{ opacity: 0 }} >
+<label htmlFor="positionTitle"><strong></strong></label>
                         <input type="text" id="positionTitle" name="positionTitle" value={formData.positionTitle} required readOnly />
-                    </div>
+</div>
+{/* end of blank */}
+                <div className="form-single-special">
+                        <label htmlFor="costCenter"><strong>Cost Centre</strong></label>
+                        <input type="text" id="costCenter" name="costCenter" value={formData.costCenter} required readOnly />
+              
+                        </div>
+                        <div className="form-single-special">
+                        <label htmlFor="entity"><strong>Entity</strong></label>
+                        <input type="text" id="entity" name="entity" value={formData.entity} required readOnly />
+                        </div>
+<div className="form-single-special">
+<label htmlFor="positionTitle"><strong>Position Title</strong></label>
+                        <input type="text" id="positionTitle" name="positionTitle" value={formData.positionTitle} required readOnly />
+</div>
+
                 </div>
                 <div className="form-longtext">
                     <label htmlFor="travelPurpose">Travel Purpose</label>
