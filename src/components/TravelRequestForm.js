@@ -163,14 +163,39 @@ function TravelRequestForm() {
 
     const handleHotelToggleChange = (event) => {
         setShowNights(event.target.checked);
+        if (!event.target.checked) {
+            setFormData(prevFormData => ({
+                ...prevFormData, // Spread the existing formData
+                hotelNumberOfNights: 0
+            }))
+        }
     };
 
     const handleCarToggleChange = (event) => {
         setCarDetails(event.target.checked);
+        if (!event.target.checked) {
+            setFormData(prevFormData => ({
+                ...prevFormData, // Spread the existing formData
+                carRentalFrom: "",
+                carRentalTo: "",
+                carRentalOn: "",
+                carRentalUntil: "",
+                carRentalBirthDate: null,
+                carDrivingLicense: "",
+                carRentalCategory: "",
+            }))
+        }
     };
 
     const handlePerCarToggleChange = (event) => {
         setPerCarDetails(event.target.checked);
+        if (!event.target.checked) {
+            setFormData(prevFormData => ({
+                ...prevFormData, // Spread the existing formData
+                personalCarDrivingLicenseNumber: "",
+                personalCarRegistrationNumber: ""
+            }))
+        }
     };
 
     useEffect(() => {
@@ -184,7 +209,7 @@ function TravelRequestForm() {
         setFlightTypeValue(firstFlightType);
         setFormData(prevFormData => ({
             ...prevFormData, // Spread the existing formData
-            flightTicketType : {
+            flightTicketType: {
                 key: firstFlightType.key,
                 name: firstFlightType.name // Update the trainTicketType properties
             }
@@ -196,12 +221,13 @@ function TravelRequestForm() {
         setFlightTicket(event.target.checked);
         if (isChecked) {
             initialFlightTicket();
-        }else{
+        } else {
             setFormData(prevFormData => ({
                 ...prevFormData, // Spread the existing formData
                 flightTicketType: {},
                 flightTicketReason: {}
             }));
+            setReasonValue([]);
         }
     };
 
@@ -220,20 +246,25 @@ function TravelRequestForm() {
         costCenter: "",
         entity: "",
         positionTitle: "",
+        travelPurpose: "",
+        participants: "",
+        placesVisited: "",
+        flightTicketReason: {},
+        flightTicketType: {},
         carRentalFrom: "",
         carRentalTo: "",
-        flightTicketReason: {},
-        itineraryTotal: "",
-        travelPurpose: "",
-        personalCarDrivingLicenseNumber: "",
+        carRentalOn: "",
+        carRentalUntil: "",
+        carRentalBirthDate: null,
         carDrivingLicense: "",
-        placesVisited: "",
         carRentalCategory: "",
+        personalCarDrivingLicenseNumber: "",
         personalCarRegistrationNumber: "",
-        flightTicketType: {},
         trainTicketType: {},
         hotelNumberOfNights: 0,
-        participants: ""
+        itineraryTotal: "",
+        approver1: {},
+        approver2: {},
     });
 
     // const initialTrainTicket = () => {
@@ -271,27 +302,27 @@ function TravelRequestForm() {
             }
         }));
     };
-    
+
     // Handle toggling of train details
     const handleTrainToggleChange = async (event) => {
         const isChecked = event.target.checked;
         setTrainDetails(isChecked);
         if (isChecked) {
             initialTrainTicket();
-        }else{
+        } else {
             setFormData(prevFormData => ({
                 ...prevFormData, // Spread the existing formData
                 trainTicketType: {}
             }));
         }
     };
-    
+
     useEffect(() => {
         console.log("Updated formData: ", JSON.stringify(formData));
     }, [formData]);
 
     // Handle form submission
-    const handleSubmit = async (e) => {
+    const handleFormSubmit = async (e) => {
         console.log("Form submission started");
         e.preventDefault();
         try {
@@ -304,18 +335,18 @@ function TravelRequestForm() {
 
     return (
         <div className="form-container">
-            <form className="travel-form" onSubmit={handleSubmit}>
+            <form className="travel-form" onSubmit={handleFormSubmit}>
                 <div className="form-single">
                     <label htmlFor="issuer">Issuer:</label>
-                    <input type="text" id="issuer" name="issuer" required />
+                    <input type="text" id="issuer" name="issuer"  />
                 </div>
                 <div className="form-single">
                     <label htmlFor="issuerDate">Issue Date:</label>
-                    <input type="date" id="issuerDate" name="issuerDate" required />
+                    <input type="date" id="issuerDate" name="issuerDate"  />
                 </div>
                 <div className="form-single">
                     <label htmlFor="telephoneNumber">Telephone Number</label>
-                    <input type="text" id="telephoneNumber" name="telephoneNumber" required />
+                    <input type="text" id="telephoneNumber" name="telephoneNumber"  />
                 </div>
                 <hr className="separator" />
                 <h2 className="form-heading">Traveller Identification</h2>
@@ -420,6 +451,13 @@ function TravelRequestForm() {
                             onChange={(e) => setSelectedItem(e.value)}
                             onSelect={(e) => {
                                 setSelectedItem(e.value);
+                                setFormData({
+                                    ...formData, // Spread the existing formData
+                                    approver1: {
+                                        key: e.value.firstName,
+                                        name: e.value.firstName // Update only the firstName property
+                                    }
+                                });
                                 console.log("value : " + JSON.stringify(e.value.email));
                             }}
                             itemTemplate={itemTemplate}
@@ -530,7 +568,12 @@ function TravelRequestForm() {
                 {showNights && (
                     <div className="form-single" id="nightsContainer">
                         <label htmlFor="nights">Number of Nights</label>
-                        <input type="number" id="nights" name="nights" required />
+                        <input type="number" id="nights" name="nights" required
+                            value={formData.hotelNumberOfNights}
+                            onChange={(e) => setFormData({
+                                ...formData, // Spread the existing formData
+                                hotelNumberOfNights: e.target.value // Update only the firstName property
+                            })} />
                     </div>
                 )}
 
@@ -553,32 +596,73 @@ function TravelRequestForm() {
                     <div>
                         <div className="form-single">
                             <label htmlFor="category">Category</label>
-                            <input type="text" id="category" name="category" required />
+                            <input type="text" id="category" name="category" required
+                                value={formData.carRentalCategory}
+                                onChange={(e) => setFormData({
+                                    ...formData,
+                                    carRentalCategory: e.target.value
+                                })}
+                            />
                         </div>
                         <div className="form-row">
                             <div className="form-group-car">
                                 <label htmlFor="from">From:</label>
-                                <input type="text" id="from" name="from" required />
+                                <input type="text" id="from" name="from" required
+                                    value={formData.carRentalFrom}
+                                    onChange={(e) => setFormData({
+                                        ...formData,
+                                        carRentalFrom: e.target.value
+                                    })}
+                                />
                             </div>
                             <div className="form-group-car">
                                 <label htmlFor="on">On:</label>
-                                <input type="text" id="on" name="on" required />
+                                <input type="text" id="on" name="on" required
+                                    value={formData.carRentalOn}
+                                    onChange={(e) => setFormData({
+                                        ...formData,
+                                        carRentalOn: e.target.value
+                                    })}
+                                />
                             </div>
                             <div className="form-group-car">
                                 <label htmlFor="to">To:</label>
-                                <input type="text" id="to" name="to" required />
+                                <input type="text" id="to" name="to" required
+                                    value={formData.carRentalTo}
+                                    onChange={(e) => setFormData({
+                                        ...formData,
+                                        carRentalTo: e.target.value
+                                    })}
+                                />
                             </div>
                             <div className="form-group-car">
                                 <label htmlFor="until">Until:</label>
-                                <input type="text" id="until" name="until" required />
+                                <input type="text" id="until" name="until" required
+                                    value={formData.carRentalUntil}
+                                    onChange={(e) => setFormData({
+                                        ...formData,
+                                        carRentalUntil: e.target.value
+                                    })}
+                                />
                             </div>
                             <div className="form-group-car">
                                 <label htmlFor="birthDate">Birth Date</label>
-                                <input type="date" id="birthDate" name="birthDate" required />
+                                <input type="date" id="birthDate" name="birthDate" required
+                                    value={formData.carRentalBirthDate}
+                                    onChange={(e) => setFormData({
+                                        ...formData,
+                                        carRentalBirthDate: e.target.value
+                                    })} />
                             </div>
                             <div className="form-group-car">
                                 <label htmlFor="drivingLicense">Driving License</label>
-                                <input type="text" id="drivingLicense" name="drivingLicense" required />
+                                <input type="text" id="drivingLicense" name="drivingLicense" required
+                                    value={formData.carDrivingLicense}
+                                    onChange={(e) => setFormData({
+                                        ...formData,
+                                        carDrivingLicense: e.target.value
+                                    })}
+                                />
                             </div>
                         </div>
                     </div>
@@ -601,11 +685,23 @@ function TravelRequestForm() {
                         <div className="form-row">
                             <div className="form-group-car">
                                 <label htmlFor="carRegNum">Car Registration Number</label>
-                                <input type="text" id="carRegNum" name="carRegNum" required />
+                                <input type="text" id="carRegNum" name="carRegNum" required
+                                    value={formData.personalCarRegistrationNumber}
+                                    onChange={(e) => setFormData({
+                                        ...formData, // Spread the existing formData
+                                        personalCarRegistrationNumber: e.target.value // Update only the firstName property
+                                    })}
+                                />
                             </div>
                             <div className="form-group-car">
                                 <label htmlFor="drivingLicenseNum">Driving License Number</label>
-                                <input type="text" id="drivingLicenseNum" name="drivingLicenseNum" required />
+                                <input type="text" id="drivingLicenseNum" name="drivingLicenseNum" required
+                                    value={formData.personalCarDrivingLicenseNumber}
+                                    onChange={(e) => setFormData({
+                                        ...formData, // Spread the existing formData
+                                        personalCarDrivingLicenseNumber: e.target.value // Update only the firstName property
+                                    })}
+                                />
                             </div>
                         </div>
                     </div>
