@@ -6,10 +6,18 @@ import 'primereact/resources/primereact.min.css';
 import { AutoComplete } from "primereact/autocomplete";
 import { Dropdown } from 'primereact/dropdown';
 import { RadioButton } from "primereact/radiobutton";
-import Button from '@mui/material/Button';
+import { Button } from 'primereact/button';
 import Snackbar from '@mui/material/Snackbar';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
+import { FloatLabel } from 'primereact/floatlabel';
+import 'primeicons/primeicons.css';
+import { InputText } from "primereact/inputtext";
+import { Calendar } from 'primereact/calendar';
+import { InputNumber } from 'primereact/inputnumber';
+import { InputTextarea } from 'primereact/inputtextarea';
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
 
 function TravelRequestForm() {
     const [showNights, setShowNights] = useState(false);
@@ -37,6 +45,7 @@ function TravelRequestForm() {
         flightNumber: '',
         price: ''
     });
+    const [editingItinerary, setEditingItinerary] = useState(null);
 
     const [dropDownSuggestions, setdropDownSuggestions] = useState([]);
     const [selectedItem, setSelectedItem] = useState(null);
@@ -53,7 +62,68 @@ function TravelRequestForm() {
             userList.filter(item => item.email.toLowerCase().includes(query))
         );
     };
+    const [selectedPhoneCode, setSelectedPhoneCode] = useState(null);
+    const handleEditItinerary = (index) => {
+        const itineraryToEdit = { ...itineraries[index] }; // Create a copy to avoid direct mutation
+        setNewItinerary(itineraryToEdit);
+        setEditingItinerary(index); // Store the index, not the itinerary itself
+        setShowItinerary(true);
+    };
 
+
+    const handleSaveItinerary = () => {
+        if (editingItinerary !== null) {
+            // Update existing itinerary
+            setItineraries(itineraries.map((it, i) =>
+                i === editingItinerary ? newItinerary : it
+            ));
+            setEditingItinerary(null);
+        } else {
+            // Add new itinerary
+            setItineraries([...itineraries, newItinerary]);
+        }
+        setNewItinerary({
+            itFrom: '',
+            itTo: '',
+            departure: '',
+            arrival: '',
+            itrDate: '',
+            flightNumber: '',
+            price: ''
+        });
+        setShowItinerary(false);
+    };
+
+    const handleRemoveItinerary = (index) => {
+        setItineraries(itineraries.filter((_, i) => i !== index));
+    };
+
+
+    const PhoneNumberInput = () => {
+        const phoneCodes = [
+            { code: "91", country: "India" },
+            { code: "966", country: "Saudi Arabia" },
+            { code: "98", country: "Iran" }
+        ];
+
+        return (
+            <div className="p-inputgroup flex-1">
+                <FloatLabel>
+                    <span className="p-inputgroup-addon">+</span>
+                    <Dropdown
+                        // autoWidth={false}
+                        value={selectedPhoneCode}
+                        onChange={(e) => setSelectedPhoneCode(e.value)}
+                        options={phoneCodes}
+                        optionLabel="code"
+                        placeholder="Select Code"
+                        className="p-mr-2 w-full md:w-14rem"
+                    />
+                    <InputNumber id="telephoneNumber" placeholder="Telephone Number" />
+                </FloatLabel>
+            </div>
+        );
+    };
     const searchItem = (event) => {
         const query = event.query.toLowerCase();
         setdropDownSuggestions(
@@ -147,19 +217,19 @@ function TravelRequestForm() {
         });
     };
 
-    const handleSaveItinerary = () => {
-        setItineraries([...itineraries, newItinerary]);
-        setNewItinerary({
-            itFrom: '',
-            itTo: '',
-            departure: '',
-            arrival: '',
-            itrDate: '',
-            flightNumber: '',
-            price: ''
-        });
-        setShowItinerary(false);
-    };
+    // const handleSaveItinerary = () => {
+    //     setItineraries([...itineraries, newItinerary]);
+    //     setNewItinerary({
+    //         itFrom: '',
+    //         itTo: '',
+    //         departure: '',
+    //         arrival: '',
+    //         itrDate: '',
+    //         flightNumber: '',
+    //         price: ''
+    //     });
+    //     setShowItinerary(false);
+    // };
 
     const calculateTotalPrice = () => {
         return itineraries.reduce((total, itinerary) => {
@@ -237,9 +307,9 @@ function TravelRequestForm() {
         }
     };
 
-    const handleAddItineraryClick = () => {
-        setShowItinerary(true);
-    };
+    // const handleAddItineraryClick = () => {
+    //     setShowItinerary(true);
+    // };
 
     const handleCloseItineraryClick = () => {
         setShowItinerary(false);
@@ -373,19 +443,30 @@ function TravelRequestForm() {
                 <div className="header-strip">
                     <h2 className="header-text">Travel Request Form </h2>
                 </div>
-                <div className="form-row">
-                    <div className="form-single">
+                <div className="form-row-first-parentblock">
+                    {/* <div className="form-single">
                         <label htmlFor="issuer"><strong>Issuer</strong></label>
                         <input type="text" id="issuer" name="issuer" />
-                    </div>
-                    <div className="form-single">
+                    </div> */}
+
+                    <FloatLabel>
+                        <InputText id="issuer" />
+                        <label for="issuer"><strong>Issuer</strong></label>
+                    </FloatLabel>
+                    {/* <div className="form-single">
                         <label htmlFor="issuerDate"><strong>Issue Date:</strong></label>
                         <input type="date" id="issuerDate" name="issuerDate" />
-                    </div>
-                    <div className="form-single">
+                    </div> */}
+                    <FloatLabel>
+                        <Calendar id="issuerDate" dateFormat="dd/mm/yy" showIcon />
+                        <label for="issuerDate">Issuer Date</label>
+                    </FloatLabel>
+                    {/* <div className="form-single">
                         <label htmlFor="telephoneNumber"><strong>Telephone Number</strong></label>
                         <input type="text" id="telephoneNumber" name="telephoneNumber" />
-                    </div>
+                    </div> */}
+                    <PhoneNumberInput />
+                    {/* <span className="p-inputgroup-addon">.00</span> */}
                 </div>
                 <h2 className="form-heading"><strong>Traveller Identification</strong></h2>
                 <hr className="separator" />
@@ -456,18 +537,26 @@ function TravelRequestForm() {
                     </div>
 
                 </div>
-                <div className="form-longtext">
+                {/* <div className="form-longtext">
                     <label htmlFor="travelPurpose">Travel Purpose</label>
                     <textarea id="travelPurpose" name="travelPurpose"
                         value={formData.travelPurpose}
                         onChange={(e) => setFormData({
-                            ...formData, // Spread the existing formData
-                            travelPurpose: e.target.value // Update only the firstName property
+                            ...formData, 
+                            travelPurpose: e.target.value
                         })}
                         rows="1">
                     </textarea>
-                </div>
+                </div> */}
+                <FloatLabel>
+                    <InputTextarea value={formData.travelPurpose}
+                        onChange={(e) => setFormData({
+                            ...formData,
+                            travelPurpose: e.target.value
+                        })} rows={5} cols={30} />
+                    <label htmlFor="travelPurpose">Travel Purpose</label>
 
+                </FloatLabel>
                 <div className="form-longtext">
                     <label htmlFor="placeVisited">Place Visited</label>
                     <input type="text" id="placeVisited" name="placeVisited" required
@@ -804,9 +893,13 @@ function TravelRequestForm() {
                 )}
                 <hr className="separator" />
                 <div className="addbutton">
-                    <button type="button" onClick={handleAddItineraryClick}>
+                    {/* <button type="button" onClick={handleAddItineraryClick}>
                         {showItinerary ? "Hide Itinerary" : "Add Itinerary"}
-                    </button>
+                    </button> */}
+                    <Button onClick={() => {
+                        setShowItinerary(!showItinerary);
+                    }}
+                        type="button" label="Add Itinerary" badge={itineraries.length} />
                 </div>
 
                 {showItinerary && (
@@ -908,7 +1001,7 @@ function TravelRequestForm() {
                 {itineraries.length > 0 && (
                     <div className="itinerary-table">
                         <h3>Saved Itineraries</h3>
-                        <table>
+                        {/* <table>
                             <thead>
                                 <tr>
                                     <th>From</th>
@@ -933,14 +1026,48 @@ function TravelRequestForm() {
                                     </tr>
                                 ))}
                             </tbody>
-                        </table>
+                        </table> */}
+                        <DataTable value={itineraries} showGridlines tableStyle={{ minWidth: '50rem' }}>
+                            <Column sortable field="itFrom" header="From" />
+                            <Column sortable field="itTo" header="To" />
+                            <Column sortable field="departure" header="Departure" />
+                            <Column sortable field="arrival" header="Arrival" />
+                            <Column sortable field="itrDate" header="Date and Time" />
+                            <Column sortable field="flightNumber" header="Flight Number" />
+                            <Column sortable field="price" header="Price incl. VAT" />
+                            <Column header="Actions"
+                                body={(rowData, { rowIndex }) => (
+                                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                        <Button icon="pi pi-pencil" style={{ marginRight: '0.5rem' }}
+                                            onClick={() => handleEditItinerary(rowIndex)} />
+                                        <Button severity="danger" icon="pi pi-trash"
+                                            onClick={() => handleRemoveItinerary(rowIndex)} />
+                                    </div>
+                                )}
+                            />
+                        </DataTable>
                         <div className="total-price">
                             <strong>Total Price incl. VAT:</strong> {calculateTotalPrice()}
                         </div>
                     </div>
                 )}
 
-                <button type="submit">Submit</button>
+                {/* <button type="submit">Submit</button> */}
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
+    <Button
+        style={{
+            border: 'none', // Remove border
+            borderRadius: '4px', // Set a small border radius (adjust as needed)
+            backgroundColor: '#1679AB',
+            padding: '0.5rem 1rem', // Adjust padding to control button size
+            width: '15%', // Set the width of the button (e.g., 25% of the container)
+              fontWeight: 'bold'
+        }}
+        type="submit"
+        label="Submit"
+    />
+</div>
+
             </form>
             <Snackbar
                 open={open}
