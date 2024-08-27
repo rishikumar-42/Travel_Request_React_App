@@ -6,6 +6,10 @@ import 'primereact/resources/primereact.min.css';
 import { AutoComplete } from "primereact/autocomplete";
 import { Dropdown } from 'primereact/dropdown';
 import { RadioButton } from "primereact/radiobutton";
+import Button from '@mui/material/Button';
+import Snackbar from '@mui/material/Snackbar';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
 
 function TravelRequestForm() {
     const [showNights, setShowNights] = useState(false);
@@ -40,6 +44,8 @@ function TravelRequestForm() {
     const [selectedItem2, setSelectedItem2] = useState(null);
     const [employeeDropDownSuggestions, setEmployeeDropDownSuggestions] = useState([]);
     const [selectedEmployee, setSelectedEmployee] = useState(null);
+    const [open, setOpen] = useState(false);
+    const [message, setMessage] = useState(false);
 
     const searchEmployee = (event) => {
         const query = event.query.toLowerCase();
@@ -326,100 +332,128 @@ function TravelRequestForm() {
         console.log("Form submission started");
         e.preventDefault();
         try {
-            await TravelRequestFormService.submitFormData(formData);
+            const response = await TravelRequestFormService.submitFormData(formData);
+            setMessage(`Successfully created Id : ${response.data.id}`);
+            setOpen(true);
             // Handle success (e.g., show a message or redirect)
         } catch (error) {
             console.error("Error submitting form", error);
+            setMessage(`Error response : ${error.response.data.title}`);
+            setOpen(true);
         }
     };
+
+
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setOpen(false);
+    };
+
+    const action = (
+        <React.Fragment>
+            <Button color="secondary" size="small" onClick={handleClose}>
+                UNDO
+            </Button>
+            <IconButton
+                size="small"
+                aria-label="close"
+                color="inherit"
+                onClick={handleClose}
+            >
+                <CloseIcon fontSize="small" />
+            </IconButton>
+        </React.Fragment>
+    );
 
     return (
         <div className="form-container">
             <form className="travel-form" onSubmit={handleFormSubmit}>
-            <div className="header-strip">
-        <h2 className="header-text">Travel Request Form </h2>
-    </div>
-                <div className="form-row">   
-                <div className="form-single">
-                <label htmlFor="issuer"><strong>Issuer</strong></label>
-                <input type="text" id="issuer" name="issuer"  />
+                <div className="header-strip">
+                    <h2 className="header-text">Travel Request Form </h2>
                 </div>
-                <div className="form-single">
-                    <label htmlFor="issuerDate"><strong>Issue Date:</strong></label>
-                    <input type="date" id="issuerDate" name="issuerDate"  />
-                </div>
-                <div className="form-single">
-                    <label htmlFor="telephoneNumber"><strong>Telephone Number</strong></label>
-                    <input type="text" id="telephoneNumber" name="telephoneNumber"  />
-                </div>
+                <div className="form-row">
+                    <div className="form-single">
+                        <label htmlFor="issuer"><strong>Issuer</strong></label>
+                        <input type="text" id="issuer" name="issuer" />
+                    </div>
+                    <div className="form-single">
+                        <label htmlFor="issuerDate"><strong>Issue Date:</strong></label>
+                        <input type="date" id="issuerDate" name="issuerDate" />
+                    </div>
+                    <div className="form-single">
+                        <label htmlFor="telephoneNumber"><strong>Telephone Number</strong></label>
+                        <input type="text" id="telephoneNumber" name="telephoneNumber" />
+                    </div>
                 </div>
                 <h2 className="form-heading"><strong>Traveller Identification</strong></h2>
                 <hr className="separator" />
                 <div className="form-row">
                     <div className="form-group">
-                    <div className="form-row-travellerID">
-                    <div className="form-single">
-                        <label htmlFor="employeeEmail"><strong>Email</strong></label>
-                        <AutoComplete
-                            value={selectedEmployee}
-                            suggestions={employeeDropDownSuggestions}
-                            completeMethod={searchEmployee}
-                            field="email"
-                            onChange={(e) => setSelectedEmployee(e.value)}
-                            onSelect={(e) => {
-                                setSelectedEmployee(e.value);
-                                setFormData({
-                                    ...formData, // Spread the existing formData
-                                    firstName: e.value.firstName, // Update only the firstName property
-                                    lastName: e.value.lastName,
-                                    employeeNumber: e.value.employeeNumber,
-                                    costCenter: e.value.costCenter,
-                                    entity: e.value.entity,
-                                    positionTitle: e.value.positionTitle
-                                });
-                                console.log("value : " + JSON.stringify(formData));
-                            }}
-                            itemTemplate={itemTemplate}
-                        />    
-                        </div>                     
-                         <div className="form-single-special">
-                          <label htmlFor="firstName"><strong>First Name</strong></label>
-                        <input  type="text" id="firstName" name="firstName" value={formData.firstName} required readOnly />
-                        </div>
+                        <div className="form-row-travellerID">
+                            <div className="form-single">
+                                <label htmlFor="employeeEmail"><strong>Email</strong></label>
+                                <AutoComplete
+                                    value={selectedEmployee}
+                                    suggestions={employeeDropDownSuggestions}
+                                    completeMethod={searchEmployee}
+                                    field="email"
+                                    onChange={(e) => setSelectedEmployee(e.value)}
+                                    onSelect={(e) => {
+                                        setSelectedEmployee(e.value);
+                                        setFormData({
+                                            ...formData, // Spread the existing formData
+                                            firstName: e.value.firstName, // Update only the firstName property
+                                            lastName: e.value.lastName,
+                                            employeeNumber: e.value.employeeNumber,
+                                            costCenter: e.value.costCenter,
+                                            entity: e.value.entity,
+                                            positionTitle: e.value.positionTitle
+                                        });
+                                        console.log("value : " + JSON.stringify(formData));
+                                    }}
+                                    itemTemplate={itemTemplate}
+                                />
+                            </div>
+                            <div className="form-single-special">
+                                <label htmlFor="firstName"><strong>First Name</strong></label>
+                                <input type="text" id="firstName" name="firstName" value={formData.firstName} required readOnly />
+                            </div>
 
-                        <div className="form-single-special">
-                        <label htmlFor="lastName"><strong>Last Name</strong></label>
-                        
-                        <input type="text" id="lastName" name="lastName" value={formData.lastName} required readOnly />
+                            <div className="form-single-special">
+                                <label htmlFor="lastName"><strong>Last Name</strong></label>
+
+                                <input type="text" id="lastName" name="lastName" value={formData.lastName} required readOnly />
+                            </div>
+                            <div className="form-single-special">
+                                <label htmlFor="employeeNumber"><strong>Employee Number</strong></label>
+                                <input type="text" id="employeeNumber" name="employeeNumber" value={formData.employeeNumber} required readOnly />
+                            </div>
                         </div>
-                        <div className="form-single-special">
-                        <label htmlFor="employeeNumber"><strong>Employee Number</strong></label>
-                        <input type="text" id="employeeNumber" name="employeeNumber" value={formData.employeeNumber} required readOnly />
-                       </div>
                     </div>
-                </div>
-              
+
                 </div>
                 <div className="form-row-travellerID-row2">
                     {/* This is a blank  */}
-                <div className="form-single-special" style={{ opacity: 0 }} >
-<label htmlFor="positionTitle"><strong></strong></label>
-                        <input type="text" id="positionTitle" name="positionTitle"/>
-</div>
-{/* end of blank */}
-                <div className="form-single-special">
+                    <div className="form-single-special" style={{ opacity: 0 }} >
+                        <label htmlFor="positionTitle"><strong></strong></label>
+                        <input type="text" id="positionTitle" name="positionTitle" />
+                    </div>
+                    {/* end of blank */}
+                    <div className="form-single-special">
                         <label htmlFor="costCenter"><strong>Cost Centre</strong></label>
                         <input type="text" id="costCenter" name="costCenter" value={formData.costCenter} required readOnly />
-              
-                        </div>
-                        <div className="form-single-special">
+
+                    </div>
+                    <div className="form-single-special">
                         <label htmlFor="entity"><strong>Entity</strong></label>
                         <input type="text" id="entity" name="entity" value={formData.entity} required readOnly />
-                        </div>
-<div className="form-single-special">
-<label htmlFor="positionTitle"><strong>Position Title</strong></label>
+                    </div>
+                    <div className="form-single-special">
+                        <label htmlFor="positionTitle"><strong>Position Title</strong></label>
                         <input type="text" id="positionTitle" name="positionTitle" value={formData.positionTitle} required readOnly />
-</div>
+                    </div>
 
                 </div>
                 <div className="form-longtext">
@@ -471,7 +505,6 @@ function TravelRequestForm() {
                                     ...formData, // Spread the existing formData
                                     approver1: {
                                         key: e.value.firstName,
-                                        name: e.value.firstName // Update only the firstName property
                                     }
                                 });
                                 console.log("value : " + JSON.stringify(e.value.email));
@@ -490,6 +523,12 @@ function TravelRequestForm() {
                             onChange={(e) => setSelectedItem2(e.value)}
                             onSelect={(e) => {
                                 setSelectedItem2(e.value);
+                                setFormData({
+                                    ...formData, // Spread the existing formData
+                                    approver2: {
+                                        key: e.value.firstName,
+                                    }
+                                });
                                 console.log("value : " + JSON.stringify(e.value.email));
                             }}
                             itemTemplate={itemTemplate}
@@ -903,6 +942,13 @@ function TravelRequestForm() {
 
                 <button type="submit">Submit</button>
             </form>
+            <Snackbar
+                open={open}
+                autoHideDuration={6000}
+                onClose={handleClose}
+                message={message}
+                action={action}
+            ></Snackbar>
         </div>
     );
 }
