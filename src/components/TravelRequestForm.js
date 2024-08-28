@@ -18,6 +18,7 @@ import { InputNumber } from 'primereact/inputnumber';
 import { InputTextarea } from 'primereact/inputtextarea';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
+import { InputSwitch } from "primereact/inputswitch";
 
 function TravelRequestForm() {
     const [showNights, setShowNights] = useState(false);
@@ -39,10 +40,15 @@ function TravelRequestForm() {
     const [newItinerary, setNewItinerary] = useState({
         itFrom: '',
         itTo: '',
-        departure: '',
-        arrival: '',
-        itrDate: '',
+        departure: null,
+        arrival: null,
+        // itrDate: '',
         flightNumber: '',
+        returnFrom: '',
+        returnTo: '',
+        returnDeparture: null,
+        returnArrival: null,
+        returnFlightNumber: '',
         price: ''
     });
     const [editingItinerary, setEditingItinerary] = useState(null);
@@ -55,6 +61,7 @@ function TravelRequestForm() {
     const [selectedEmployee, setSelectedEmployee] = useState(null);
     const [open, setOpen] = useState(false);
     const [message, setMessage] = useState(false);
+    const [showReturnFields, setShowReturnFields] = useState(false);
 
     const searchEmployee = (event) => {
         const query = event.query.toLowerCase();
@@ -62,12 +69,18 @@ function TravelRequestForm() {
             userList.filter(item => item.email.toLowerCase().includes(query))
         );
     };
-    const [selectedPhoneCode, setSelectedPhoneCode] = useState(null);
+    // const [selectedPhoneCode, setSelectedPhoneCode] = useState(null);
     const handleEditItinerary = (index) => {
         const itineraryToEdit = { ...itineraries[index] }; // Create a copy to avoid direct mutation
         setNewItinerary(itineraryToEdit);
         setEditingItinerary(index); // Store the index, not the itinerary itself
         setShowItinerary(true);
+    };
+
+    const formatDate = (date) => {
+        if (!date) return '';
+        const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
+        return new Intl.DateTimeFormat('en-GB', options).format(new Date(date));
     };
 
 
@@ -85,10 +98,15 @@ function TravelRequestForm() {
         setNewItinerary({
             itFrom: '',
             itTo: '',
-            departure: '',
-            arrival: '',
-            itrDate: '',
+            departure: null,
+            arrival: null,
+            // itrDate: '',
             flightNumber: '',
+            returnFrom: '',
+            returnTo: '',
+            returnDeparture: null,
+            returnArrival: null,
+            returnFlightNumber: '',
             price: ''
         });
         setShowItinerary(false);
@@ -99,31 +117,31 @@ function TravelRequestForm() {
     };
 
 
-    const PhoneNumberInput = () => {
-        const phoneCodes = [
-            { code: "91", country: "India" },
-            { code: "966", country: "Saudi Arabia" },
-            { code: "98", country: "Iran" }
-        ];
+    // const PhoneNumberInput = () => {
+    //     const phoneCodes = [
+    //         { code: "91", country: "India" },
+    //         { code: "966", country: "Saudi Arabia" },
+    //         { code: "98", country: "Iran" }
+    //     ];
 
-        return (
-            <div className="p-inputgroup flex-1">
-                <FloatLabel>
-                    <span className="p-inputgroup-addon">+</span>
-                    <Dropdown
-                        // autoWidth={false}
-                        value={selectedPhoneCode}
-                        onChange={(e) => setSelectedPhoneCode(e.value)}
-                        options={phoneCodes}
-                        optionLabel="code"
-                        placeholder="Select Code"
-                        className="p-mr-2 w-full md:w-14rem"
-                    />
-                    <InputNumber id="telephoneNumber" placeholder="Telephone Number" />
-                </FloatLabel>
-            </div>
-        );
-    };
+    //     return (
+    //         <div className="p-inputgroup flex-1">
+    //             <FloatLabel>
+    //                 <span className="p-inputgroup-addon">+</span>
+    //                 <Dropdown
+    //                     // autoWidth={false}
+    //                     value={selectedPhoneCode}
+    //                     onChange={(e) => setSelectedPhoneCode(e.value)}
+    //                     options={phoneCodes}
+    //                     optionLabel="code"
+    //                     placeholder="Select Code"
+    //                     className="p-mr-2 w-full md:w-14rem"
+    //                 />
+    //                 <InputNumber id="telephoneNumber" placeholder="Telephone Number" />
+    //             </FloatLabel>
+    //         </div>
+    //     );
+    // };
     const searchItem = (event) => {
         const query = event.query.toLowerCase();
         setdropDownSuggestions(
@@ -209,8 +227,17 @@ function TravelRequestForm() {
         getAllTrainTypes();
     }, []);
 
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
+    // const handleInputChange = (e) => {
+    //     const { name, value } = e.target;
+    //     setNewItinerary({
+    //         ...newItinerary,
+    //         [name]: value
+    //     });
+    // };
+
+    const handleInputChange = (name, e) => {
+        const { value } = e.target;
+        console.log(name, " : ", value);
         setNewItinerary({
             ...newItinerary,
             [name]: value
@@ -316,6 +343,9 @@ function TravelRequestForm() {
     };
 
     const [formData, setFormData] = useState({
+        issuer:"",
+        issuerDate:null,
+        phoneNumber:null,
         firstName: "",
         lastName: "",
         employeeNumber: "",
@@ -444,28 +474,37 @@ function TravelRequestForm() {
                     <h2 className="header-text">Travel Request Form </h2>
                 </div>
                 <div className="form-row-first-parentblock">
-                    {/* <div className="form-single">
-                        <label htmlFor="issuer"><strong>Issuer</strong></label>
-                        <input type="text" id="issuer" name="issuer" />
-                    </div> */}
-
-                    <FloatLabel>
-                        <InputText id="issuer" />
-                        <label for="issuer"><strong>Issuer</strong></label>
-                    </FloatLabel>
-                    {/* <div className="form-single">
-                        <label htmlFor="issuerDate"><strong>Issue Date:</strong></label>
-                        <input type="date" id="issuerDate" name="issuerDate" />
-                    </div> */}
-                    <FloatLabel>
-                        <Calendar id="issuerDate" dateFormat="dd/mm/yy" showIcon />
-                        <label for="issuerDate">Issuer Date</label>
-                    </FloatLabel>
+                    <div className="p-inputgroup flex-1">
+                        <FloatLabel>
+                            <InputText id="issuer" value={formData.issuer}
+                        onChange={(e) => setFormData({
+                            ...formData,
+                            issuer: e.target.value
+                        })} />
+                            <label for="issuer"><strong>Issuer</strong></label>
+                        </FloatLabel>
+                    </div>
+                    <div className="p-inputgroup flex-1">
+                        <FloatLabel>
+                            <Calendar id="issuerDate" dateFormat="dd/mm/yy" value={formData.issuerDate} 
+                            onChange={(e) => setFormData({
+                                ...formData, 
+                                issuerDate:e.value})} showIcon />
+                            <label for="issuerDate">Issuer Date</label>
+                        </FloatLabel>
+                    </div>
+                    <div className="p-inputgroup flex-1">
+                        <FloatLabel>
+                            <InputNumber id="number-input" />
+                            <label htmlFor="number-input">Number</label>
+                        </FloatLabel>
+                    </div>
+                    {/* </FloatLabel> */}
                     {/* <div className="form-single">
                         <label htmlFor="telephoneNumber"><strong>Telephone Number</strong></label>
                         <input type="text" id="telephoneNumber" name="telephoneNumber" />
                     </div> */}
-                    <PhoneNumberInput />
+                    {/* <PhoneNumberInput /> */}
                     {/* <span className="p-inputgroup-addon">.00</span> */}
                 </div>
                 <h2 className="form-heading"><strong>Traveller Identification</strong></h2>
@@ -549,15 +588,33 @@ function TravelRequestForm() {
                     </textarea>
                 </div> */}
                 <FloatLabel>
-                    <InputTextarea value={formData.travelPurpose}
+                    <InputTextarea id="travelPurpose" className="full-width-textarea" value={formData.travelPurpose}
                         onChange={(e) => setFormData({
                             ...formData,
                             travelPurpose: e.target.value
-                        })} rows={5} cols={30} />
+                        })} rows={3} cols={30} required />
                     <label htmlFor="travelPurpose">Travel Purpose</label>
-
                 </FloatLabel>
-                <div className="form-longtext">
+
+                <FloatLabel>
+                    <InputTextarea id="placesVisited" className="full-width-textarea" value={formData.placesVisited}
+                        onChange={(e) => setFormData({
+                            ...formData,
+                            placesVisited: e.target.value
+                        })} rows={3} cols={30} required />
+                    <label htmlFor="placesVisited">Place Visited</label>
+                </FloatLabel>
+
+                <FloatLabel>
+                    <InputTextarea id="participants" className="full-width-textarea" value={formData.participants}
+                        onChange={(e) => setFormData({
+                            ...formData,
+                            participants: e.target.value
+                        })} rows={3} cols={30} />
+                    <label htmlFor="participants">Participants</label>
+                </FloatLabel>
+
+                {/* <div className="form-longtext">
                     <label htmlFor="placeVisited">Place Visited</label>
                     <input type="text" id="placeVisited" name="placeVisited" required
                         value={formData.placesVisited}
@@ -566,9 +623,10 @@ function TravelRequestForm() {
                             placesVisited: e.target.value // Update only the firstName property
                         })}
                     />
-                </div>
+                </div> */}
 
-                <div className="form-longtext">
+
+                {/* <div className="form-longtext">
                     <label htmlFor="participants">Participants (ACS, customer, supplier …)</label>
                     <textarea id="participants" name="participants" rows="1"
                         value={formData.participants}
@@ -576,7 +634,7 @@ function TravelRequestForm() {
                             ...formData, // Spread the existing formData
                             participants: e.target.value // Update only the firstName property
                         })}></textarea>
-                </div>
+                </div> */}
                 <hr className="separator" />
 
                 <div className="form-row">
@@ -687,7 +745,7 @@ function TravelRequestForm() {
                                     ...formData, // Spread the existing formData
                                     flightTicketReason: {
                                         key: e.value.key,
-                                        name: e.value.name // Update only the firstName property
+                                        // name: e.value.name // Update only the firstName property
                                     }
                                 });
                             }} options={reasonList} optionLabel="name" className="w-full" />
@@ -907,7 +965,7 @@ function TravelRequestForm() {
                         <div className="modal-content">
                             <span className="close" onClick={handleCloseItineraryClick}>&times;</span>
                             <div className="itinerary-form">
-                                <div className="form-row">
+                                {/* <div className="form-row">
                                     <div className="form-group">
                                         <label htmlFor="itFrom">From</label>
                                         <input
@@ -978,7 +1036,177 @@ function TravelRequestForm() {
                                             required
                                         />
                                     </div>
+                                </div> */}
+                                <div className="form-row">
+                                    <div className="form-group">
+                                        {/* <label htmlFor="itFrom">From</label>
+                                        <input
+                                            type="text"
+                                            id="itFrom"
+                                            name="itFrom"
+                                            value={newItinerary.itFrom}
+                                            onChange={handleInputChange}
+                                            required
+                                        /> */}
+                                        <FloatLabel>
+                                            <InputText id="itFrom" value={newItinerary.itFrom} onChange={e => handleInputChange('itFrom', e)} />
+                                            <label for="itFrom">From</label>
+                                        </FloatLabel>
+                                    </div>
+                                    <div className="form-group">
+                                        {/* <label htmlFor="itTo">To</label>
+                                        <input
+                                            type="text"
+                                            id="itTo"
+                                            name="itTo"
+                                            value={newItinerary.itTo}
+                                            onChange={handleInputChange}
+                                            required
+                                        /> */}
+                                        <FloatLabel>
+                                            <InputText id="itTo" value={newItinerary.itTo} onChange={e => handleInputChange('itTo', e)} />
+                                            <label for="itTo">To</label>
+                                        </FloatLabel>
+                                    </div>
                                 </div>
+                                <div className="form-row">
+                                    <div className="form-group">
+                                        <label htmlFor="departure">Departure</label>
+                                        {/* <input
+                                            type="text"
+                                            id="departure"
+                                            name="departure"
+                                            value={newItinerary.departure}
+                                            onChange={handleInputChange}
+                                            required
+                                        /> */}
+                                        <Calendar id="departure" dateFormat="dd/mm/yy" value={newItinerary.departure} onChange={(e) => handleInputChange('departure', e)} showIcon />
+                                    </div>
+                                    <div className="form-group">
+                                        <label htmlFor="arrival">Arrival</label>
+                                        {/* <input
+                                            type="text"
+                                            id="arrival"
+                                            name="arrival"
+                                            value={newItinerary.arrival}
+                                            onChange={handleInputChange}
+                                            required
+                                        /> */}
+                                        <Calendar id="arrival" dateFormat="dd/mm/yy" value={newItinerary.arrival} onChange={(e) => handleInputChange('arrival', e)} showIcon />
+                                    </div>
+                                </div>
+                                <br></br>
+                                <div className="form-row">
+                                    {/* <div className="form-group">
+                                        <label htmlFor="itrDate">Date and Time</label>
+                                        <input
+                                            type="date"
+                                            id="itrDate"
+                                            name="itrDate"
+                                            value={newItinerary.itrDate}
+                                            onChange={handleInputChange}
+                                            required
+                                        />
+                                    </div> */}
+                                    <div className="form-group">
+                                        {/* <label htmlFor="flightNumber">Flight Number</label>
+                                        <input
+                                            type="text"
+                                            id="flightNumber"
+                                            name="flightNumber"
+                                            value={newItinerary.flightNumber}
+                                            onChange={handleInputChange}
+                                            required
+                                        /> */}
+                                        <FloatLabel>
+                                            <InputText id="flightNumber" value={newItinerary.flightNumber} onChange={e => handleInputChange('flightNumber', e)} />
+                                            <label for="flightNumber">Flight Number</label>
+                                        </FloatLabel>
+                                    </div>
+                                </div>
+
+                                {/* Toggle Button */}
+                                <div className="form-row">
+                                    <div className="form-group">
+                                        <label htmlFor="showReturnFields">Show Return Trip</label>
+                                        {/* <input
+                                            type="checkbox"
+                                            id="showReturnFields"
+                                            name="showReturnFields"
+                                            checked={showReturnFields}
+                                            onChange={handleToggleChange}
+                                        /> */}
+                                        <InputSwitch checked={showReturnFields} onChange={(e) => setShowReturnFields(e.value)} />
+                                    </div>
+                                </div>
+
+                                {/* Conditionally Render Additional Fields */}
+                                {showReturnFields && (
+                                    <><div className="form-row">
+                                        <div className="form-group">
+                                            {/* <label htmlFor="returnFrom">Return From</label>
+                                            <input
+                                                type="text"
+                                                id="returnFrom"
+                                                name="returnFrom"
+                                                value={newItinerary.returnFrom}
+                                                onChange={handleInputChange} /> */}
+                                            <FloatLabel>
+                                                <InputText id="returnFrom" value={newItinerary.returnFrom} onChange={e => handleInputChange('returnFrom', e)} />
+                                                <label for="returnFrom">Return From</label>
+                                            </FloatLabel>
+                                        </div>
+                                        <div className="form-group">
+                                            {/* <label htmlFor="returnTo">Return To</label>
+                                            <input
+                                                type="text"
+                                                id="returnTo"
+                                                name="returnTo"
+                                                value={newItinerary.returnTo}
+                                                onChange={handleInputChange} /> */}
+                                            <FloatLabel>
+                                                <InputText id="returnTo" value={newItinerary.returnTo} onChange={e => handleInputChange('returnTo', e)} />
+                                                <label for="returnTo">Return To</label>
+                                            </FloatLabel>
+                                        </div>
+                                    </div><div className="form-row">
+                                            <div className="form-group">
+                                                <label htmlFor="returnDeparture">Return Departure</label>
+                                                {/* <input
+                                                    type="text"
+                                                    id="returnDeparture"
+                                                    name="returnDeparture"
+                                                    value={newItinerary.returnDeparture}
+                                                    onChange={handleInputChange} /> */}
+                                                <Calendar id="returnDeparture" dateFormat="dd/mm/yy" value={newItinerary.returnDeparture} onChange={(e) => handleInputChange('returnDeparture', e)} showIcon />
+                                            </div>
+                                            <div className="form-group">
+                                                <label htmlFor="returnArrival">Return Arrival</label>
+                                                {/* <input
+                                                    type="text"
+                                                    id="returnArrival"
+                                                    name="returnArrival"
+                                                    value={newItinerary.returnArrival}
+                                                    onChange={handleInputChange} /> */}
+                                                <Calendar id="returnArrival" dateFormat="dd/mm/yy" value={newItinerary.returnArrival} onChange={(e) => handleInputChange('returnArrival', e)} showIcon />
+                                            </div>
+                                        </div>
+                                        <br></br>
+                                        <div className="form-row">
+                                            <div className="form-group">
+                                                {/* <label htmlFor="returnFlightNumber">Return Flight Number</label>
+                                                <input
+                                                    type="text"
+                                                    id="returnFlightNumber"
+                                                    name="returnFlightNumber"
+                                                    value={newItinerary.returnFlightNumber}
+                                                    onChange={handleInputChange} /> */}
+                                                <FloatLabel>
+                                                    <InputText id="returnFlightNumber" value={newItinerary.returnFlightNumber} onChange={e => handleInputChange('returnFlightNumber', e)} />
+                                                    <label for="returnFlightNumber">Return Flight Number</label>
+                                                </FloatLabel>
+                                            </div></div></>
+                                )}
                                 <div className="form-single">
                                     <label htmlFor="price">Price incl. VAT</label>
                                     <input
@@ -1030,10 +1258,14 @@ function TravelRequestForm() {
                         <DataTable value={itineraries} showGridlines tableStyle={{ minWidth: '50rem' }}>
                             <Column sortable field="itFrom" header="From" />
                             <Column sortable field="itTo" header="To" />
-                            <Column sortable field="departure" header="Departure" />
-                            <Column sortable field="arrival" header="Arrival" />
-                            <Column sortable field="itrDate" header="Date and Time" />
+                            <Column sortable field="departure" header="Departure" body={(rowData) => formatDate(rowData.departure)} />
+                            <Column sortable field="arrival" header="Arrival" body={(rowData) => formatDate(rowData.arrival)} />
                             <Column sortable field="flightNumber" header="Flight Number" />
+                            <Column sortable field="returnFrom" header="Return From" />
+                            <Column sortable field="returnTo" header="Return To" />
+                            <Column sortable field="returnDeparture" header="Return Departure" body={(rowData) => formatDate(rowData.returnDeparture)} />
+                            <Column sortable field="returnArrival" header="Return Arrival" body={(rowData) => formatDate(rowData.returnArrival)} />
+                            <Column sortable field="returnFlightNumber" header="Return Flight Number" />
                             <Column sortable field="price" header="Price incl. VAT" />
                             <Column header="Actions"
                                 body={(rowData, { rowIndex }) => (
@@ -1054,19 +1286,19 @@ function TravelRequestForm() {
 
                 {/* <button type="submit">Submit</button> */}
                 <div style={{ display: 'flex', justifyContent: 'center' }}>
-    <Button
-        style={{
-            border: 'none', // Remove border
-            borderRadius: '4px', // Set a small border radius (adjust as needed)
-            backgroundColor: '#1679AB',
-            padding: '0.5rem 1rem', // Adjust padding to control button size
-            width: '15%', // Set the width of the button (e.g., 25% of the container)
-              fontWeight: 'bold'
-        }}
-        type="submit"
-        label="Submit"
-    />
-</div>
+                    <Button
+                        style={{
+                            border: 'none', // Remove border
+                            borderRadius: '4px', // Set a small border radius (adjust as needed)
+                            backgroundColor: '#1679AB',
+                            padding: '0.5rem 1rem', // Adjust padding to control button size
+                            width: '15%', // Set the width of the button (e.g., 25% of the container)
+                            fontWeight: 'bold'
+                        }}
+                        type="submit"
+                        label="Submit"
+                    />
+                </div>
 
             </form>
             <Snackbar

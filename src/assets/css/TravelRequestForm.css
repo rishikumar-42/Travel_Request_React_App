@@ -69,7 +69,8 @@ h1 {
 
 label {
     display: block;
-    margin-bottom: 5px;
+    /* margin-top: 0;
+    margin-bottom: 2px; */
 }
 
 /* input {
@@ -93,7 +94,7 @@ label {
 .form-row-first-parentblock
 {
     display: flex;
-    gap: 20px; /* Space between columns */
+    gap: 10px; /* Space between columns */
     justify-content: space-between; /* Adjusts spacing */
     align-items: center; /* Aligns items vertically */
     margin-top: 1%;
@@ -415,4 +416,17 @@ input:checked + .slider:before {
         min-width: 48%; /* Adjusted for increased width */
     
     
+}
+
+.full-width-textarea {
+    width: 100%; /* Makes the textarea occupy the full width of its container */
+    box-sizing: border-box; /* Ensures padding and border are included in the width */
+    padding-bottom: 10px;
+  }
+
+  .float-label .full-width-textarea:focus ~ label,
+.float-label .full-width-textarea:not(:placeholder-shown) ~ label {
+    margin-top: 0;
+  font-size: 12px;
+  color: #007bff; /* Adjust color as needed */
 }
