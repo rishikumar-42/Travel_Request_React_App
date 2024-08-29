@@ -1,5 +1,6 @@
 .form-container {
-    max-width: auto; /* Increased width for better fit */
+    max-width: auto;
+    /* Increased width for better fit */
     margin: 50px auto;
     padding: 10px;
     /* border: 1px solid #ddd; */
@@ -8,26 +9,34 @@
     margin-top: 1%;
     padding-top: 0%;
 }
+
 .travel-form {
     display: grid;
     grid-template-rows: auto 1fr;
-    gap: 1rem; /* Space between the header and form fields */
+    gap: 1rem;
+    /* Space between the header and form fields */
     padding: 0.5rem;
     background-color: white;
-    border-radius: 12px; /* Smoothed edges */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: Adds a subtle shadow for depth */
+    border-radius: 12px;
+    /* Smoothed edges */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* Optional: Adds a subtle shadow for depth */
 }
 
 .header-strip {
     /* grid-row: 1 / 2; */
-    text-align: left; 
-    background-color: #51829B !important; /* Your desired color */
+    text-align: left;
+    background-color: #51829B !important;
+    /* Your desired color */
     color: white;
-    border-radius: 12px 12px 0 0; /* Smoothed top edges only */
+    border-radius: 12px 12px 0 0;
+    /* Smoothed top edges only */
 }
-.header-text{
+
+.header-text {
     margin-left: 1%;
 }
+
 /* input[type="text"] {
     background-color: #f0f0f0;
     border: 1px solid #ccc;
@@ -60,7 +69,8 @@ h1 {
 .form-group {
     flex: 1;
     margin-right: 10px;
-    min-width: 48%; /* Adjusted for increased width */
+    min-width: 48%;
+    /* Adjusted for increased width */
 }
 
 .form-group:last-child {
@@ -91,14 +101,17 @@ label {
     font-size: 16px;
     cursor: pointer;
 } */
-.form-row-first-parentblock
-{
+.form-row-first-parentblock {
     display: flex;
-    gap: 10px; /* Space between columns */
-    justify-content: space-between; /* Adjusts spacing */
-    align-items: center; /* Aligns items vertically */
+    gap: 10px;
+    /* Space between columns */
+    justify-content: space-between;
+    /* Adjusts spacing */
+    align-items: center;
+    /* Aligns items vertically */
     margin-top: 1%;
 }
+
 /* button:hover {
     background-color: #0056b3;
 } */
@@ -106,19 +119,27 @@ label {
 .form-single {
     margin-left: auto;
     margin-right: auto;
-    width: 30%; /* Adjust the width to fill the available space */
+    width: 30%;
+    /* Adjust the width to fill the available space */
 }
+
 .form-single-special {
     margin-left: auto;
     margin-right: auto;
-    width: 30%; /* Adjust the width to fill the available space */
+    width: 30%;
+    /* Adjust the width to fill the available space */
 }
+
 .form-row {
     display: flex;
-    gap: 10px; /* Space between columns */
-    justify-content: space-between; /* Adjusts spacing */
-    align-items: center; /* Aligns items vertically */
+    gap: 10px;
+    /* Space between columns */
+    justify-content: space-between;
+    /* Adjusts spacing */
+    align-items: center;
+    /* Aligns items vertically */
 }
+
 .form-single label {
     display: block;
     margin-bottom: 5px;
@@ -132,19 +153,30 @@ label {
     border-radius: 4px;
 } */
 .form-single input {
-    width: 100%; /* Make the input fields fill the entire width of their container */
-    padding: 10px; /* Add padding to make the input boxes bigger */
-    font-size: 16px; /* Increase font size for larger inputs */
-    box-sizing: border-box; /* Ensure padding doesn't affect the width */
+    width: 100%;
+    /* Make the input fields fill the entire width of their container */
+    padding: 10px;
+    /* Add padding to make the input boxes bigger */
+    font-size: 16px;
+    /* Increase font size for larger inputs */
+    box-sizing: border-box;
+    /* Ensure padding doesn't affect the width */
 }
+
 .form-single-special input {
-    width: 90%; /* Make the input fields fill the entire width of their container */
-    padding: 10px; /* Add padding to make the input boxes bigger */
-    font-size: 16px; /* Increase font size for larger inputs */
-    box-sizing: border-box; /* Ensure padding doesn't affect the width */
+    width: 90%;
+    /* Make the input fields fill the entire width of their container */
+    padding: 10px;
+    /* Add padding to make the input boxes bigger */
+    font-size: 16px;
+    /* Increase font size for larger inputs */
+    box-sizing: border-box;
+    /* Ensure padding doesn't affect the width */
 }
+
 .form-longtext {
-    margin-bottom: 20px; /* Adds space between each field */
+    margin-bottom: 20px;
+    /* Adds space between each field */
 }
 
 .form-longtext label {
@@ -153,7 +185,8 @@ label {
 }
 
 .form-longtext input {
-    width: 96%; /* Reduces the input field width to 85% */
+    width: 96%;
+    /* Reduces the input field width to 85% */
     padding: 15px;
     box-sizing: border-box;
     border: 1px solid #ccc;
@@ -161,13 +194,16 @@ label {
 }
 
 .form-longtext textarea {
-    width: 96%; /* Adjust the width as needed */
+    width: 96%;
+    /* Adjust the width as needed */
     padding: 15px;
     box-sizing: border-box;
     border: 1px solid #ccc;
     border-radius: 4px;
-    resize: none; /* Prevents manual resizing */
-    overflow: hidden; /* Hides scrollbars */
+    resize: none;
+    /* Prevents manual resizing */
+    overflow: hidden;
+    /* Hides scrollbars */
 }
 
 
@@ -179,13 +215,16 @@ label {
 }
 
 .half-width {
-    width: 48%; /* Adjusts the width to fit two columns */
+    width: 48%;
+    /* Adjusts the width to fit two columns */
     display: flex;
-    align-items: center; /* Vertically aligns the checkbox with the label */
+    align-items: center;
+    /* Vertically aligns the checkbox with the label */
 }
 
 input[type="checkbox"] {
-    margin-right: 8px; /* Adds some space between the checkbox and the label */
+    margin-right: 8px;
+    /* Adds some space between the checkbox and the label */
 }
 
 
@@ -193,62 +232,88 @@ input[type="checkbox"] {
 /* dropdown */
 /* Styles for the container of the dropdown */
 .form-dropdown-container {
-    margin-bottom: 15px; /* Add margin to the bottom for spacing */
+    margin-bottom: 15px;
+    /* Add margin to the bottom for spacing */
 }
 
 /* Styles for the dropdown to make it wider */
 .wide-dropdown {
-    width: 100%; /* Makes the dropdown take the full width of its container */
-    max-width: 400px; /* Optionally limit the maximum width */
-    padding: 8px; /* Add padding inside the dropdown for better aesthetics */
-    border: 1px solid #ccc; /* Add a border around the dropdown */
-    border-radius: 4px; /* Optional: round the corners of the dropdown */
-    font-size: 16px; /* Increase font size for better readability */
-    box-sizing: border-box; /* Ensure padding and border are included in the element's width */
+    width: 100%;
+    /* Makes the dropdown take the full width of its container */
+    max-width: 400px;
+    /* Optionally limit the maximum width */
+    padding: 8px;
+    /* Add padding inside the dropdown for better aesthetics */
+    border: 1px solid #ccc;
+    /* Add a border around the dropdown */
+    border-radius: 4px;
+    /* Optional: round the corners of the dropdown */
+    font-size: 16px;
+    /* Increase font size for better readability */
+    box-sizing: border-box;
+    /* Ensure padding and border are included in the element's width */
 }
 
 
 .separator {
     border: none;
-    border-top: 2px solid #ccc; /* Light gray color */
-    margin: -6px 0; /* Space around the separator */
-    width: 100%; /* Ensures it spans the full width of the container */
+    border-top: 2px solid #ccc;
+    /* Light gray color */
+    margin: -6px 0;
+    /* Space around the separator */
+    width: 100%;
+    /* Ensures it spans the full width of the container */
+    padding-bottom: 12px;
 }
 
 .form-heading {
     text-align: initial;
-    font-size: 18px; /* Adjust font size as needed */
+    font-size: 18px;
+    /* Adjust font size as needed */
     font-weight: normal;
-    margin-bottom: 0%; /* Space below the heading */
-    color: #323131; /* Optional: Change color if desired */
+    margin-bottom: 0%;
+    /* Space below the heading */
+    color: #323131;
+    /* Optional: Change color if desired */
     margin-top: 0%;
 }
-.reducedInputSize{
+
+.reducedInputSize {
     width: 98%;
 }
-.form-row-travellerID{
+
+.form-row-travellerID {
     display: flex;
-    gap: 4px; /* Space between columns */
-    justify-content: space-between; /* Adjusts spacing */
+    gap: 4px;
+    /* Space between columns */
+    justify-content: space-between;
+    /* Adjusts spacing */
     margin-left: 1%;
     flex-direction: row;
-    
+
 
 }
-.form-row-travellerID-row2{
+
+.form-row-travellerID-row2 {
     display: flex;
-    gap: 4px; /* Space between columns */
-    justify-content: left; /* Adjusts spacing */
+    gap: 4px;
+    /* Space between columns */
+    justify-content: left;
+    /* Adjusts spacing */
     margin-left: 1%;
     flex-direction: row;
-    
+
 }
-.form-heading-flight{
+
+.form-heading-flight {
     text-align: left;
-    font-size: 24px; /* Adjust font size as needed */
+    font-size: 24px;
+    /* Adjust font size as needed */
     font-weight: normal;
-    margin-bottom: 20px; /* Space below the heading */
-    color: #323131; /* Optional: Change color if desired */
+    margin-bottom: 20px;
+    /* Space below the heading */
+    color: #323131;
+    /* Optional: Change color if desired */
 }
 
 
@@ -263,7 +328,8 @@ input[type="checkbox"] {
 
 .toggle-label {
     margin-right: 15px;
-    font-size: 16px; /* Adjust as needed */
+    font-size: 16px;
+    /* Adjust as needed */
 }
 
 .switch {
@@ -288,7 +354,8 @@ input[type="checkbox"] {
     bottom: 0;
     background-color: #ccc;
     transition: .4s;
-    border-radius: 24px; /* Makes the slider rounded */
+    border-radius: 24px;
+    /* Makes the slider rounded */
 }
 
 .slider:before {
@@ -303,28 +370,32 @@ input[type="checkbox"] {
     border-radius: 50%;
 }
 
-input:checked + .slider {
-    background-color: #007bff; /* Color when toggle is on */
+input:checked+.slider {
+    background-color: #007bff;
+    /* Color when toggle is on */
 }
 
-input:checked + .slider:before {
+input:checked+.slider:before {
     transform: translateX(26px);
 }
 
 
 /*form grup car Rental*/
-.form-group-car{
+.form-group-car {
     flex: 1;
     margin-right: 10px;
-    min-width: 48%; /* Adjusted for increased width */
+    min-width: 48%;
+    /* Adjusted for increased width */
 }
-.form-group-car input{
+
+.form-group-car input {
     width: 91%;
     padding: 8px;
     box-sizing: border-box;
     border: 1px solid #ccc;
     border-radius: 4px;
 }
+
 .form-group-car label {
     display: block;
     margin-bottom: 5px;
@@ -341,7 +412,8 @@ input:checked + .slider:before {
     width: 100%;
     height: 100%;
     overflow: auto;
-    background-color: rgba(0, 0, 0, 0.5); /* Black background with opacity */
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Black background with opacity */
 }
 
 .modal-content {
@@ -349,7 +421,7 @@ input:checked + .slider:before {
     margin: auto;
     padding: 20px;
     border: 1px solid #888;
-    width: 60%; /* Adjust the width of the modal */
+    width: 88%;
     border-radius: 10px;
 }
 
@@ -376,7 +448,8 @@ input:checked + .slider:before {
     border-collapse: collapse;
 }
 
-.itinerary-table th, .itinerary-table td {
+.itinerary-table th,
+.itinerary-table td {
     border: 1px solid #ddd;
     padding: 8px;
     text-align: left;
@@ -398,7 +471,8 @@ input:checked + .slider:before {
 /* Media Query for smaller laptop screens or tablets */
 @media (max-width: 1024px) {
     .form-container {
-        max-width: 90%; /* Ensure it still fits well on smaller screens */
+        max-width: 90%;
+        /* Ensure it still fits well on smaller screens */
         padding: 20px;
     }
 
@@ -410,23 +484,138 @@ input:checked + .slider:before {
         margin-right: 0;
         margin-bottom: 15px;
     }
+
     /* .form-single {
         flex: 1;
         margin-right: 10px;
         min-width: 48%; /* Adjusted for increased width */
-    
-    
+
+
 }
 
 .full-width-textarea {
-    width: 100%; /* Makes the textarea occupy the full width of its container */
-    box-sizing: border-box; /* Ensures padding and border are included in the width */
+    width: 100%;
+    /* Makes the textarea occupy the full width of its container */
+    box-sizing: border-box;
+    /* Ensures padding and border are included in the width */
     padding-bottom: 10px;
-  }
+}
 
-  .float-label .full-width-textarea:focus ~ label,
-.float-label .full-width-textarea:not(:placeholder-shown) ~ label {
+.float-label .full-width-textarea:focus~label,
+.float-label .full-width-textarea:not(:placeholder-shown)~label {
     margin-top: 0;
-  font-size: 12px;
-  color: #007bff; /* Adjust color as needed */
+    font-size: 12px;
+    color: #007bff;
+    /* Adjust color as needed */
+}
+
+.travel-type {
+    display: flex;
+    align-items: center;
+}
+
+.radio-group {
+    display: flex;
+    gap: 10px;
+    padding-left: 1rem;
+}
+
+.radio-group label {
+    margin-left: 5px;
+}
+
+.calendar-container {
+    display: flex;
+    gap: 20px;
+}
+
+.calendar-item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.currency {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.currencybug {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-groupcalendar {
+    display: flex;
+}
+
+.onwardDepartureDate.p-dropdown.p-component.p-inputwrapper {
+    width: 157px;
+}
+
+.form-group.SRT {
+    padding-top: 1rem;
+}
+
+span.close {
+    margin-top: -21px;
+    padding-left: 20px;
+}
+.custom-header {
+    background-color:#51829B !important; /* Replace with your desired color */
+    color: #ffff; /* Optional: set text color for better contrast */
+}
+.addbutton button.p-button.p-component {
+    background-color:#51829B !important; /* Replace with your desired color */
+    color: #ffff; 
+}
+
+
+.form-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    /* Adjust spacing between fields as needed */
+}
+
+.form-row2 {
+    padding-top: 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    /* Adjust spacing between fields as needed */
+}
+
+.savebtn {
+    padding-left: 69rem;
+}
+
+.itinerary-form {
+    width: 100%;
+    padding-top: 1rem;
+}
+
+.form-group {
+    flex: 1;
+    /* Allows the fields to grow and shrink equally */
+    min-width: 200px;
+    /* Adjust minimum width as needed */
+}
+
+.FloatLabel {
+    display: flex;
+    flex-direction: column;
+}
+
+.FloatLabel label {
+    margin-top: 5px;
+    /* Space between input and label */
+}
+
+.InputText,
+.Calendar,
+.Dropdown {
+    width: 100%;
+    /* Ensures input elements take up full width of their container */
 }

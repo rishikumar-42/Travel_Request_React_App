@@ -35,21 +35,35 @@ function TravelRequestForm() {
     const [flightTypeValue, setFlightTypeValue] = useState({});
     const [trainTypeList, setTrainTypeList] = useState([]);
     const [trainTypeValue, setTrainTypeValue] = useState({});
+    const [currencyList, setCurrencyList] = useState([]);
+    const [currencyValue, setCurrencyValue] = useState({});
+    const [preferredTimeList, setPreferredTimeList] = useState([]);
     const [reasonValue, setReasonValue] = useState([]);
     const [itineraries, setItineraries] = useState([]);
+    // const [newItinerary, setNewItinerary] = useState({
+    //     itFrom: '',
+    //     itTo: '',
+    //     departure: null,
+    //     arrival: null,
+    //     // itrDate: '',
+    //     flightNumber: '',
+    //     returnFrom: '',
+    //     returnTo: '',
+    //     returnDeparture: null,
+    //     returnArrival: null,
+    //     returnFlightNumber: '',
+    //     price: ''
+    // });
     const [newItinerary, setNewItinerary] = useState({
-        itFrom: '',
-        itTo: '',
-        departure: null,
-        arrival: null,
-        // itrDate: '',
-        flightNumber: '',
-        returnFrom: '',
-        returnTo: '',
-        returnDeparture: null,
-        returnArrival: null,
-        returnFlightNumber: '',
-        price: ''
+        onwardJourney: '',
+        onwardDepartureDate: null,
+        onwardPreferredTime: '',
+        onwardJourneyNote: '',
+        onwardTransportNumber: '',
+        returnJourney: '',
+        returnArrivalDate: null,
+        returnPreferredTime: '',
+        returnTransportNumber: '',
     });
     const [editingItinerary, setEditingItinerary] = useState(null);
 
@@ -83,6 +97,11 @@ function TravelRequestForm() {
         return new Intl.DateTimeFormat('en-GB', options).format(new Date(date));
     };
 
+    const formatPickList = (data) => {
+        if (!data) return '';
+        return data.name;
+    };
+
 
     const handleSaveItinerary = () => {
         if (editingItinerary !== null) {
@@ -96,18 +115,27 @@ function TravelRequestForm() {
             setItineraries([...itineraries, newItinerary]);
         }
         setNewItinerary({
-            itFrom: '',
-            itTo: '',
-            departure: null,
-            arrival: null,
-            // itrDate: '',
-            flightNumber: '',
-            returnFrom: '',
-            returnTo: '',
-            returnDeparture: null,
-            returnArrival: null,
-            returnFlightNumber: '',
-            price: ''
+            // itFrom: '',
+            // itTo: '',
+            // departure: null,
+            // arrival: null,
+            // // itrDate: '',
+            // flightNumber: '',
+            // returnFrom: '',
+            // returnTo: '',
+            // returnDeparture: null,
+            // returnArrival: null,
+            // returnFlightNumber: '',
+            // price: ''
+            onwardJourney: '',
+            onwardDepartureDate: null,
+            onwardPreferredTime: '',
+            onwardTransportNumber: '',
+            onwardJourneyNote: '',
+            returnJourney: '',
+            returnArrivalDate: null,
+            returnPreferredTime: '',
+            returnTransportNumber: '',
         });
         setShowItinerary(false);
     };
@@ -186,6 +214,34 @@ function TravelRequestForm() {
     }, []);
 
     useEffect(() => {
+        const getAllCurrency = async () => {
+            try {
+                const currencyList = await TravelRequestFormService.fetchCurrencyPicklist();
+                setCurrencyList(currencyList);
+                console.log("Currency List:", currencyList);
+            } catch (error) {
+                console.error("Error fetching suggestions", error);
+            }
+        };
+
+        getAllCurrency();
+    }, []);
+
+    useEffect(() => {
+        const getAllPreferredTime = async () => {
+            try {
+                const preferredTimeList = await TravelRequestFormService.fetchPreferredTimePicklist();
+                setPreferredTimeList(preferredTimeList);
+                console.log("Preferred Time List:", preferredTimeList);
+            } catch (error) {
+                console.error("Error fetching preferred time ", error);
+            }
+        };
+
+        getAllPreferredTime();
+    }, []);
+
+    useEffect(() => {
         const getAllReasons = async () => {
             try {
                 const reasonList = await TravelRequestFormService.fetchReasonPicklist();
@@ -227,6 +283,31 @@ function TravelRequestForm() {
         getAllTrainTypes();
     }, []);
 
+    const calculateEstimatedDuration = (departureDate, arrivalDate) => {
+        if (departureDate !== null && arrivalDate !== null) {
+            const timeDiff = arrivalDate - departureDate;
+            const millisecondsPerDay = 1000 * 60 * 60 * 24;
+            const dayDiff = Math.floor(timeDiff / millisecondsPerDay);
+            console.log(dayDiff); // Output will be the number of days between the two dates
+            setFormData(prevFormData => ({
+                ...prevFormData, // Spread the existing formData
+                travelEstimatedDuration: dayDiff
+            }))
+        }
+    }
+
+    const calculateEstimatedNights = (departureDate, arrivalDate) => {
+        if (departureDate !== null && arrivalDate !== null) {
+            const timeDiff = arrivalDate - departureDate;
+            const millisecondsPerDay = 1000 * 60 * 60 * 24;
+            const nightDiff = Math.ceil(timeDiff / millisecondsPerDay);
+            console.log(nightDiff); // Output will be the number of days between the two dates
+            setFormData(prevFormData => ({
+                ...prevFormData, // Spread the existing formData
+                hotelNumberOfNights: nightDiff
+            }))
+        }
+    }
     // const handleInputChange = (e) => {
     //     const { name, value } = e.target;
     //     setNewItinerary({
@@ -269,7 +350,7 @@ function TravelRequestForm() {
         if (!event.target.checked) {
             setFormData(prevFormData => ({
                 ...prevFormData, // Spread the existing formData
-                hotelNumberOfNights: 0
+                hotelNumberOfNights: null
             }))
         }
     };
@@ -343,18 +424,25 @@ function TravelRequestForm() {
     };
 
     const [formData, setFormData] = useState({
-        issuer:"",
-        issuerDate:null,
-        phoneNumber:null,
+        issuer: "",
+        issuerDate: null,
+        issuerNumber: null,
         firstName: "",
         lastName: "",
         employeeNumber: "",
         costCenter: "",
         entity: "",
         positionTitle: "",
+        travelType: "",
         travelPurpose: "",
         participants: "",
-        placesVisited: "",
+        destination: "",
+        travelDepartureDate: null,
+        travelArrivalDate: null,
+        travelEstimatedDuration: null,
+        travelCurrency: {},
+        travelNote: null,
+        travelBudget: null,
         flightTicketReason: {},
         flightTicketType: {},
         carRentalFrom: "",
@@ -364,10 +452,16 @@ function TravelRequestForm() {
         carRentalBirthDate: null,
         carDrivingLicense: "",
         carRentalCategory: "",
+        carRentalNote: "",
         personalCarDrivingLicenseNumber: "",
         personalCarRegistrationNumber: "",
+        personalCarNote: "",
         trainTicketType: {},
-        hotelNumberOfNights: 0,
+        hotelLocation: "",
+        hotelNumberOfNights: null,
+        hotelCheckIn: null,
+        hotelCheckOut: null,
+        hotelNote: "",
         itineraryTotal: "",
         approver1: {},
         approver2: {},
@@ -477,25 +571,30 @@ function TravelRequestForm() {
                     <div className="p-inputgroup flex-1">
                         <FloatLabel>
                             <InputText id="issuer" value={formData.issuer}
-                        onChange={(e) => setFormData({
-                            ...formData,
-                            issuer: e.target.value
-                        })} />
+                                onChange={(e) => setFormData({
+                                    ...formData,
+                                    issuer: e.target.value
+                                })} />
                             <label for="issuer"><strong>Issuer</strong></label>
                         </FloatLabel>
                     </div>
                     <div className="p-inputgroup flex-1">
                         <FloatLabel>
-                            <Calendar id="issuerDate" dateFormat="dd/mm/yy" value={formData.issuerDate} 
-                            onChange={(e) => setFormData({
-                                ...formData, 
-                                issuerDate:e.value})} showIcon />
+                            <Calendar id="issuerDate" dateFormat="dd/mm/yy" value={formData.issuerDate}
+                                onChange={(e) => setFormData({
+                                    ...formData,
+                                    issuerDate: e.value
+                                })} showIcon />
                             <label for="issuerDate">Issuer Date</label>
                         </FloatLabel>
                     </div>
                     <div className="p-inputgroup flex-1">
                         <FloatLabel>
-                            <InputNumber id="number-input" />
+                            <InputNumber id="number-input" value={formData.issuerNumber}
+                                onValueChange={(e) => setFormData({
+                                    ...formData,
+                                    issuerNumber: e.target.value
+                                })} />
                             <label htmlFor="number-input">Number</label>
                         </FloatLabel>
                     </div>
@@ -513,80 +612,100 @@ function TravelRequestForm() {
                     <div className="form-group">
                         <div className="form-row-travellerID">
                             <div className="form-single">
-                                <label htmlFor="employeeEmail"><strong>Email</strong></label>
-                                <AutoComplete
-                                    value={selectedEmployee}
-                                    suggestions={employeeDropDownSuggestions}
-                                    completeMethod={searchEmployee}
-                                    field="email"
-                                    onChange={(e) => setSelectedEmployee(e.value)}
-                                    onSelect={(e) => {
-                                        setSelectedEmployee(e.value);
-                                        setFormData({
-                                            ...formData, // Spread the existing formData
-                                            firstName: e.value.firstName, // Update only the firstName property
-                                            lastName: e.value.lastName,
-                                            employeeNumber: e.value.employeeNumber,
-                                            costCenter: e.value.costCenter,
-                                            entity: e.value.entity,
-                                            positionTitle: e.value.positionTitle
-                                        });
-                                        console.log("value : " + JSON.stringify(formData));
-                                    }}
-                                    itemTemplate={itemTemplate}
-                                />
+                                <FloatLabel>
+                                    <AutoComplete
+                                        id="employeeEmail"
+                                        value={selectedEmployee}
+                                        suggestions={employeeDropDownSuggestions}
+                                        completeMethod={searchEmployee}
+                                        field="email"
+                                        onChange={(e) => setSelectedEmployee(e.value)}
+                                        onSelect={(e) => {
+                                            setSelectedEmployee(e.value);
+                                            setFormData({
+                                                ...formData, // Spread the existing formData
+                                                firstName: e.value.firstName, // Update only the firstName property
+                                                lastName: e.value.lastName,
+                                                employeeNumber: e.value.employeeNumber,
+                                                costCenter: e.value.costCenter,
+                                                entity: e.value.entity,
+                                                positionTitle: e.value.positionTitle
+                                            });
+                                            console.log("value : " + JSON.stringify(formData));
+                                        }}
+                                        itemTemplate={itemTemplate}
+                                    />
+                                    <label htmlFor="employeeEmail"><strong>Email</strong></label>
+                                </FloatLabel>
                             </div>
                             <div className="form-single-special">
-                                <label htmlFor="firstName"><strong>First Name</strong></label>
-                                <input type="text" id="firstName" name="firstName" value={formData.firstName} required readOnly />
+                                <FloatLabel>
+                                    <InputText type="text" id="firstName" name="firstName" value={formData.firstName} required readOnly />
+                                    <label htmlFor="firstName"><strong>First Name</strong></label>
+                                </FloatLabel>
                             </div>
 
                             <div className="form-single-special">
-                                <label htmlFor="lastName"><strong>Last Name</strong></label>
-
-                                <input type="text" id="lastName" name="lastName" value={formData.lastName} required readOnly />
+                                <FloatLabel>
+                                    <InputText type="text" id="lastName" name="lastName" value={formData.lastName} required readOnly />
+                                    <label htmlFor="lastName"><strong>Last Name</strong></label>
+                                </FloatLabel>
                             </div>
                             <div className="form-single-special">
-                                <label htmlFor="employeeNumber"><strong>Employee Number</strong></label>
-                                <input type="text" id="employeeNumber" name="employeeNumber" value={formData.employeeNumber} required readOnly />
+                                <FloatLabel>
+                                    <InputText type="text" id="employeeNumber" name="employeeNumber" value={formData.employeeNumber} required readOnly />
+                                    <label htmlFor="employeeNumber"><strong>Employee Number</strong></label>
+                                </FloatLabel>
                             </div>
                         </div>
                     </div>
 
                 </div>
                 <div className="form-row-travellerID-row2">
-                    {/* This is a blank  */}
-                    <div className="form-single-special" style={{ opacity: 0 }} >
-                        <label htmlFor="positionTitle"><strong></strong></label>
-                        <input type="text" id="positionTitle" name="positionTitle" />
-                    </div>
-                    {/* end of blank */}
                     <div className="form-single-special">
-                        <label htmlFor="costCenter"><strong>Cost Centre</strong></label>
-                        <input type="text" id="costCenter" name="costCenter" value={formData.costCenter} required readOnly />
-
+                        <FloatLabel>
+                            <InputText type="text" id="costCenter" name="costCenter" value={formData.costCenter} required readOnly />
+                            <label htmlFor="costCenter"><strong>Cost Centre</strong></label>
+                        </FloatLabel>
                     </div>
                     <div className="form-single-special">
-                        <label htmlFor="entity"><strong>Entity</strong></label>
-                        <input type="text" id="entity" name="entity" value={formData.entity} required readOnly />
+                        <FloatLabel>
+                            <InputText type="text" id="entity" name="entity" value={formData.entity} required readOnly />
+                            <label htmlFor="entity"><strong>Entity</strong></label>
+                        </FloatLabel>
                     </div>
                     <div className="form-single-special">
-                        <label htmlFor="positionTitle"><strong>Position Title</strong></label>
-                        <input type="text" id="positionTitle" name="positionTitle" value={formData.positionTitle} required readOnly />
+                        <FloatLabel>
+                            <InputText type="text" id="positionTitle" name="positionTitle" value={formData.positionTitle} required readOnly />
+                            <label htmlFor="positionTitle"><strong>Position Title</strong></label>
+                        </FloatLabel>
                     </div>
 
                 </div>
-                {/* <div className="form-longtext">
-                    <label htmlFor="travelPurpose">Travel Purpose</label>
-                    <textarea id="travelPurpose" name="travelPurpose"
-                        value={formData.travelPurpose}
-                        onChange={(e) => setFormData({
-                            ...formData, 
-                            travelPurpose: e.target.value
-                        })}
-                        rows="1">
-                    </textarea>
-                </div> */}
+                <h2 className="form-heading"><strong>Travel Details</strong></h2>
+                <hr className="separator" />
+                <div className="travel-type">
+                    <label htmlFor="travelType" className="mr-2">Travel Type:</label>
+                    <div className="radio-group">
+                        <RadioButton inputId="domestic" name="travelType" value="domestic"
+                            onChange={(e) => setFormData({
+                                ...formData,
+                                travelType: e.value
+                            })}
+                            checked={formData.travelType === 'domestic'} required />
+                        <label htmlFor="domestic" className="mr-2">Domestic</label>
+
+                        <RadioButton inputId="international" name="travelType" value="international"
+                            onChange={(e) => setFormData({
+                                ...formData,
+                                travelType: e.value
+                            })}
+                            checked={formData.travelType === 'international'} required />
+                        <label htmlFor="international" className="mr-2">International</label>
+                    </div>
+                </div>
+
+
                 <FloatLabel>
                     <InputTextarea id="travelPurpose" className="full-width-textarea" value={formData.travelPurpose}
                         onChange={(e) => setFormData({
@@ -597,13 +716,48 @@ function TravelRequestForm() {
                 </FloatLabel>
 
                 <FloatLabel>
-                    <InputTextarea id="placesVisited" className="full-width-textarea" value={formData.placesVisited}
+                    <InputText id="destination" className="full-width-textarea" value={formData.destination}
                         onChange={(e) => setFormData({
                             ...formData,
-                            placesVisited: e.target.value
+                            destination: e.target.value
                         })} rows={3} cols={30} required />
-                    <label htmlFor="placesVisited">Place Visited</label>
+                    <label htmlFor="destination">Destination </label>
                 </FloatLabel>
+                <div className="calendar-container">
+                    <div className="calendar-item">
+                        <FloatLabel>
+                            <Calendar id="departureDate" dateFormat="dd/mm/yy" value={formData.travelDepartureDate}
+                                onChange={(e) => {
+                                    setFormData({
+                                        ...formData,
+                                        travelDepartureDate: e.value
+                                    })
+                                    calculateEstimatedDuration(e.value, formData.travelArrivalDate)
+                                }} showIcon />
+                            <label htmlFor="departureDate" className="mr-2">Departure Date</label>
+                        </FloatLabel>
+                    </div>
+                    <div className="calendar-item">
+                        <FloatLabel>
+                            <Calendar id="returnDate" dateFormat="dd/mm/yy" value={formData.travelArrivalDate}
+                                onChange={(e) => {
+                                    setFormData({
+                                        ...formData,
+                                        travelArrivalDate: e.value
+                                    })
+                                    calculateEstimatedDuration(formData.travelDepartureDate, e.value)
+                                }}
+                                showIcon />
+                            <label htmlFor="returnDate" className="mr-2">Return Date</label>
+                        </FloatLabel>
+                    </div>
+                    <div className="calendar-item">
+                        <FloatLabel>
+                            <label htmlFor="estimatedduration" className="mr-2">Estimated Duration </label>
+                            <InputText id="estimatedduration" value={formData.travelEstimatedDuration} readOnly />
+                        </FloatLabel>
+                    </div>
+                </div>
 
                 <FloatLabel>
                     <InputTextarea id="participants" className="full-width-textarea" value={formData.participants}
@@ -613,76 +767,356 @@ function TravelRequestForm() {
                         })} rows={3} cols={30} />
                     <label htmlFor="participants">Participants</label>
                 </FloatLabel>
+                <div className="currency">
+                    <div className="currencybug">
+                        <Dropdown placeholder="Currency" value={currencyValue} onChange={(e) => {
+                            setCurrencyValue(e.value);
+                            setFormData({
+                                ...formData,
+                                travelCurrency: {
+                                    key: e.value.key,
+                                }
+                            });
+                        }} options={currencyList} optionLabel="name" />
+                    </div>
+                    <div className="currencybug">
+                        <FloatLabel>
+                            <InputNumber id="budgetAmount" value={formData.travelBudget}
+                                onValueChange={(e) => setFormData({
+                                    ...formData,
+                                    travelBudget: e.target.value
+                                })} required />
+                            <label htmlFor="budgetAmount">Budget Amount</label>
+                        </FloatLabel>
+                    </div>
+                    <div className="currencybug">
+                        <FloatLabel>
+                            <InputText id="Note" value={formData.travelNote}
+                                onChange={(e) => setFormData({
+                                    ...formData,
+                                    travelNote: e.target.value
+                                })} required />
+                            <label htmlFor="Note">Note: </label>
+                        </FloatLabel>
+                    </div>
+                </div>
 
-                {/* <div className="form-longtext">
-                    <label htmlFor="placeVisited">Place Visited</label>
-                    <input type="text" id="placeVisited" name="placeVisited" required
-                        value={formData.placesVisited}
-                        onChange={(e) => setFormData({
-                            ...formData, // Spread the existing formData
-                            placesVisited: e.target.value // Update only the firstName property
-                        })}
-                    />
-                </div> */}
-
-
-                {/* <div className="form-longtext">
-                    <label htmlFor="participants">Participants (ACS, customer, supplier …)</label>
-                    <textarea id="participants" name="participants" rows="1"
-                        value={formData.participants}
-                        onChange={(e) => setFormData({
-                            ...formData, // Spread the existing formData
-                            participants: e.target.value // Update only the firstName property
-                        })}></textarea>
-                </div> */}
                 <hr className="separator" />
 
                 <div className="form-row">
                     <div className="form-group">
-                        <label htmlFor="entity">Manager</label>
-                        <AutoComplete
-                            value={selectedItem}
-                            suggestions={dropDownSuggestions}
-                            completeMethod={searchItem}
-                            field="email"
-                            onChange={(e) => setSelectedItem(e.value)}
-                            onSelect={(e) => {
-                                setSelectedItem(e.value);
-                                setFormData({
-                                    ...formData, // Spread the existing formData
-                                    approver1: {
-                                        key: e.value.firstName,
-                                    }
-                                });
-                                console.log("value : " + JSON.stringify(e.value.email));
-                            }}
-                            itemTemplate={itemTemplate}
-                            disabled={selectedEmployee === null}
-                        />
+                        <FloatLabel>
+                            <label htmlFor="entity">Manager</label>
+                            <AutoComplete
+                                value={selectedItem}
+                                suggestions={dropDownSuggestions}
+                                completeMethod={searchItem}
+                                field="email"
+                                onChange={(e) => setSelectedItem(e.value)}
+                                onSelect={(e) => {
+                                    setSelectedItem(e.value);
+                                    setFormData({
+                                        ...formData, // Spread the existing formData
+                                        approver1: {
+                                            key: e.value.firstName,
+                                        }
+                                    });
+                                    console.log("value : " + JSON.stringify(e.value.email));
+                                }}
+                                itemTemplate={itemTemplate}
+                                disabled={selectedEmployee === null}
+                            />
+                        </FloatLabel>
                     </div>
                     <div className="form-group">
-                        <label htmlFor="positionTitle">Head Of Department/GM/VP</label>
-                        <AutoComplete
-                            value={selectedItem2}
-                            suggestions={dropDownSuggestions2}
-                            completeMethod={searchItem2}
-                            field="email"
-                            onChange={(e) => setSelectedItem2(e.value)}
-                            onSelect={(e) => {
-                                setSelectedItem2(e.value);
-                                setFormData({
-                                    ...formData, // Spread the existing formData
-                                    approver2: {
-                                        key: e.value.firstName,
-                                    }
-                                });
-                                console.log("value : " + JSON.stringify(e.value.email));
-                            }}
-                            itemTemplate={itemTemplate}
-                            disabled={selectedItem === null}
-                        />
+                        <FloatLabel>
+                            <label htmlFor="positionTitle">Head Of Department/GM/VP</label>
+                            <AutoComplete
+                                value={selectedItem2}
+                                suggestions={dropDownSuggestions2}
+                                completeMethod={searchItem2}
+                                field="email"
+                                onChange={(e) => setSelectedItem2(e.value)}
+                                onSelect={(e) => {
+                                    setSelectedItem2(e.value);
+                                    setFormData({
+                                        ...formData, // Spread the existing formData
+                                        approver2: {
+                                            key: e.value.firstName,
+                                        }
+                                    });
+                                    console.log("value : " + JSON.stringify(e.value.email));
+                                }}
+                                itemTemplate={itemTemplate}
+                                disabled={selectedItem === null}
+                            />
+                        </FloatLabel>
                     </div>
                 </div>
+                <hr className="separator" />
+
+                
+                <div className="form-row-toggle">
+                    <label className="toggle-label" htmlFor="hotelToggle">Hotel</label>
+                    <label className="switch">
+                        <input
+                            type="checkbox"
+                            id="hotelToggle"
+                            name="hotelToggle"
+                            onChange={handleHotelToggleChange}
+                        />
+                        <span className="slider round"></span>
+                    </label>
+                </div>
+
+                {showNights && (
+                    // <div className="form-single" id="nightsContainer">
+                    <div className="calendar-container">
+                        <div className="calendar-item">
+                            <FloatLabel>
+                                <label htmlFor="location">Location</label>
+                                <InputText id="location" name="location" required
+                                    value={formData.hotelLocation}
+                                    onChange={(e) => setFormData({
+                                        ...formData, // Spread the existing formData
+                                        hotelLocation: e.target.value // Update only the firstName property
+                                    })} />
+                            </FloatLabel>
+                        </div>
+                        <div className="calendar-item">
+                            <FloatLabel>
+                                <Calendar id="checkIn" dateFormat="dd/mm/yy" value={formData.hotelCheckIn}
+                                    onChange={(e) => {
+                                        setFormData({
+                                            ...formData,
+                                            hotelCheckIn: e.value
+                                        });
+                                        calculateEstimatedNights(e.value, formData.hotelCheckOut);
+                                    }} showTime hourFormat="24" showIcon />
+                                <label htmlFor="checkIn" className="mr-2">Check In</label>
+                            </FloatLabel>
+                        </div>
+                        <div className="calendar-item">
+                            <FloatLabel>
+                                <Calendar id="checkOut" dateFormat="dd/mm/yy" value={formData.hotelCheckOut}
+                                    onChange={(e) => {
+                                        setFormData({
+                                            ...formData,
+                                            hotelCheckOut: e.value
+                                        });
+                                        calculateEstimatedNights(formData.hotelCheckIn, e.value);
+                                    }} showTime hourFormat="24" showIcon />
+                                <label htmlFor="checkOut" className="mr-2">Check Out</label>
+                            </FloatLabel>
+                        </div>
+                        <div className="calendar-item">
+                            <FloatLabel>
+                                <label htmlFor="nights">Number of Nights</label>
+                                <InputNumber id="nights" name="nights" required
+                                    value={formData.hotelNumberOfNights}
+                                    // onChange={(e) => setFormData({
+                                    //     ...formData, // Spread the existing formData
+                                    //     hotelNumberOfNights: e.target.value // Update only the firstName property
+                                    // })} 
+                                    readOnly />
+                            </FloatLabel>
+                        </div>
+                        <div className="calendar-item">
+                            <FloatLabel>
+                                <label htmlFor="hotelNote">Note</label>
+                                <InputText id="hotelNote" name="hotelNote" required
+                                    value={formData.hotelNote}
+                                    onChange={(e) => setFormData({
+                                        ...formData, // Spread the existing formData
+                                        hotelNote: e.target.value // Update only the firstName property
+                                    })} />
+                            </FloatLabel>
+                        </div>
+                    </div>
+                    // </div>
+                )}
+
+                <hr className="separator" />
+
+                <div className="form-row-toggle">
+                    <label className="toggle-label" htmlFor="carRentalToggle">Car Rental</label>
+                    <label className="switch">
+                        <input
+                            type="checkbox"
+                            id="carRentalToggle"
+                            name="carRentalToggle"
+                            onChange={handleCarToggleChange}
+                        />
+                        <span className="slider round"></span>
+                    </label>
+                </div>
+
+                {showCarDetails && (
+                    <div>
+                        <div className="calendar-container">
+                            <div className="calendar-item">
+                                <FloatLabel>
+                                    <label htmlFor="category">Category</label>
+                                    <InputText type="text" id="category" name="category" required
+                                        value={formData.carRentalCategory}
+                                        onChange={(e) => setFormData({
+                                            ...formData,
+                                            carRentalCategory: e.target.value
+                                        })}
+                                    />
+                                </FloatLabel>
+                            </div>
+                            {/* <div className="form-row"> */}
+                            <div className="calendar-item">
+                                <FloatLabel>
+                                    <label htmlFor="from">From:</label>
+                                    <InputText type="text" id="from" name="from" required
+                                        value={formData.carRentalFrom}
+                                        onChange={(e) => setFormData({
+                                            ...formData,
+                                            carRentalFrom: e.target.value
+                                        })}
+                                    />
+                                </FloatLabel>
+                            </div>
+                            <div className="calendar-item">
+                                <FloatLabel>
+                                    <label htmlFor="on">On:</label>
+                                    <InputText type="text" id="on" name="on" required
+                                        value={formData.carRentalOn}
+                                        onChange={(e) => setFormData({
+                                            ...formData,
+                                            carRentalOn: e.target.value
+                                        })}
+                                    />
+                                </FloatLabel>
+                            </div>
+                            <div className="calendar-item">
+                                <FloatLabel>
+                                    <label htmlFor="to">To:</label>
+                                    <InputText type="text" id="to" name="to" required
+                                        value={formData.carRentalTo}
+                                        onChange={(e) => setFormData({
+                                            ...formData,
+                                            carRentalTo: e.target.value
+                                        })}
+                                    />
+                                </FloatLabel>
+                            </div>
+                            <div className="calendar-item">
+                                <FloatLabel>
+                                    <label htmlFor="until">Until:</label>
+                                    <InputText type="text" id="until" name="until" required
+                                        value={formData.carRentalUntil}
+                                        onChange={(e) => setFormData({
+                                            ...formData,
+                                            carRentalUntil: e.target.value
+                                        })}
+                                    />
+                                </FloatLabel>
+                            </div>
+                        </div>
+                        <br></br>
+                        <div className="calendar-container">
+                            <div className="calendar-item">
+                                {/* <label htmlFor="birthDate">Birth Date</label>
+                                <input type="date" id="birthDate" name="birthDate" required
+                                    value={formData.carRentalBirthDate}
+                                    onChange={(e) => setFormData({
+                                        ...formData,
+                                        carRentalBirthDate: e.target.value
+                                    })} /> */}
+                                <FloatLabel>
+                                    <Calendar id="issuerDate" dateFormat="dd/mm/yy" value={formData.carRentalBirthDate}
+                                        onChange={(e) => setFormData({
+                                            ...formData,
+                                            carRentalBirthDate: e.value
+                                        })} showIcon />
+                                    <label for="issuerDate">Issuer Date</label>
+                                </FloatLabel>
+                            </div>
+                            <div className="calendar-item">
+                                <FloatLabel>
+                                    <label htmlFor="drivingLicense">Driving License</label>
+                                    <InputText type="text" id="drivingLicense" name="drivingLicense" required
+                                        value={formData.carDrivingLicense}
+                                        onChange={(e) => setFormData({
+                                            ...formData,
+                                            carDrivingLicense: e.target.value
+                                        })}
+                                    />
+                                </FloatLabel>
+                            </div>
+                            <div className="calendar-item">
+                                <FloatLabel>
+                                    <label htmlFor="carRentalNote">Note</label>
+                                    <InputText id="carRentalNote" name="carRentalNote"
+                                        value={formData.carRentalNote}
+                                        onChange={(e) => setFormData({
+                                            ...formData,
+                                            carRentalNote: e.target.value
+                                        })}
+                                    />
+                                </FloatLabel>
+                            </div>
+                        </div>
+                    </div>
+                )}
+                <hr className="separator" />
+                <div className="form-row-toggle">
+                    <label className="toggle-label" htmlFor="perCarToggle">Personal Car</label>
+                    <label className="switch">
+                        <input
+                            type="checkbox"
+                            id="perCarToggle"
+                            name="perCarToggle"
+                            onChange={handlePerCarToggleChange}
+                        />
+                        <span className="slider round"></span>
+                    </label>
+                </div>
+                {showPerCarDetails && (
+                    <div>
+                        <div className="calendar-container">
+                            <div className="calendar-item">
+                                <FloatLabel>
+                                    <label htmlFor="carRegNum">Car Registration Number</label>
+                                    <InputText type="text" id="carRegNum" name="carRegNum" required
+                                        value={formData.personalCarRegistrationNumber}
+                                        onChange={(e) => setFormData({
+                                            ...formData, // Spread the existing formData
+                                            personalCarRegistrationNumber: e.target.value // Update only the firstName property
+                                        })}
+                                    />
+                                </FloatLabel>
+                            </div>
+                            <div className="calendar-item">
+                                <FloatLabel>
+                                    <label htmlFor="drivingLicenseNum">Driving License Number</label>
+                                    <InputText type="text" id="drivingLicenseNum" name="drivingLicenseNum" required
+                                        value={formData.personalCarDrivingLicenseNumber}
+                                        onChange={(e) => setFormData({
+                                            ...formData, // Spread the existing formData
+                                            personalCarDrivingLicenseNumber: e.target.value // Update only the firstName property
+                                        })}
+                                    />
+                                </FloatLabel>
+                            </div>
+                            <div className="calendar-item">
+                                <FloatLabel>
+                                    <label htmlFor="personalCarNote">Note</label>
+                                    <InputText id="personalCarNote" name="personalCarNote"
+                                        value={formData.personalCarNote}
+                                        onChange={(e) => setFormData({
+                                            ...formData,
+                                            personalCarNote: e.target.value
+                                        })}
+                                    />
+                                </FloatLabel>
+                            </div>
+                        </div>
+                    </div>
+                )}
                 <hr className="separator" />
 
                 <div className="form-row-toggle">
@@ -706,14 +1140,12 @@ function TravelRequestForm() {
                                     return (
                                         <div key={category.key} className="flex align-items-center">
                                             <RadioButton inputId={category.key} name="category" value={category}
-                                                // onChange={(e) => set(e.value)} 
                                                 onChange={(e) => {
                                                     setFlightTypeValue(e.value)
                                                     setFormData({
-                                                        ...formData, // Spread the existing formData
+                                                        ...formData,
                                                         flightTicketType: {
                                                             key: e.value.key,
-                                                            name: e.value.name // Update only the firstName property
                                                         }
                                                     });
                                                     console.log("radio : ", formData)
@@ -750,161 +1182,6 @@ function TravelRequestForm() {
                                 });
                             }} options={reasonList} optionLabel="name" className="w-full" />
 
-                        </div>
-                    </div>
-                )}
-                <hr className="separator" />
-                <div className="form-row-toggle">
-                    <label className="toggle-label" htmlFor="hotelToggle">Hotel</label>
-                    <label className="switch">
-                        <input
-                            type="checkbox"
-                            id="hotelToggle"
-                            name="hotelToggle"
-                            onChange={handleHotelToggleChange}
-                        />
-                        <span className="slider round"></span>
-                    </label>
-                </div>
-
-                {showNights && (
-                    <div className="form-single" id="nightsContainer">
-                        <label htmlFor="nights">Number of Nights</label>
-                        <input type="number" id="nights" name="nights" required
-                            value={formData.hotelNumberOfNights}
-                            onChange={(e) => setFormData({
-                                ...formData, // Spread the existing formData
-                                hotelNumberOfNights: e.target.value // Update only the firstName property
-                            })} />
-                    </div>
-                )}
-
-                <hr className="separator" />
-
-                <div className="form-row-toggle">
-                    <label className="toggle-label" htmlFor="carRentalToggle">Car Rental</label>
-                    <label className="switch">
-                        <input
-                            type="checkbox"
-                            id="carRentalToggle"
-                            name="carRentalToggle"
-                            onChange={handleCarToggleChange}
-                        />
-                        <span className="slider round"></span>
-                    </label>
-                </div>
-
-                {showCarDetails && (
-                    <div>
-                        <div className="form-single">
-                            <label htmlFor="category">Category</label>
-                            <input type="text" id="category" name="category" required
-                                value={formData.carRentalCategory}
-                                onChange={(e) => setFormData({
-                                    ...formData,
-                                    carRentalCategory: e.target.value
-                                })}
-                            />
-                        </div>
-                        <div className="form-row">
-                            <div className="form-group-car">
-                                <label htmlFor="from">From:</label>
-                                <input type="text" id="from" name="from" required
-                                    value={formData.carRentalFrom}
-                                    onChange={(e) => setFormData({
-                                        ...formData,
-                                        carRentalFrom: e.target.value
-                                    })}
-                                />
-                            </div>
-                            <div className="form-group-car">
-                                <label htmlFor="on">On:</label>
-                                <input type="text" id="on" name="on" required
-                                    value={formData.carRentalOn}
-                                    onChange={(e) => setFormData({
-                                        ...formData,
-                                        carRentalOn: e.target.value
-                                    })}
-                                />
-                            </div>
-                            <div className="form-group-car">
-                                <label htmlFor="to">To:</label>
-                                <input type="text" id="to" name="to" required
-                                    value={formData.carRentalTo}
-                                    onChange={(e) => setFormData({
-                                        ...formData,
-                                        carRentalTo: e.target.value
-                                    })}
-                                />
-                            </div>
-                            <div className="form-group-car">
-                                <label htmlFor="until">Until:</label>
-                                <input type="text" id="until" name="until" required
-                                    value={formData.carRentalUntil}
-                                    onChange={(e) => setFormData({
-                                        ...formData,
-                                        carRentalUntil: e.target.value
-                                    })}
-                                />
-                            </div>
-                            <div className="form-group-car">
-                                <label htmlFor="birthDate">Birth Date</label>
-                                <input type="date" id="birthDate" name="birthDate" required
-                                    value={formData.carRentalBirthDate}
-                                    onChange={(e) => setFormData({
-                                        ...formData,
-                                        carRentalBirthDate: e.target.value
-                                    })} />
-                            </div>
-                            <div className="form-group-car">
-                                <label htmlFor="drivingLicense">Driving License</label>
-                                <input type="text" id="drivingLicense" name="drivingLicense" required
-                                    value={formData.carDrivingLicense}
-                                    onChange={(e) => setFormData({
-                                        ...formData,
-                                        carDrivingLicense: e.target.value
-                                    })}
-                                />
-                            </div>
-                        </div>
-                    </div>
-                )}
-                <hr className="separator" />
-                <div className="form-row-toggle">
-                    <label className="toggle-label" htmlFor="perCarToggle">Personal Car</label>
-                    <label className="switch">
-                        <input
-                            type="checkbox"
-                            id="perCarToggle"
-                            name="perCarToggle"
-                            onChange={handlePerCarToggleChange}
-                        />
-                        <span className="slider round"></span>
-                    </label>
-                </div>
-                {showPerCarDetails && (
-                    <div>
-                        <div className="form-row">
-                            <div className="form-group-car">
-                                <label htmlFor="carRegNum">Car Registration Number</label>
-                                <input type="text" id="carRegNum" name="carRegNum" required
-                                    value={formData.personalCarRegistrationNumber}
-                                    onChange={(e) => setFormData({
-                                        ...formData, // Spread the existing formData
-                                        personalCarRegistrationNumber: e.target.value // Update only the firstName property
-                                    })}
-                                />
-                            </div>
-                            <div className="form-group-car">
-                                <label htmlFor="drivingLicenseNum">Driving License Number</label>
-                                <input type="text" id="drivingLicenseNum" name="drivingLicenseNum" required
-                                    value={formData.personalCarDrivingLicenseNumber}
-                                    onChange={(e) => setFormData({
-                                        ...formData, // Spread the existing formData
-                                        personalCarDrivingLicenseNumber: e.target.value // Update only the firstName property
-                                    })}
-                                />
-                            </div>
                         </div>
                     </div>
                 )}
@@ -964,105 +1241,17 @@ function TravelRequestForm() {
                     <div className="modal">
                         <div className="modal-content">
                             <span className="close" onClick={handleCloseItineraryClick}>&times;</span>
-                            <div className="itinerary-form">
-                                {/* <div className="form-row">
-                                    <div className="form-group">
-                                        <label htmlFor="itFrom">From</label>
-                                        <input
-                                            type="text"
-                                            id="itFrom"
-                                            name="itFrom"
-                                            value={newItinerary.itFrom}
-                                            onChange={handleInputChange}
-                                            required
-                                        />
-                                    </div>
-                                    <div className="form-group">
-                                        <label htmlFor="itTo">To</label>
-                                        <input
-                                            type="text"
-                                            id="itTo"
-                                            name="itTo"
-                                            value={newItinerary.itTo}
-                                            onChange={handleInputChange}
-                                            required
-                                        />
-                                    </div>
-                                </div>
+                            {/* <div className="itinerary-form">
                                 <div className="form-row">
                                     <div className="form-group">
-                                        <label htmlFor="departure">Departure</label>
-                                        <input
-                                            type="text"
-                                            id="departure"
-                                            name="departure"
-                                            value={newItinerary.departure}
-                                            onChange={handleInputChange}
-                                            required
-                                        />
-                                    </div>
-                                    <div className="form-group">
-                                        <label htmlFor="arrival">Arrival</label>
-                                        <input
-                                            type="text"
-                                            id="arrival"
-                                            name="arrival"
-                                            value={newItinerary.arrival}
-                                            onChange={handleInputChange}
-                                            required
-                                        />
-                                    </div>
-                                </div>
-                                <div className="form-row">
-                                    <div className="form-group">
-                                        <label htmlFor="itrDate">Date and Time</label>
-                                        <input
-                                            type="date"
-                                            id="itrDate"
-                                            name="itrDate"
-                                            value={newItinerary.itrDate}
-                                            onChange={handleInputChange}
-                                            required
-                                        />
-                                    </div>
-                                    <div className="form-group">
-                                        <label htmlFor="flightNumber">Flight Number</label>
-                                        <input
-                                            type="text"
-                                            id="flightNumber"
-                                            name="flightNumber"
-                                            value={newItinerary.flightNumber}
-                                            onChange={handleInputChange}
-                                            required
-                                        />
-                                    </div>
-                                </div> */}
-                                <div className="form-row">
-                                    <div className="form-group">
-                                        {/* <label htmlFor="itFrom">From</label>
-                                        <input
-                                            type="text"
-                                            id="itFrom"
-                                            name="itFrom"
-                                            value={newItinerary.itFrom}
-                                            onChange={handleInputChange}
-                                            required
-                                        /> */}
+
                                         <FloatLabel>
                                             <InputText id="itFrom" value={newItinerary.itFrom} onChange={e => handleInputChange('itFrom', e)} />
                                             <label for="itFrom">From</label>
                                         </FloatLabel>
                                     </div>
                                     <div className="form-group">
-                                        {/* <label htmlFor="itTo">To</label>
-                                        <input
-                                            type="text"
-                                            id="itTo"
-                                            name="itTo"
-                                            value={newItinerary.itTo}
-                                            onChange={handleInputChange}
-                                            required
-                                        /> */}
+
                                         <FloatLabel>
                                             <InputText id="itTo" value={newItinerary.itTo} onChange={e => handleInputChange('itTo', e)} />
                                             <label for="itTo">To</label>
@@ -1072,52 +1261,17 @@ function TravelRequestForm() {
                                 <div className="form-row">
                                     <div className="form-group">
                                         <label htmlFor="departure">Departure</label>
-                                        {/* <input
-                                            type="text"
-                                            id="departure"
-                                            name="departure"
-                                            value={newItinerary.departure}
-                                            onChange={handleInputChange}
-                                            required
-                                        /> */}
+
                                         <Calendar id="departure" dateFormat="dd/mm/yy" value={newItinerary.departure} onChange={(e) => handleInputChange('departure', e)} showIcon />
                                     </div>
                                     <div className="form-group">
                                         <label htmlFor="arrival">Arrival</label>
-                                        {/* <input
-                                            type="text"
-                                            id="arrival"
-                                            name="arrival"
-                                            value={newItinerary.arrival}
-                                            onChange={handleInputChange}
-                                            required
-                                        /> */}
                                         <Calendar id="arrival" dateFormat="dd/mm/yy" value={newItinerary.arrival} onChange={(e) => handleInputChange('arrival', e)} showIcon />
                                     </div>
                                 </div>
                                 <br></br>
                                 <div className="form-row">
-                                    {/* <div className="form-group">
-                                        <label htmlFor="itrDate">Date and Time</label>
-                                        <input
-                                            type="date"
-                                            id="itrDate"
-                                            name="itrDate"
-                                            value={newItinerary.itrDate}
-                                            onChange={handleInputChange}
-                                            required
-                                        />
-                                    </div> */}
                                     <div className="form-group">
-                                        {/* <label htmlFor="flightNumber">Flight Number</label>
-                                        <input
-                                            type="text"
-                                            id="flightNumber"
-                                            name="flightNumber"
-                                            value={newItinerary.flightNumber}
-                                            onChange={handleInputChange}
-                                            required
-                                        /> */}
                                         <FloatLabel>
                                             <InputText id="flightNumber" value={newItinerary.flightNumber} onChange={e => handleInputChange('flightNumber', e)} />
                                             <label for="flightNumber">Flight Number</label>
@@ -1125,87 +1279,47 @@ function TravelRequestForm() {
                                     </div>
                                 </div>
 
-                                {/* Toggle Button */}
                                 <div className="form-row">
                                     <div className="form-group">
                                         <label htmlFor="showReturnFields">Show Return Trip</label>
-                                        {/* <input
-                                            type="checkbox"
-                                            id="showReturnFields"
-                                            name="showReturnFields"
-                                            checked={showReturnFields}
-                                            onChange={handleToggleChange}
-                                        /> */}
                                         <InputSwitch checked={showReturnFields} onChange={(e) => setShowReturnFields(e.value)} />
                                     </div>
                                 </div>
 
-                                {/* Conditionally Render Additional Fields */}
                                 {showReturnFields && (
-                                    <><div className="form-row">
-                                        <div className="form-group">
-                                            {/* <label htmlFor="returnFrom">Return From</label>
-                                            <input
-                                                type="text"
-                                                id="returnFrom"
-                                                name="returnFrom"
-                                                value={newItinerary.returnFrom}
-                                                onChange={handleInputChange} /> */}
-                                            <FloatLabel>
-                                                <InputText id="returnFrom" value={newItinerary.returnFrom} onChange={e => handleInputChange('returnFrom', e)} />
-                                                <label for="returnFrom">Return From</label>
-                                            </FloatLabel>
-                                        </div>
-                                        <div className="form-group">
-                                            {/* <label htmlFor="returnTo">Return To</label>
-                                            <input
-                                                type="text"
-                                                id="returnTo"
-                                                name="returnTo"
-                                                value={newItinerary.returnTo}
-                                                onChange={handleInputChange} /> */}
-                                            <FloatLabel>
-                                                <InputText id="returnTo" value={newItinerary.returnTo} onChange={e => handleInputChange('returnTo', e)} />
-                                                <label for="returnTo">Return To</label>
-                                            </FloatLabel>
-                                        </div>
-                                    </div><div className="form-row">
+                                    <>
+                                        <div className="form-row">
+                                            <div className="form-group">
+                                                <FloatLabel>
+                                                    <InputText id="returnFrom" value={newItinerary.returnFrom} onChange={e => handleInputChange('returnFrom', e)} />
+                                                    <label for="returnFrom">Return From</label>
+                                                </FloatLabel>
+                                            </div>
+                                            <div className="form-group">
+                                                <FloatLabel>
+                                                    <InputText id="returnTo" value={newItinerary.returnTo} onChange={e => handleInputChange('returnTo', e)} />
+                                                    <label for="returnTo">Return To</label>
+                                                </FloatLabel>
+                                            </div>
+                                        </div><div className="form-row">
                                             <div className="form-group">
                                                 <label htmlFor="returnDeparture">Return Departure</label>
-                                                {/* <input
-                                                    type="text"
-                                                    id="returnDeparture"
-                                                    name="returnDeparture"
-                                                    value={newItinerary.returnDeparture}
-                                                    onChange={handleInputChange} /> */}
                                                 <Calendar id="returnDeparture" dateFormat="dd/mm/yy" value={newItinerary.returnDeparture} onChange={(e) => handleInputChange('returnDeparture', e)} showIcon />
                                             </div>
                                             <div className="form-group">
                                                 <label htmlFor="returnArrival">Return Arrival</label>
-                                                {/* <input
-                                                    type="text"
-                                                    id="returnArrival"
-                                                    name="returnArrival"
-                                                    value={newItinerary.returnArrival}
-                                                    onChange={handleInputChange} /> */}
                                                 <Calendar id="returnArrival" dateFormat="dd/mm/yy" value={newItinerary.returnArrival} onChange={(e) => handleInputChange('returnArrival', e)} showIcon />
                                             </div>
                                         </div>
                                         <br></br>
                                         <div className="form-row">
                                             <div className="form-group">
-                                                {/* <label htmlFor="returnFlightNumber">Return Flight Number</label>
-                                                <input
-                                                    type="text"
-                                                    id="returnFlightNumber"
-                                                    name="returnFlightNumber"
-                                                    value={newItinerary.returnFlightNumber}
-                                                    onChange={handleInputChange} /> */}
                                                 <FloatLabel>
                                                     <InputText id="returnFlightNumber" value={newItinerary.returnFlightNumber} onChange={e => handleInputChange('returnFlightNumber', e)} />
                                                     <label for="returnFlightNumber">Return Flight Number</label>
                                                 </FloatLabel>
-                                            </div></div></>
+                                            </div></div>
+                                    </>
                                 )}
                                 <div className="form-single">
                                     <label htmlFor="price">Price incl. VAT</label>
@@ -1221,7 +1335,86 @@ function TravelRequestForm() {
                                 <div className="form-row">
                                     <button type="button" onClick={handleSaveItinerary}>Save</button>
                                 </div>
+                            </div> */}
+                            <div className="itinerary-form">
+                                <div className="form-row">
+                                    <div >
+                                        <FloatLabel>
+                                            <InputText id="onwardJourney" value={newItinerary.onwardJourney} onChange={e => handleInputChange('onwardJourney', e)} />
+                                            <label htmlFor="onwardJourney">Onward Journey</label>
+                                        </FloatLabel>
+                                    </div>
+                                    <div >
+                                        <FloatLabel>
+                                            <Calendar id="onwardDepartureDate" dateFormat="dd/mm/yy" value={newItinerary.onwardDepartureDate} onChange={(e) => handleInputChange('onwardDepartureDate', e)} showIcon />
+                                            <label htmlFor="onwardDepartureDate">Departure Date</label>
+                                        </FloatLabel>
+                                    </div>
+                                    <div >
+                                        <FloatLabel>
+                                            <Dropdown id="onwardPreferredTime" className="onwardDepartureDate"
+                                                value={newItinerary.onwardPreferredTime}
+                                                onChange={e => handleInputChange('onwardPreferredTime', e)} options={preferredTimeList} optionLabel="name" />
+                                            <label htmlFor="onwardPreferredTime">Preferred Time</label>
+                                        </FloatLabel>
+                                    </div>
+                                    <div >
+                                        <FloatLabel>
+                                            <InputText id="onwardTransportNumber" value={newItinerary.onwardTransportNumber} onChange={e => handleInputChange('onwardTransportNumber', e)} />
+                                            <label htmlFor="onwardTransportNumber"> Flight/Train Number</label>
+                                        </FloatLabel>
+                                    </div>
+                                    <div >
+                                        <FloatLabel>
+                                            <InputText id="onwardJourneyNote" value={newItinerary.onwardJourneyNote} onChange={e => handleInputChange('onwardJourneyNote', e)} />
+                                            <label htmlFor="onwardJourneyNote">Onward Journey Note</label>
+                                        </FloatLabel>
+                                    </div>
+                                    
+                                </div>
+                                <div className="form-row">
+                                    <div className="form-group SRT">
+                                        <label htmlFor="showReturnFields">Show Return Trip</label>
+                                        <InputSwitch checked={showReturnFields} onChange={(e) => setShowReturnFields(e.value)} />
+                                    </div>
+                                </div>
+
+                                {showReturnFields && (
+                                    <>
+                                        <div className="form-row2">
+                                            <div >
+                                                <FloatLabel>
+                                                    <InputText id="returnJourney" value={newItinerary.returnJourney} onChange={e => handleInputChange('returnJourney', e)} />
+                                                    <label htmlFor="returnJourney">Return Journey</label>
+                                                </FloatLabel>
+                                            </div>
+                                            <div >
+                                                <FloatLabel>
+                                                    <Calendar id="returnArrivalDate" dateFormat="dd/mm/yy" value={newItinerary.returnArrivalDate} onChange={(e) => handleInputChange('returnArrivalDate', e)} showIcon />
+                                                    <label htmlFor="returnArrivalDate">Arrival Date</label>
+                                                </FloatLabel>
+                                            </div>
+                                            <div className="returnpreferredTime">
+                                                <FloatLabel>
+                                                    <Dropdown id="returnpreferredTime" className="onwardDepartureDate"
+                                                        value={newItinerary.returnPreferredTime}
+                                                        onChange={e => handleInputChange('returnPreferredTime', e)} options={preferredTimeList} optionLabel="name" />
+                                                    <label htmlFor="returnpreferredTime">Preferred Time</label>
+                                                </FloatLabel>
+                                            </div>
+                                            <div >
+                                        <FloatLabel>
+                                            <InputText id="returnTransportNumber" value={newItinerary.returnTransportNumber} onChange={e => handleInputChange('returnTransportNumber', e)} />
+                                            <label htmlFor="returnTransportNumber"> Flight/Train Number</label>
+                                        </FloatLabel>
+                                    </div>
+                                        </div> </>)}
+
+                                <div className="savebtn">
+                                    <Button onClick={handleSaveItinerary} label="Save" />
+                                </div>
                             </div>
+
                         </div>
                     </div>
                 )}
@@ -1256,18 +1449,17 @@ function TravelRequestForm() {
                             </tbody>
                         </table> */}
                         <DataTable value={itineraries} showGridlines tableStyle={{ minWidth: '50rem' }}>
-                            <Column sortable field="itFrom" header="From" />
-                            <Column sortable field="itTo" header="To" />
-                            <Column sortable field="departure" header="Departure" body={(rowData) => formatDate(rowData.departure)} />
-                            <Column sortable field="arrival" header="Arrival" body={(rowData) => formatDate(rowData.arrival)} />
-                            <Column sortable field="flightNumber" header="Flight Number" />
-                            <Column sortable field="returnFrom" header="Return From" />
-                            <Column sortable field="returnTo" header="Return To" />
-                            <Column sortable field="returnDeparture" header="Return Departure" body={(rowData) => formatDate(rowData.returnDeparture)} />
-                            <Column sortable field="returnArrival" header="Return Arrival" body={(rowData) => formatDate(rowData.returnArrival)} />
-                            <Column sortable field="returnFlightNumber" header="Return Flight Number" />
-                            <Column sortable field="price" header="Price incl. VAT" />
-                            <Column header="Actions"
+                            {/*<Column sortable field="price" header="Price incl. VAT" /> */}
+                            <Column sortable field="onwardJourney" header="Onward Journey" headerClassName="custom-header"/>
+                            <Column sortable field="onwardDepartureDate" header="Departure Date" body={(rowData) => formatDate(rowData.onwardDepartureDate)} headerClassName="custom-header" />
+                            <Column sortable field="onwardPreferredTime" header="Onward Preferred Time" body={(rowData) => formatPickList(rowData.onwardPreferredTime)} headerClassName="custom-header" />
+                            <Column sortable field="onwardTransportNumber" header="Onward Transport Number"  headerClassName="custom-header" />
+                            <Column sortable field="onwardJourneyNote" header="Note" headerClassName="custom-header" />
+                            <Column sortable field="returnJourney" header="Return Journey" headerClassName="custom-header" />
+                            <Column sortable field="returnArrivalDate" header="Arrival Date" body={(rowData) => formatDate(rowData.returnArrivalDate)} headerClassName="custom-header" />
+                            <Column sortable field="returnPreferredTime" header="Return Preferred Time" body={(rowData) => formatPickList(rowData.returnPreferredTime)} headerClassName="custom-header"/>
+                            <Column sortable field="returnTransportNumber" header="Return Transport Number" headerClassName="custom-header" />
+                            <Column header="Actions" headerClassName="custom-header"
                                 body={(rowData, { rowIndex }) => (
                                     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                                         <Button icon="pi pi-pencil" style={{ marginRight: '0.5rem' }}
@@ -1278,9 +1470,9 @@ function TravelRequestForm() {
                                 )}
                             />
                         </DataTable>
-                        <div className="total-price">
+                        {/* <div className="total-price">
                             <strong>Total Price incl. VAT:</strong> {calculateTotalPrice()}
-                        </div>
+                        </div> */}
                     </div>
                 )}
 

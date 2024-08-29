@@ -58,6 +58,28 @@ const TravelRequestFormServiceLayer = {
             throw error;
         }
     },
+    fetchCurrencyPicklist: async () => {
+        try {
+            const response = await axios.get(`o/headless-admin-list-type/v1.0/list-type-definitions/by-external-reference-code/${process.env.REACT_APP_API_CURRENCY_PICKLIST}`);
+            const currencyList = response.data.listTypeEntries || [];
+            console.log("currency list : ", response.data);
+            return currencyList;
+        } catch (error) {
+            console.error("Error fetching currency details", error);
+            throw error;
+        }
+    },
+    fetchPreferredTimePicklist: async () => {
+        try {
+            const response = await axios.get(`o/headless-admin-list-type/v1.0/list-type-definitions/by-external-reference-code/${process.env.REACT_APP_API_PREFERRED_TIME_PICKLIST}`);
+            const prefferedTimeList = response.data.listTypeEntries || [];
+            console.log("currency list : ", response.data);
+            return prefferedTimeList;
+        } catch (error) {
+            console.error("Error fetching currency details", error);
+            throw error;
+        }
+    },
     fetchFlightTypePicklist: async () => {
         try {
             const response = await axios.get(`o/headless-admin-list-type/v1.0/list-type-definitions/by-external-reference-code/${process.env.REACT_APP_API_FLIGHT_TYPE_PICKLIST}`);
