@@ -77,6 +77,7 @@ function TravelRequestForm() {
     const [open, setOpen] = useState(false);
     const [message, setMessage] = useState(false);
     const [showReturnFields, setShowReturnFields] = useState(false);
+    const [saveItineraryFlag, setSaveItineraryFlag] = useState(true);
 
     const searchEmployee = (event) => {
         const query = event.query.toLowerCase();
@@ -114,6 +115,8 @@ function TravelRequestForm() {
         } else {
             // Add new itinerary
             setItineraries([...itineraries, newItinerary]);
+            
+
         }
         setNewItinerary({
             // itFrom: '',
@@ -140,6 +143,7 @@ function TravelRequestForm() {
             // r_itineraryRelation_c_travelInfoERC: ""
         });
         setShowItinerary(false);
+        setShowReturnFields(false);
     };
 
     const handleRemoveItinerary = (index) => {
@@ -341,11 +345,11 @@ function TravelRequestForm() {
     //     setShowItinerary(false);
     // };
 
-    const calculateTotalPrice = () => {
-        return itineraries.reduce((total, itinerary) => {
-            return total + parseFloat(itinerary.price || 0);
-        }, 0).toFixed(2);
-    };
+    // const calculateTotalPrice = () => {
+    //     return itineraries.reduce((total, itinerary) => {
+    //         return total + parseFloat(itinerary.price || 0);
+    //     }, 0).toFixed(2);
+    // };
 
     const handleHotelToggleChange = (event) => {
         setShowNights(event.target.checked);
@@ -424,7 +428,16 @@ function TravelRequestForm() {
     const handleCloseItineraryClick = () => {
         setShowItinerary(false);
         setEditingItinerary(null);
-        setNewItinerary({});
+        setNewItinerary({onwardJourney: '',
+            onwardDepartureDate: null,
+            onwardPreferredTime: '',
+            onwardJourneyNote: '',
+            onwardTransportNumber: '',
+            returnJourney: '',
+            returnArrivalDate: null,
+            returnPreferredTime: '',
+            returnTransportNumber: '',});
+        setShowReturnFields(false);
     };
 
     const [formData, setFormData] = useState({
@@ -526,19 +539,40 @@ function TravelRequestForm() {
         console.log("Updated formData: ", JSON.stringify(formData));
     }, [formData]);
 
-    // Handle form submission
-    const handleFormSubmit = async (e) => {
-        console.log("Form submission started");
+    useEffect(() => {
         setFormData({
             ...formData,
             itineraryRelation: itineraries
         })
+    }, [itineraries]);
+
+
+    // handle save button
+    useEffect(() => {
+        console.log("Itenarary : ",newItinerary);
+        console.log("show " ,showReturnFields);
+        if (newItinerary.onwardJourney !== '' && newItinerary.onwardDepartureDate !== null && newItinerary.onwardPreferredTime !== null && newItinerary.onwardTransportNumber !== '' && !showReturnFields){
+            setSaveItineraryFlag(false)
+        }else if(newItinerary.onwardJourney !== '' && newItinerary.onwardDepartureDate !== null && newItinerary.onwardPreferredTime !== null && newItinerary.onwardTransportNumber !== '' && showReturnFields && newItinerary.returnJourney !== '' && newItinerary.returnArrivalDate !== null && newItinerary.returnPreferredTime !== null && newItinerary.returnTransportNumber !== ''){
+            setSaveItineraryFlag(false)
+        }else{
+            setSaveItineraryFlag(true)
+        }
+        
+    }, [newItinerary,showReturnFields]);
+
+    // Handle form submission
+    const handleFormSubmit = async (e) => {
+        console.log("Form submission started");
+        // setFormData({
+        //     ...formData,
+        //     itineraryRelation: itineraries
+        // })
         e.preventDefault();
         try {
             const response = await TravelRequestFormService.submitFormData(formData);
             setMessage(`Successfully created Id : ${response.data.id}`);
             setOpen(true);
-            // Handle success (e.g., show a message or redirect)
         } catch (error) {
             console.error("Error submitting form", error);
             setMessage(`Error response : ${error.response.data.title}`);
@@ -649,6 +683,7 @@ function TravelRequestForm() {
                                             console.log("value : " + JSON.stringify(formData));
                                         }}
                                         itemTemplate={itemTemplate}
+                                        required
                                     />
                                     <label htmlFor="employeeEmail"><strong>Email</strong></label>
                                 </FloatLabel>
@@ -748,7 +783,7 @@ function TravelRequestForm() {
                                         travelDepartureDate: e.value
                                     })
                                     calculateEstimatedDuration(e.value, formData.travelArrivalDate)
-                                }} showIcon />
+                                }} required showIcon />
                             <label htmlFor="departureDate" className="mr-2">Departure Date</label>
                         </FloatLabel>
                     </div>
@@ -762,7 +797,8 @@ function TravelRequestForm() {
                                     })
                                     calculateEstimatedDuration(formData.travelDepartureDate, e.value)
                                 }}
-                                showIcon />
+                                showIcon 
+                                required/>
                             <label htmlFor="returnDate" className="mr-2">Return Date</label>
                         </FloatLabel>
                     </div>
@@ -792,7 +828,7 @@ function TravelRequestForm() {
                                     key: e.value.key,
                                 }
                             });
-                        }} options={currencyList} optionLabel="name" />
+                        }} options={currencyList} optionLabel="name" required />
                     </div>
                     <div className="currencybug">
                         <FloatLabel>
@@ -810,7 +846,7 @@ function TravelRequestForm() {
                                 onChange={(e) => setFormData({
                                     ...formData,
                                     travelNote: e.target.value
-                                })} required />
+                                })} />
                             <label htmlFor="Note">Note: </label>
                         </FloatLabel>
                     </div>
@@ -821,8 +857,8 @@ function TravelRequestForm() {
                 <div className="form-row">
                     <div className="form-group">
                         <FloatLabel>
-                            <label htmlFor="entity">Manager</label>
                             <AutoComplete
+                                id="manager"
                                 value={selectedItem}
                                 suggestions={dropDownSuggestions}
                                 completeMethod={searchItem}
@@ -840,13 +876,15 @@ function TravelRequestForm() {
                                 }}
                                 itemTemplate={itemTemplate}
                                 disabled={selectedEmployee === null}
+                                required
                             />
+                            <label htmlFor="manager">Manager</label>
                         </FloatLabel>
                     </div>
                     <div className="form-group">
-                        <FloatLabel>
-                            <label htmlFor="positionTitle">Head Of Department/GM/VP</label>
+                        <FloatLabel>   
                             <AutoComplete
+                                id="hod"
                                 value={selectedItem2}
                                 suggestions={dropDownSuggestions2}
                                 completeMethod={searchItem2}
@@ -865,7 +903,8 @@ function TravelRequestForm() {
                                 itemTemplate={itemTemplate}
                                 disabled={selectedItem === null}
                             />
-                        </FloatLabel>
+                            <label htmlFor="hod">HOD/GM/VP</label>
+                        </FloatLabel>                        
                     </div>
                 </div>
                 <hr className="separator" />
@@ -1426,7 +1465,7 @@ function TravelRequestForm() {
                                         </div> </>)}
 
                                 <div className="savebtn">
-                                    <Button onClick={handleSaveItinerary} label="Save" />
+                                    <Button onClick={handleSaveItinerary} label="Save" disabled={saveItineraryFlag}/>
                                 </div>
                             </div>
 
@@ -1477,9 +1516,9 @@ function TravelRequestForm() {
                             <Column header="Actions" headerClassName="custom-header"
                                 body={(rowData, { rowIndex }) => (
                                     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                                        <Button icon="pi pi-pencil" style={{ marginRight: '0.5rem' }}
+                                        <Button type="button" icon="pi pi-pencil" style={{ marginRight: '0.5rem' }}
                                             onClick={() => handleEditItinerary(rowIndex)} />
-                                        <Button severity="danger" icon="pi pi-trash"
+                                        <Button type="button" severity="danger" icon="pi pi-trash"
                                             onClick={() => handleRemoveItinerary(rowIndex)} />
                                     </div>
                                 )}
