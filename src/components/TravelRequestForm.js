@@ -64,6 +64,7 @@ function TravelRequestForm() {
         returnArrivalDate: null,
         returnPreferredTime: '',
         returnTransportNumber: '',
+        // r_itineraryRelation_c_travelInfoERC: ""
     });
     const [editingItinerary, setEditingItinerary] = useState(null);
 
@@ -136,6 +137,7 @@ function TravelRequestForm() {
             returnArrivalDate: null,
             returnPreferredTime: '',
             returnTransportNumber: '',
+            // r_itineraryRelation_c_travelInfoERC: ""
         });
         setShowItinerary(false);
     };
@@ -421,6 +423,8 @@ function TravelRequestForm() {
 
     const handleCloseItineraryClick = () => {
         setShowItinerary(false);
+        setEditingItinerary(null);
+        setNewItinerary({});
     };
 
     const [formData, setFormData] = useState({
@@ -462,9 +466,10 @@ function TravelRequestForm() {
         hotelCheckIn: null,
         hotelCheckOut: null,
         hotelNote: "",
-        itineraryTotal: "",
+        // itineraryTotal: "",
         approver1: {},
         approver2: {},
+        itineraryRelation: []
     });
 
     // const initialTrainTicket = () => {
@@ -524,6 +529,10 @@ function TravelRequestForm() {
     // Handle form submission
     const handleFormSubmit = async (e) => {
         console.log("Form submission started");
+        setFormData({
+            ...formData,
+            itineraryRelation: itineraries
+        })
         e.preventDefault();
         try {
             const response = await TravelRequestFormService.submitFormData(formData);
@@ -534,6 +543,12 @@ function TravelRequestForm() {
             console.error("Error submitting form", error);
             setMessage(`Error response : ${error.response.data.title}`);
             setOpen(true);
+        }
+    };
+
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault(); // Prevent the default action (form submission)
         }
     };
 
@@ -563,7 +578,7 @@ function TravelRequestForm() {
 
     return (
         <div className="form-container">
-            <form className="travel-form" onSubmit={handleFormSubmit}>
+            <form className="travel-form" onSubmit={handleFormSubmit} onKeyDown={handleKeyDown}>
                 <div className="header-strip">
                     <h2 className="header-text">Travel Request Form </h2>
                 </div>
@@ -575,7 +590,7 @@ function TravelRequestForm() {
                                     ...formData,
                                     issuer: e.target.value
                                 })} />
-                            <label for="issuer"><strong>Issuer</strong></label>
+                            <label htmlFor="issuer"><strong>Issuer</strong></label>
                         </FloatLabel>
                     </div>
                     <div className="p-inputgroup flex-1">
@@ -585,7 +600,7 @@ function TravelRequestForm() {
                                     ...formData,
                                     issuerDate: e.value
                                 })} showIcon />
-                            <label for="issuerDate">Issuer Date</label>
+                            <label htmlFor="issuerDate">Issuer Date</label>
                         </FloatLabel>
                     </div>
                     <div className="p-inputgroup flex-1">
@@ -1032,7 +1047,7 @@ function TravelRequestForm() {
                                             ...formData,
                                             carRentalBirthDate: e.value
                                         })} showIcon />
-                                    <label for="issuerDate">Issuer Date</label>
+                                    <label htmlFor="issuerDate">Issuer Date</label>
                                 </FloatLabel>
                             </div>
                             <div className="calendar-item">
@@ -1168,7 +1183,7 @@ function TravelRequestForm() {
                                 <input type="checkbox" id="economyClass" name="class" required />
                             </div>
                         </div> */}
-                        <p>Note: Kindly attach the 3 quotes/routes provided by Travel Agent for comparison. If the least cost-saving route is not taken, kindly provide the reason below.</p>
+                        <p>Note: Kindly attach the 3 quotes/routes provided by Travel Agent htmlFor comparison. If the least cost-saving route is not taken, kindly provide the reason below.</p>
                         <div className="form-dropdown-container">
                             <label htmlFor="reason">Reason</label>
                             <Dropdown inputId="dd-city" value={reasonValue} onChange={(e) => {
@@ -1247,14 +1262,14 @@ function TravelRequestForm() {
 
                                         <FloatLabel>
                                             <InputText id="itFrom" value={newItinerary.itFrom} onChange={e => handleInputChange('itFrom', e)} />
-                                            <label for="itFrom">From</label>
+                                            <label htmlFor="itFrom">From</label>
                                         </FloatLabel>
                                     </div>
                                     <div className="form-group">
 
                                         <FloatLabel>
                                             <InputText id="itTo" value={newItinerary.itTo} onChange={e => handleInputChange('itTo', e)} />
-                                            <label for="itTo">To</label>
+                                            <label htmlFor="itTo">To</label>
                                         </FloatLabel>
                                     </div>
                                 </div>
@@ -1274,7 +1289,7 @@ function TravelRequestForm() {
                                     <div className="form-group">
                                         <FloatLabel>
                                             <InputText id="flightNumber" value={newItinerary.flightNumber} onChange={e => handleInputChange('flightNumber', e)} />
-                                            <label for="flightNumber">Flight Number</label>
+                                            <label htmlFor="flightNumber">Flight Number</label>
                                         </FloatLabel>
                                     </div>
                                 </div>
@@ -1292,13 +1307,13 @@ function TravelRequestForm() {
                                             <div className="form-group">
                                                 <FloatLabel>
                                                     <InputText id="returnFrom" value={newItinerary.returnFrom} onChange={e => handleInputChange('returnFrom', e)} />
-                                                    <label for="returnFrom">Return From</label>
+                                                    <label htmlFor="returnFrom">Return From</label>
                                                 </FloatLabel>
                                             </div>
                                             <div className="form-group">
                                                 <FloatLabel>
                                                     <InputText id="returnTo" value={newItinerary.returnTo} onChange={e => handleInputChange('returnTo', e)} />
-                                                    <label for="returnTo">Return To</label>
+                                                    <label htmlFor="returnTo">Return To</label>
                                                 </FloatLabel>
                                             </div>
                                         </div><div className="form-row">
@@ -1316,7 +1331,7 @@ function TravelRequestForm() {
                                             <div className="form-group">
                                                 <FloatLabel>
                                                     <InputText id="returnFlightNumber" value={newItinerary.returnFlightNumber} onChange={e => handleInputChange('returnFlightNumber', e)} />
-                                                    <label for="returnFlightNumber">Return Flight Number</label>
+                                                    <label htmlFor="returnFlightNumber">Return Flight Number</label>
                                                 </FloatLabel>
                                             </div></div>
                                     </>
