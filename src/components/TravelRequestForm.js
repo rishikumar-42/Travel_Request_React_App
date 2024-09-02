@@ -40,6 +40,9 @@ function TravelRequestForm() {
     const [preferredTimeList, setPreferredTimeList] = useState([]);
     const [reasonValue, setReasonValue] = useState([]);
     const [itineraries, setItineraries] = useState([]);
+    const [isEmployeeEmailValid, setIsEmployeeEmailValid] = useState(true);
+    const [isManagerEmailValid, setIsManagerEmailValid] = useState(true);
+    const [isHODEmailValid, setIsHODEmailValid] = useState(true);
     // const [newItinerary, setNewItinerary] = useState({
     //     itFrom: '',
     //     itTo: '',
@@ -608,6 +611,77 @@ function TravelRequestForm() {
         setOpen(false);
     };
 
+    const validateEmployeeEmail = () => {
+        return userList.some(user => {
+            if( user.email.toLowerCase() ===  ( typeof selectedEmployee === 'object' ? selectedEmployee.email.toLowerCase() : selectedEmployee.toLowerCase()) ){
+                setFormData({
+                    ...formData, // Spread the existing formData
+                    firstName: user.firstName, // Update only the firstName property
+                    lastName: user.lastName,
+                    employeeNumber: user.employeeNumber,
+                    costCenter: user.costCenter,
+                    entity: user.entity,
+                    positionTitle: user.positionTitle
+                });
+                return true;
+            }
+            return false;
+            });
+      };
+    
+      // Function to handle blur event for validation
+      const handleBlur = () => {
+        if (selectedEmployee === null)
+            setIsEmployeeEmailValid(true)
+        else
+            setIsEmployeeEmailValid(validateEmployeeEmail());
+      };
+
+    const validateManagerEmail = () => {
+        return userList.some(user => {
+            if( user.email.toLowerCase() ===  ( typeof selectedItem === 'object' ? selectedItem.email.toLowerCase() : selectedItem.toLowerCase()) ){
+                setFormData({
+                    ...formData, // Spread the existing formData
+                    approver1: {
+                        key : user.firstName
+                    }
+                });
+                return true;
+            }
+            return false;
+            });
+      };
+    
+      // Function to handle blur event for validation
+      const handleBlur2 = () => {
+        if (selectedItem === null)
+            setIsManagerEmailValid(true)
+        else
+            setIsManagerEmailValid(validateManagerEmail());
+      };
+    const validateHODEmail = () => {
+        return userList.some(user => {
+            if( user.email.toLowerCase() ===  ( typeof selectedItem2 === 'object' ? selectedItem2.email.toLowerCase() : selectedItem2.toLowerCase()) ){
+                setFormData({
+                    ...formData, // Spread the existing formData
+                    approver2: {
+                        key : user.firstName
+                    }
+                });
+                return true;
+            }
+            return false;
+            });
+      };
+    
+      // Function to handle blur event for validation
+      const handleBlur3 = () => {
+        if (selectedItem === null)
+            setIsHODEmailValid(true)
+        else
+            setIsHODEmailValid(validateHODEmail());
+      };
+
     const action = (
         <React.Fragment>
             <Button color="secondary" size="small" onClick={handleClose}>
@@ -682,7 +756,21 @@ function TravelRequestForm() {
                                         suggestions={employeeDropDownSuggestions}
                                         completeMethod={searchEmployee}
                                         field="email"
-                                        onChange={(e) => setSelectedEmployee(e.value)}
+                                        onBlur={handleBlur}
+                                        onChange={(e) => {
+                                            setSelectedEmployee(e.value);
+                                            setFormData({
+                                                ...formData, // Spread the existing formData
+                                                firstName: '', // Update only the firstName property
+                                                lastName: '',
+                                                employeeNumber: '',
+                                                costCenter: '',
+                                                entity: '',
+                                                positionTitle: ''
+                                            });
+                                            setSelectedItem('');
+                                            setSelectedItem2('');
+                                        }}
                                         onSelect={(e) => {
                                             setSelectedEmployee(e.value);
                                             setFormData({
@@ -699,7 +787,8 @@ function TravelRequestForm() {
                                         itemTemplate={itemTemplate}
                                         required
                                     />
-                                    <label htmlFor="employeeEmail"><strong>Email</strong></label>
+                                    <label htmlFor="employeeEmail">{!isEmployeeEmailValid && <strong style={{ color: 'red' }}>Email not in the list</strong>} {isEmployeeEmailValid && <strong>Email</strong>}</label>
+                                    
                                 </FloatLabel>
                             </div>
                             <div className="form-single-special">
@@ -877,7 +966,15 @@ function TravelRequestForm() {
                                 suggestions={dropDownSuggestions}
                                 completeMethod={searchItem}
                                 field="email"
-                                onChange={(e) => setSelectedItem(e.value)}
+                                onBlur={handleBlur2}
+                                onChange={(e) => {
+                                    setSelectedItem(e.value);
+                                    setFormData({
+                                        ...formData, // Spread the existing formData
+                                        approver2: {}
+                                    });
+                                    setSelectedItem2('');
+                                }}
                                 onSelect={(e) => {
                                     setSelectedItem(e.value);
                                     setFormData({
@@ -889,10 +986,10 @@ function TravelRequestForm() {
                                     console.log("value : " + JSON.stringify(e.value.email));
                                 }}
                                 itemTemplate={itemTemplate}
-                                disabled={selectedEmployee === null}
+                                disabled={selectedEmployee === null || selectedEmployee === ''}
                                 required
                             />
-                            <label htmlFor="manager">Manager</label>
+                            <label htmlFor="manager">{!isManagerEmailValid && <strong style={{ color: 'red' }}>Email not in the list</strong>} {isManagerEmailValid && <strong>Manager</strong>}</label>
                         </FloatLabel>
                     </div>
                     <div className="form-group">
@@ -903,6 +1000,7 @@ function TravelRequestForm() {
                                 suggestions={dropDownSuggestions2}
                                 completeMethod={searchItem2}
                                 field="email"
+                                onBlur={handleBlur3}
                                 onChange={(e) => setSelectedItem2(e.value)}
                                 onSelect={(e) => {
                                     setSelectedItem2(e.value);
@@ -915,9 +1013,9 @@ function TravelRequestForm() {
                                     console.log("value : " + JSON.stringify(e.value.email));
                                 }}
                                 itemTemplate={itemTemplate}
-                                disabled={selectedItem === null}
+                                disabled={selectedItem === null || selectedItem === ''}
                             />
-                            <label htmlFor="hod">HOD/GM/VP</label>
+                            <label htmlFor="hod">{!isHODEmailValid && <strong style={{ color: 'red' }}>Email not in the list</strong>} {isHODEmailValid && <strong>HOD/GM/VP</strong>}</label>
                         </FloatLabel>
                     </div>
                 </div>
