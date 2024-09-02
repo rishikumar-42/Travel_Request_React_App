@@ -115,7 +115,7 @@ function TravelRequestForm() {
         } else {
             // Add new itinerary
             setItineraries([...itineraries, newItinerary]);
-            
+
 
         }
         setNewItinerary({
@@ -428,7 +428,8 @@ function TravelRequestForm() {
     const handleCloseItineraryClick = () => {
         setShowItinerary(false);
         setEditingItinerary(null);
-        setNewItinerary({onwardJourney: '',
+        setNewItinerary({
+            onwardJourney: '',
             onwardDepartureDate: null,
             onwardPreferredTime: '',
             onwardJourneyNote: '',
@@ -436,11 +437,13 @@ function TravelRequestForm() {
             returnJourney: '',
             returnArrivalDate: null,
             returnPreferredTime: '',
-            returnTransportNumber: '',});
+            returnTransportNumber: '',
+        });
         setShowReturnFields(false);
     };
 
     const [formData, setFormData] = useState({
+        travelRequestId : "",
         issuer: "",
         issuerDate: null,
         issuerNumber: null,
@@ -520,6 +523,19 @@ function TravelRequestForm() {
             }
         }));
     };
+    const createUniqueId = async () => {
+        const count = (await TravelRequestFormService.fetchCount()).data.totalCount;
+        const now = new Date();
+        const year = String(now.getFullYear()).slice(-2); // Last two digits of the year
+        const month = String(now.getMonth() + 1).padStart(2, '0'); // Month, zero-padded
+        const seq = String(count).padStart(4, '0');
+        const uniqId = `TR${year}${month}${seq}`;
+        setFormData(prevFormData => ({
+            ...prevFormData, // Spread the existing formData
+            travelRequestId : uniqId
+        }));
+        return uniqId;
+    };
 
     // Handle toggling of train details
     const handleTrainToggleChange = async (event) => {
@@ -549,26 +565,24 @@ function TravelRequestForm() {
 
     // handle save button
     useEffect(() => {
-        console.log("Itenarary : ",newItinerary);
-        console.log("show " ,showReturnFields);
-        if (newItinerary.onwardJourney !== '' && newItinerary.onwardDepartureDate !== null && newItinerary.onwardPreferredTime !== null && newItinerary.onwardTransportNumber !== '' && !showReturnFields){
+        console.log("Itenarary : ", newItinerary);
+        console.log("show ", showReturnFields);
+        if (newItinerary.onwardJourney !== '' && newItinerary.onwardDepartureDate !== null && newItinerary.onwardPreferredTime !== null && newItinerary.onwardTransportNumber !== '' && !showReturnFields) {
             setSaveItineraryFlag(false)
-        }else if(newItinerary.onwardJourney !== '' && newItinerary.onwardDepartureDate !== null && newItinerary.onwardPreferredTime !== null && newItinerary.onwardTransportNumber !== '' && showReturnFields && newItinerary.returnJourney !== '' && newItinerary.returnArrivalDate !== null && newItinerary.returnPreferredTime !== null && newItinerary.returnTransportNumber !== ''){
+        } else if (newItinerary.onwardJourney !== '' && newItinerary.onwardDepartureDate !== null && newItinerary.onwardPreferredTime !== null && newItinerary.onwardTransportNumber !== '' && showReturnFields && newItinerary.returnJourney !== '' && newItinerary.returnArrivalDate !== null && newItinerary.returnPreferredTime !== null && newItinerary.returnTransportNumber !== '') {
             setSaveItineraryFlag(false)
-        }else{
+        } else {
             setSaveItineraryFlag(true)
         }
-        
-    }, [newItinerary,showReturnFields]);
+
+    }, [newItinerary, showReturnFields]);
 
     // Handle form submission
     const handleFormSubmit = async (e) => {
-        console.log("Form submission started");
-        // setFormData({
-        //     ...formData,
-        //     itineraryRelation: itineraries
-        // })
         e.preventDefault();
+        console.log("Form submission started");
+        const uniqId = await createUniqueId();
+        console.log("unique Id : " , uniqId);
         try {
             const response = await TravelRequestFormService.submitFormData(formData);
             setMessage(`Successfully created Id : ${response.data.id}`);
@@ -797,8 +811,8 @@ function TravelRequestForm() {
                                     })
                                     calculateEstimatedDuration(formData.travelDepartureDate, e.value)
                                 }}
-                                showIcon 
-                                required/>
+                                showIcon
+                                required />
                             <label htmlFor="returnDate" className="mr-2">Return Date</label>
                         </FloatLabel>
                     </div>
@@ -882,7 +896,7 @@ function TravelRequestForm() {
                         </FloatLabel>
                     </div>
                     <div className="form-group">
-                        <FloatLabel>   
+                        <FloatLabel>
                             <AutoComplete
                                 id="hod"
                                 value={selectedItem2}
@@ -904,12 +918,12 @@ function TravelRequestForm() {
                                 disabled={selectedItem === null}
                             />
                             <label htmlFor="hod">HOD/GM/VP</label>
-                        </FloatLabel>                        
+                        </FloatLabel>
                     </div>
                 </div>
                 <hr className="separator" />
 
-                
+
                 <div className="form-row-toggle">
                     <label className="toggle-label" htmlFor="hotelToggle">Hotel</label>
                     <label className="switch">
@@ -1424,7 +1438,7 @@ function TravelRequestForm() {
                                             <label htmlFor="onwardJourneyNote">Onward Journey Note</label>
                                         </FloatLabel>
                                     </div>
-                                    
+
                                 </div>
                                 <div className="form-row">
                                     <div className="form-group SRT">
@@ -1457,15 +1471,15 @@ function TravelRequestForm() {
                                                 </FloatLabel>
                                             </div>
                                             <div >
-                                        <FloatLabel>
-                                            <InputText id="returnTransportNumber" value={newItinerary.returnTransportNumber} onChange={e => handleInputChange('returnTransportNumber', e)} />
-                                            <label htmlFor="returnTransportNumber"> Flight/Train Number</label>
-                                        </FloatLabel>
-                                    </div>
+                                                <FloatLabel>
+                                                    <InputText id="returnTransportNumber" value={newItinerary.returnTransportNumber} onChange={e => handleInputChange('returnTransportNumber', e)} />
+                                                    <label htmlFor="returnTransportNumber"> Flight/Train Number</label>
+                                                </FloatLabel>
+                                            </div>
                                         </div> </>)}
 
                                 <div className="savebtn">
-                                    <Button onClick={handleSaveItinerary} label="Save" disabled={saveItineraryFlag}/>
+                                    <Button onClick={handleSaveItinerary} label="Save" disabled={saveItineraryFlag} />
                                 </div>
                             </div>
 
@@ -1504,14 +1518,14 @@ function TravelRequestForm() {
                         </table> */}
                         <DataTable value={itineraries} showGridlines tableStyle={{ minWidth: '50rem' }}>
                             {/*<Column sortable field="price" header="Price incl. VAT" /> */}
-                            <Column sortable field="onwardJourney" header="Onward Journey" headerClassName="custom-header"/>
+                            <Column sortable field="onwardJourney" header="Onward Journey" headerClassName="custom-header" />
                             <Column sortable field="onwardDepartureDate" header="Departure Date" body={(rowData) => formatDate(rowData.onwardDepartureDate)} headerClassName="custom-header" />
                             <Column sortable field="onwardPreferredTime" header="Onward Preferred Time" body={(rowData) => formatPickList(rowData.onwardPreferredTime)} headerClassName="custom-header" />
-                            <Column sortable field="onwardTransportNumber" header="Onward Transport Number"  headerClassName="custom-header" />
+                            <Column sortable field="onwardTransportNumber" header="Onward Transport Number" headerClassName="custom-header" />
                             <Column sortable field="onwardJourneyNote" header="Note" headerClassName="custom-header" />
                             <Column sortable field="returnJourney" header="Return Journey" headerClassName="custom-header" />
                             <Column sortable field="returnArrivalDate" header="Arrival Date" body={(rowData) => formatDate(rowData.returnArrivalDate)} headerClassName="custom-header" />
-                            <Column sortable field="returnPreferredTime" header="Return Preferred Time" body={(rowData) => formatPickList(rowData.returnPreferredTime)} headerClassName="custom-header"/>
+                            <Column sortable field="returnPreferredTime" header="Return Preferred Time" body={(rowData) => formatPickList(rowData.returnPreferredTime)} headerClassName="custom-header" />
                             <Column sortable field="returnTransportNumber" header="Return Transport Number" headerClassName="custom-header" />
                             <Column header="Actions" headerClassName="custom-header"
                                 body={(rowData, { rowIndex }) => (

@@ -117,6 +117,17 @@ const TravelRequestFormServiceLayer = {
             throw error;
         }
     },
+    fetchCount: async () => {
+        try {
+            console.log("Counting")
+            const response = await axios.get(`http://localhost:8080/o/c/travelinfos/?fields=totalCount`);
+            console.log("Fetch count : ", response); 
+            return response;
+        } catch (error) {
+            // console.error("Error submitting form", error);
+            throw error;
+        }
+    },
 
     // submitFormData: async (data) => {
     //     const response = await fetch('o/c/travelinfos/', {
