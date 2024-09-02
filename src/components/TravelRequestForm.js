@@ -450,6 +450,7 @@ function TravelRequestForm() {
         issuer: "",
         issuerDate: null,
         issuerNumber: null,
+        email:"",
         firstName: "",
         lastName: "",
         employeeNumber: "",
@@ -486,8 +487,10 @@ function TravelRequestForm() {
         hotelCheckOut: null,
         hotelNote: "",
         // itineraryTotal: "",
-        approver1: {},
-        approver2: {},
+        // approver1: {},
+        // approver2: {},
+        manager: '',
+        hod: '',
         itineraryRelation: []
     });
 
@@ -616,6 +619,7 @@ function TravelRequestForm() {
             if( user.email.toLowerCase() ===  ( typeof selectedEmployee === 'object' ? selectedEmployee.email.toLowerCase() : selectedEmployee.toLowerCase()) ){
                 setFormData({
                     ...formData, // Spread the existing formData
+                    email: user.email,
                     firstName: user.firstName, // Update only the firstName property
                     lastName: user.lastName,
                     employeeNumber: user.employeeNumber,
@@ -642,9 +646,10 @@ function TravelRequestForm() {
             if( user.email.toLowerCase() ===  ( typeof selectedItem === 'object' ? selectedItem.email.toLowerCase() : selectedItem.toLowerCase()) ){
                 setFormData({
                     ...formData, // Spread the existing formData
-                    approver1: {
-                        key : user.firstName
-                    }
+                    // approver1: {
+                    //     key : user.firstName
+                    // }
+                    manager: user.email
                 });
                 return true;
             }
@@ -664,9 +669,10 @@ function TravelRequestForm() {
             if( user.email.toLowerCase() ===  ( typeof selectedItem2 === 'object' ? selectedItem2.email.toLowerCase() : selectedItem2.toLowerCase()) ){
                 setFormData({
                     ...formData, // Spread the existing formData
-                    approver2: {
-                        key : user.firstName
-                    }
+                    // approver2: {
+                    //     key : user.firstName
+                    // }
+                    hod: user.email
                 });
                 return true;
             }
@@ -761,6 +767,7 @@ function TravelRequestForm() {
                                             setSelectedEmployee(e.value);
                                             setFormData({
                                                 ...formData, // Spread the existing formData
+                                                email: '',
                                                 firstName: '', // Update only the firstName property
                                                 lastName: '',
                                                 employeeNumber: '',
@@ -775,6 +782,7 @@ function TravelRequestForm() {
                                             setSelectedEmployee(e.value);
                                             setFormData({
                                                 ...formData, // Spread the existing formData
+                                                email: e.value.email,
                                                 firstName: e.value.firstName, // Update only the firstName property
                                                 lastName: e.value.lastName,
                                                 employeeNumber: e.value.employeeNumber,
@@ -971,7 +979,8 @@ function TravelRequestForm() {
                                     setSelectedItem(e.value);
                                     setFormData({
                                         ...formData, // Spread the existing formData
-                                        approver2: {}
+                                        // approver2: {}
+                                        hod: ''
                                     });
                                     setSelectedItem2('');
                                 }}
@@ -979,9 +988,10 @@ function TravelRequestForm() {
                                     setSelectedItem(e.value);
                                     setFormData({
                                         ...formData, // Spread the existing formData
-                                        approver1: {
-                                            key: e.value.firstName,
-                                        }
+                                        // approver1: {
+                                        //     key: e.value.firstName,
+                                        // }
+                                        manager: e.value.email
                                     });
                                     console.log("value : " + JSON.stringify(e.value.email));
                                 }}
@@ -1006,9 +1016,10 @@ function TravelRequestForm() {
                                     setSelectedItem2(e.value);
                                     setFormData({
                                         ...formData, // Spread the existing formData
-                                        approver2: {
-                                            key: e.value.firstName,
-                                        }
+                                        // approver2: {
+                                        //     key: e.value.firstName,
+                                        // }
+                                        hod: e.value.email
                                     });
                                     console.log("value : " + JSON.stringify(e.value.email));
                                 }}
