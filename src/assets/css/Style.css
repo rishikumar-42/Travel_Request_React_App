@@ -1,0 +1,61 @@
+.bg-color{background-color: #114B7D !important;} 
+label { font-weight: 500; font-size: .875em;}
+input[type="text"]:disabled { cursor: no-drop;}
+.p-inputtext {background: #F1F0F6;}
+.onwardDepartureDate { background: #F1F0F6; }
+.form-single-special input {width: 100%;}
+.approvers-container input{width:100%;}
+/* .separator {
+    border: unset !important; 
+    border-top: unset !important; 
+    margin: -6px 0;
+    width: 100%;
+    padding-bottom: unset !important; 
+} */
+.toggle-label {
+    font-weight: 500;
+}
+.separator {
+    border: none;
+    border-top: 2px solid #ccc;
+    margin: -12px 0;
+    width: 100%;
+    padding-bottom: 6px;
+}
+.p-button {
+    color: #ffffff;
+    background: #114B7D;
+    border: 1px solid #114B7D
+}
+input:checked+.slider {
+    background-color: #114B7D;
+}
+.col-width{width:13%}
+.col-width2 {
+    width: 10%;
+}
+#nights input{width:110px;}
+
+/* .car-note input{ width: 93.80% !important;} */
+
+.form-row-toggle {
+    margin-bottom: 10px;
+}
+
+.bg-gradients { background: linear-gradient(90deg, #003D71 0%, #5482AB 100%) !important; }
+
+.modal .onwardDepartureDate.p-dropdown.p-component.p-inputwrapper {
+    width: 132px;
+}
+.modal .p-inputswitch .p-inputswitch-slider {
+    background-color: #114B7D;
+}
+.modal .p-highlight span.p-inputswitch-slider {
+    background-color: #ccc !important;
+}
+.radio-group label {
+    margin-left: 3px;
+    color: #495057;
+}
+.p-tooltip-target-wrapper{display: block;}
+.reason-dropdown .p-dropdown{ width: 200px !important;}
