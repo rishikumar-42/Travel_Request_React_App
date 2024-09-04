@@ -24,10 +24,12 @@ import { Tooltip } from 'primereact/tooltip';
 import HelpIcon from '@mui/icons-material/Help';
 import { Dialog } from 'primereact/dialog';
 import "../assets/css/Style.css";
+import NewSummary from "./NewSummary.js";
 
 function TravelRequestForm() {
     const primary = "#fff"; // #f44336
     const [visible, setVisible] = useState(false);
+    const [previewVisible, setPreviewVisible] = useState(false);
     const [showNights, setShowNights] = useState(false);
     const [showCarDetails, setCarDetails] = useState(false);
     const [showPerCarDetails, setPerCarDetails] = useState(false);
@@ -50,6 +52,7 @@ function TravelRequestForm() {
     const [isEmployeeEmailValid, setIsEmployeeEmailValid] = useState(true);
     const [isManagerEmailValid, setIsManagerEmailValid] = useState(true);
     const [isHODEmailValid, setIsHODEmailValid] = useState(true);
+    const [isEmailValidSubmit, setIsEmailValidSubmit] = useState(true);
     // const [newItinerary, setNewItinerary] = useState({
     //     itFrom: '',
     //     itTo: '',
@@ -396,7 +399,7 @@ function TravelRequestForm() {
                 ...prevFormData, // Spread the existing formData
                 personalCarDrivingLicenseNumber: "",
                 personalCarRegistrationNumber: "",
-                personalCarNote:""
+                personalCarNote: ""
             }))
         }
     };
@@ -414,7 +417,7 @@ function TravelRequestForm() {
             ...prevFormData, // Spread the existing formData
             flightTicketType: {
                 key: firstFlightType.key,
-                name: firstFlightType.name // Update the trainTicketType properties
+                // name: firstFlightType.name // Update the trainTicketType properties
             }
         }));
     };
@@ -535,7 +538,7 @@ function TravelRequestForm() {
             ...prevFormData, // Spread the existing formData
             trainTicketType: {
                 key: firstTrainType.key,
-                name: firstTrainType.name // Update the trainTicketType properties
+                // name: firstTrainType.name // Update the trainTicketType properties
             }
         }));
     };
@@ -646,7 +649,7 @@ function TravelRequestForm() {
     // Function to handle blur event for validation
     const handleBlur = () => {
         if (selectedEmployee === null)
-            setIsEmployeeEmailValid(true)
+            setIsEmployeeEmailValid(false)
         else
             setIsEmployeeEmailValid(validateEmployeeEmail());
     };
@@ -670,7 +673,7 @@ function TravelRequestForm() {
     // Function to handle blur event for validation
     const handleBlur2 = () => {
         if (selectedItem === null)
-            setIsManagerEmailValid(true)
+            setIsManagerEmailValid(false)
         else
             setIsManagerEmailValid(validateManagerEmail());
     };
@@ -692,11 +695,27 @@ function TravelRequestForm() {
 
     // Function to handle blur event for validation
     const handleBlur3 = () => {
-        if (selectedItem === null)
+        if (selectedItem2 === '')
             setIsHODEmailValid(true)
         else
             setIsHODEmailValid(validateHODEmail());
     };
+
+    useEffect(() => {
+        console.log("status :", (!isManagerEmailValid || !isHODEmailValid))
+        setIsEmailValidSubmit(!isManagerEmailValid || !isHODEmailValid);
+    }, [isHODEmailValid, isManagerEmailValid]);
+
+
+
+    // const emailSubmitValidation = () => {
+    //     const employeeValid = !isEmployeeEmailValid || (typeof selectedEmployee === 'object' ? selectedEmployee.email : selectedEmployee)==='';
+    //     const managerValid = !isManagerEmailValid || (typeof selectedItem === 'object' ? selectedItem.email : selectedItem)==='';
+    //     const hodValid = !isHODEmailValid && (typeof selectedItem2 === 'object' ? selectedItem2.email : selectedItem2)==='';
+    //     console.log(isManagerEmailValid , " :-- " ,isHODEmailValid)
+    //     return (!isManagerEmailValid && !isHODEmailValid)
+    // };
+
     const action = (
         <React.Fragment>
             <Button color="secondary" size="small" onClick={handleClose}>
@@ -1091,7 +1110,7 @@ function TravelRequestForm() {
                                                     hotelCheckIn: e.value
                                                 });
                                                 calculateEstimatedNights(e.value, formData.hotelCheckOut);
-                                            }} showTime hourFormat="24" showIcon required/>
+                                            }} showTime hourFormat="24" showIcon required />
                                         <label htmlFor="checkIn" className="mr-2">Check In<span className="text-danger px-1">*</span></label>
                                     </FloatLabel>
                                 </div>
@@ -1176,24 +1195,24 @@ function TravelRequestForm() {
                                     </div>
                                     <div className="calendar-item">
                                         <FloatLabel>
-                                            <label htmlFor="on">On:<span className="text-danger px-1">*</span></label>
-                                            <InputText type="text" id="on" name="on" required
-                                                value={formData.carRentalOn}
-                                                onChange={(e) => setFormData({
-                                                    ...formData,
-                                                    carRentalOn: e.target.value
-                                                })}
-                                            />
-                                        </FloatLabel>
-                                    </div>
-                                    <div className="calendar-item">
-                                        <FloatLabel>
                                             <label htmlFor="to">To:<span className="text-danger px-1">*</span></label>
                                             <InputText type="text" id="to" name="to" required
                                                 value={formData.carRentalTo}
                                                 onChange={(e) => setFormData({
                                                     ...formData,
                                                     carRentalTo: e.target.value
+                                                })}
+                                            />
+                                        </FloatLabel>
+                                    </div>
+                                    <div className="calendar-item">
+                                        <FloatLabel>
+                                            <label htmlFor="on">On:<span className="text-danger px-1">*</span></label>
+                                            <InputText type="text" id="on" name="on" required
+                                                value={formData.carRentalOn}
+                                                onChange={(e) => setFormData({
+                                                    ...formData,
+                                                    carRentalOn: e.target.value
                                                 })}
                                             />
                                         </FloatLabel>
@@ -1349,7 +1368,7 @@ function TravelRequestForm() {
                                                             console.log("radio : ", formData)
                                                         }
                                                         }
-                                                        checked={flightTypeValue.key === category.key} required/>
+                                                        checked={flightTypeValue.key === category.key} required />
                                                     <label htmlFor={category.key} className="ps-1 px-2">{category.name}</label>
                                                 </div>
                                             );
@@ -1368,17 +1387,17 @@ function TravelRequestForm() {
                                 </div> */}
                                 <p className="mx-2">Note: Kindly attach the 3 quotes/routes provided by Travel Agent for comparison. If the least cost-saving route is not taken, kindly provide the reason below.</p>
                                 <div className="form-dropdown-container d-flex gap-3 mx-2 reason-dropdown align-items-center mt-4">
-                                        <label htmlFor="reason">Reason<span className="text-danger px-1 mt-2">*</span></label>
-                                        <Dropdown inputId="dd-city" value={reasonValue} onChange={(e) => {
-                                            setReasonValue(e.value);
-                                            setFormData({
-                                                ...formData, // Spread the existing formData
-                                                flightTicketReason: {
-                                                    key: e.value.key,
-                                                    // name: e.value.name // Update only the firstName property
-                                                }
-                                            });
-                                        }} options={reasonList} optionLabel="name" className="w-full" required />
+                                    <label htmlFor="reason">Reason<span className="text-danger px-1 mt-2">*</span></label>
+                                    <Dropdown inputId="dd-city" value={reasonValue} onChange={(e) => {
+                                        setReasonValue(e.value);
+                                        setFormData({
+                                            ...formData, // Spread the existing formData
+                                            flightTicketReason: {
+                                                key: e.value.key,
+                                                // name: e.value.name // Update only the firstName property
+                                            }
+                                        });
+                                    }} options={reasonList} optionLabel="name" className="w-full" required />
                                 </div>
                             </div>
                         )}
@@ -1412,7 +1431,7 @@ function TravelRequestForm() {
                                                             ...formData, // Spread the existing formData
                                                             trainTicketType: {
                                                                 key: e.value.key,
-                                                                name: e.value.name // Update only the firstName property
+                                                                // name: e.value.name // Update only the firstName property
                                                             }
                                                         });
                                                         console.log("radio : ", formData)
@@ -1665,11 +1684,11 @@ function TravelRequestForm() {
                                 <Column sortable field="onwardDepartureDate" header="Departure Date" body={(rowData) => formatDate(rowData.onwardDepartureDate)} headerClassName="custom-header" />
                                 <Column sortable field="onwardPreferredTime" header="Onward Preferred Time" body={(rowData) => formatPickList(rowData.onwardPreferredTime)} headerClassName="custom-header" />
                                 <Column sortable field="onwardTransportNumber" header="Onward Transport Number" headerClassName="custom-header" />
-                                <Column sortable field="onwardJourneyNote" header="Note" headerClassName="custom-header" />
                                 <Column sortable field="returnJourney" header="Return Journey" headerClassName="custom-header" />
                                 <Column sortable field="returnArrivalDate" header="Arrival Date" body={(rowData) => formatDate(rowData.returnArrivalDate)} headerClassName="custom-header" />
                                 <Column sortable field="returnPreferredTime" header="Return Preferred Time" body={(rowData) => formatPickList(rowData.returnPreferredTime)} headerClassName="custom-header" />
                                 <Column sortable field="returnTransportNumber" header="Return Transport Number" headerClassName="custom-header" />
+                                <Column sortable field="onwardJourneyNote" header="Note" headerClassName="custom-header" />
                                 <Column header="Actions" headerClassName="custom-header"
                                     body={(rowData, { rowIndex }) => (
                                         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -1687,7 +1706,7 @@ function TravelRequestForm() {
                         </div>
                     )}
                     {/* <button type="submit">Submit</button> */}
-                    <div style={{ display: 'flex', justifyContent: 'center' }}>
+                    <div className="gap-5" style={{ display: 'flex', justifyContent: 'center' }}>
                         <Button className="mb-3" style={{
                             border: 'none', // Remove border
                             borderRadius: '4px', // Set a small border radius (adjust as needed)
@@ -1696,10 +1715,34 @@ function TravelRequestForm() {
                             width: '15%', // Set the width of the button (e.g., 25% of the container)
                             fontWeight: 'bold'
                         }}
+                            onClick={() => setFormData(prevFormData => ({
+                                ...prevFormData, // Spread the existing formData
+                                status: { code: 2 }
+                            }))}
                             type="submit"
-                            label="Submit"
+                            label="Save As Draft"
+                            disabled={isEmailValidSubmit}
                         />
+                        <div>
+                            <Button icon="pi pi-angle-double-right" rounded onClick={() => setPreviewVisible(true)} />
+                            <Dialog header="Preview" visible={previewVisible} style={{ width: '80vw' }} onHide={() => { if (!previewVisible) return; setPreviewVisible(false); }}>
+                                {/* {previewVisible && { NewSummary(formData,itineraries) }} */}
+                                <NewSummary item={formData} travelInfo={itineraries} />
+                                <div className="gap-5 mt-3" style={{ display: 'flex', justifyContent: 'center' }} >
+                                    <Button icon="pi pi-angle-double-left" rounded onClick={() => setPreviewVisible(false)} />
+                                    <Button style={{
+                                        borderRadius: '4px', // Set a small border radius (adjust as needed)
+                                        backgroundColor: '#114B7D',
+                                    }}
+                                        disabled={isEmailValidSubmit}
+                                        type="submit"
+                                        label="Submit"
+                                    />
+                                </div>
+                            </Dialog>
+                        </div>
                     </div>
+
                 </form>
             </div>
             <Snackbar

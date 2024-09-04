@@ -1,0 +1,138 @@
+/* NewSummary.css */
+
+.summary-container {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin: 0 auto;
+    overflow-x: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .back-button {
+    background-color: #003366;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    cursor: pointer;
+    margin-top: 20px;
+    font-size: 16px;
+    width: 80px;
+  }
+  
+  .summary-content {
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    color: #333;
+    width: 100%;
+  }
+  
+  .toolbar {
+    background: linear-gradient(90deg, #003D71 0%, #5482AB 100%);
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    height: 10px;
+  }
+  
+  .title {
+    font-weight: 600;
+    color: #fff;
+  }
+  
+  .summary-details {
+    width: 100%;
+  }
+  
+  .details-grid {
+    padding: 5px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 columns */
+    gap: 20px; /* Increase gap between columns and rows */
+  }
+  
+  .details-grid-itinerary {
+    padding: 10px;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr); /* 7 columns for itinerary */
+    gap: 20px; /* Increase gap between columns and rows */
+  }
+  
+  .detail-item {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px; /* Add space below each item */
+  }
+  
+  .label {
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  
+  .value {
+    color: #333;
+  }
+  
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+  }
+  
+  .table-row {
+    border-bottom: 1px solid #ddd;
+    background: rgba(55, 106, 151, 0.2588235294);
+    font-size: 16px;
+  }
+  
+  .table-header {
+    padding: 10px;
+    font-weight: bold;
+    color: white;
+    text-align: left;
+    border-bottom: 2px solid #ddd;
+  }
+  
+  .table-data {
+    padding: 10px;
+    text-align: left;
+  }
+  .thead{
+    background: linear-gradient(90deg, #003D71 0%, #d3dbdb 100%);
+  }
+  .title-TravelDetails{
+  font-weight: 600;
+  }
+  .approve-button{
+    background-color: #1a6600;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 80px;
+    margin-left: 900px;
+    margin-top: -40px;
+  }
+  
+  .reject-button{
+    background-color: #660000;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 80px;
+    margin-left: 1000px;
+    margin-top: -40px;
+  }
+  
