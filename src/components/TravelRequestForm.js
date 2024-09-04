@@ -363,7 +363,11 @@ function TravelRequestForm() {
         if (!event.target.checked) {
             setFormData(prevFormData => ({
                 ...prevFormData, // Spread the existing formData
-                hotelNumberOfNights: null
+                hotelNumberOfNights: null,
+                hotelCheckIn: null,
+                hotelCheckOut: null,
+                hotelLocation: '',
+                hotelNote: '',
             }))
         }
     };
@@ -380,6 +384,7 @@ function TravelRequestForm() {
                 carRentalBirthDate: null,
                 carDrivingLicense: "",
                 carRentalCategory: "",
+                carRentalNote: ""
             }))
         }
     };
@@ -390,7 +395,8 @@ function TravelRequestForm() {
             setFormData(prevFormData => ({
                 ...prevFormData, // Spread the existing formData
                 personalCarDrivingLicenseNumber: "",
-                personalCarRegistrationNumber: ""
+                personalCarRegistrationNumber: "",
+                personalCarNote:""
             }))
         }
     };
