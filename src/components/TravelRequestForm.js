@@ -82,11 +82,11 @@ function TravelRequestForm() {
     const [editingItinerary, setEditingItinerary] = useState(null);
 
     const [dropDownSuggestions, setdropDownSuggestions] = useState([]);
-    const [selectedItem, setSelectedItem] = useState(null);
+    const [selectedItem, setSelectedItem] = useState('');
     const [dropDownSuggestions2, setdropDownSuggestions2] = useState([]);
-    const [selectedItem2, setSelectedItem2] = useState(null);
+    const [selectedItem2, setSelectedItem2] = useState('');
     const [employeeDropDownSuggestions, setEmployeeDropDownSuggestions] = useState([]);
-    const [selectedEmployee, setSelectedEmployee] = useState(null);
+    const [selectedEmployee, setSelectedEmployee] = useState('');
     const [open, setOpen] = useState(false);
     const [message, setMessage] = useState(false);
     const [showReturnFields, setShowReturnFields] = useState(false);
@@ -599,6 +599,7 @@ function TravelRequestForm() {
 
     // Handle form submission
     const handleFormSubmit = async (e) => {
+        setPreviewVisible(false)
         e.preventDefault();
         console.log("Form submission started");
         const uniqId = await createUniqueId();
@@ -625,6 +626,7 @@ function TravelRequestForm() {
             return;
         }
         setOpen(false);
+        window.location.reload();
     };
 
     const validateEmployeeEmail = () => {
@@ -703,7 +705,7 @@ function TravelRequestForm() {
 
     useEffect(() => {
         console.log("status :", (!isManagerEmailValid || !isHODEmailValid))
-        setIsEmailValidSubmit(!isManagerEmailValid || !isHODEmailValid);
+        setIsEmailValidSubmit((!isManagerEmailValid || selectedItem === '') || !isHODEmailValid);
     }, [isHODEmailValid, isManagerEmailValid]);
 
 
@@ -754,6 +756,7 @@ function TravelRequestForm() {
                         <div className="p-inputgroup flex-1">
                             <FloatLabel>
                                 <InputText id="issuer" value={formData.issuer}
+                                    maxLength={250}
                                     required
                                     tooltip="Enter your issuer" tooltipOptions={{ position: 'bottom' }}
                                     onChange={(e) => setFormData({
@@ -847,19 +850,19 @@ function TravelRequestForm() {
                                 </div>
                                 <div className="form-single">
                                     <FloatLabel>
-                                        <InputText type="text" id="firstName" name="firstName" value={formData.firstName} required readOnly />
+                                        <InputText type="text" maxLength={250} id="firstName" name="firstName" value={formData.firstName} required readOnly />
                                         <label htmlFor="firstName" className="small">First Name<span className="text-danger px-1">*</span></label>
                                     </FloatLabel>
                                 </div>
                                 <div className="form-single">
                                     <FloatLabel>
-                                        <InputText type="text" id="lastName" name="lastName" value={formData.lastName} required readOnly />
+                                        <InputText type="text" maxLength={250} id="lastName" name="lastName" value={formData.lastName} required readOnly />
                                         <label htmlFor="lastName" className="small">Last Name<span className="text-danger px-1">*</span></label>
                                     </FloatLabel>
                                 </div>
                                 <div className="form-single">
                                     <FloatLabel>
-                                        <InputText type="text" id="employeeNumber" name="employeeNumber" value={formData.employeeNumber} required readOnly />
+                                        <InputText type="text" maxLength={250} id="employeeNumber" name="employeeNumber" value={formData.employeeNumber} required readOnly />
                                         <label htmlFor="employeeNumber" className="small">Employee Number<span className="text-danger px-1">*</span></label>
                                     </FloatLabel>
                                 </div>
@@ -869,19 +872,19 @@ function TravelRequestForm() {
                     <div className="d-flex justify-content-between align-items-stretch gap-3 mt-3">
                         <div className="form-single-special">
                             <FloatLabel>
-                                <InputText type="text" id="costCenter" name="costCenter" value={formData.costCenter} required readOnly />
+                                <InputText type="text" maxLength={250} id="costCenter" name="costCenter" value={formData.costCenter} required readOnly />
                                 <label htmlFor="costCenter" className="small">Cost Centre<span className="text-danger px-1">*</span></label>
                             </FloatLabel>
                         </div>
                         <div className="form-single-special">
                             <FloatLabel>
-                                <InputText type="text" id="entity" name="entity" value={formData.entity} required readOnly />
+                                <InputText type="text" maxLength={250} id="entity" name="entity" value={formData.entity} required readOnly />
                                 <label htmlFor="entity" className="small">Entity<span className="text-danger px-1">*</span></label>
                             </FloatLabel>
                         </div>
                         <div className="form-single-special">
                             <FloatLabel>
-                                <InputText type="text" id="positionTitle" name="positionTitle" value={formData.positionTitle} required readOnly />
+                                <InputText type="text" maxLength={250} id="positionTitle" name="positionTitle" value={formData.positionTitle} required readOnly />
                                 <label htmlFor="positionTitle" className="small">Position Title<span className="text-danger px-1">*</span></label>
                             </FloatLabel>
                         </div>
@@ -912,7 +915,7 @@ function TravelRequestForm() {
                         </div>
                         <div className="d-flex justify-content-between align-items-stretch gap-3 my-4">
                             <FloatLabel className="w-50">
-                                <InputTextarea id="travelPurpose" className="full-width-textarea" value={formData.travelPurpose}
+                                <InputTextarea id="travelPurpose" maxLength={2000} className="full-width-textarea" value={formData.travelPurpose}
                                     onChange={(e) => setFormData({
                                         ...formData,
                                         travelPurpose: e.target.value
@@ -920,17 +923,17 @@ function TravelRequestForm() {
                                 <label htmlFor="travelPurpose" className="small">Travel Purpose<span className="text-danger px-1">*</span></label>
                             </FloatLabel>
                             <FloatLabel className="w-50">
-                                <InputTextarea id="participants" className="full-width-textarea" value={formData.participants}
+                                <InputTextarea id="participants" maxLength={2000} className="full-width-textarea" value={formData.participants}
                                     onChange={(e) => setFormData({
                                         ...formData,
                                         participants: e.target.value
                                     })} rows={2} cols={30} />
-                                <label htmlFor="participants" className="small">Participants<span className="text-danger px-1">*</span></label>
+                                <label htmlFor="participants" className="small">Participants</label>
                             </FloatLabel>
                         </div>
                         <div className="d-flex justify-content-between align-items-stretch gap-3 my-4">
                             <FloatLabel className="w-25">
-                                <InputText id="destination" className="full-width-textarea w-100" value={formData.destination}
+                                <InputText id="destination" maxLength={250} className="full-width-textarea w-100" value={formData.destination}
                                     onChange={(e) => setFormData({
                                         ...formData,
                                         destination: e.target.value
@@ -984,7 +987,7 @@ function TravelRequestForm() {
                                 <label htmlFor="budgetAmount" className="small">Budget Amount<span className="text-danger px-1">*</span></label>
                             </FloatLabel>
                             <FloatLabel className="flex-grow-1">
-                                <InputText id="Note" className="w-100" value={formData.travelNote}
+                                <InputText id="Note" maxLength={250} className="w-100" value={formData.travelNote}
                                     onChange={(e) => setFormData({
                                         ...formData,
                                         travelNote: e.target.value
@@ -1093,7 +1096,7 @@ function TravelRequestForm() {
                                 <div className="calendar-item">
                                     <FloatLabel>
                                         <label htmlFor="location">Location<span className="text-danger px-1">*</span></label>
-                                        <InputText id="location" name="location" required
+                                        <InputText id="location" maxLength={250} name="location" required
                                             value={formData.hotelLocation}
                                             onChange={(e) => setFormData({
                                                 ...formData, // Spread the existing formData
@@ -1138,7 +1141,7 @@ function TravelRequestForm() {
                                 <div className="calendar-item flex-shrink-1 flex-grow-1">
                                     <FloatLabel className="w-100">
                                         <label htmlFor="hotelNote">Note</label>
-                                        <InputText id="hotelNote" name="hotelNote" required className="w-100"
+                                        <InputText id="hotelNote" maxLength={250} name="hotelNote" required className="w-100"
                                             value={formData.hotelNote}
                                             onChange={(e) => setFormData({
                                                 ...formData, // Spread the existing formData
@@ -1171,7 +1174,7 @@ function TravelRequestForm() {
                                     <div className="calendar-item">
                                         <FloatLabel>
                                             <label htmlFor="category">Category<span className="text-danger px-1">*</span></label>
-                                            <InputText type="text" id="category" name="category" required
+                                            <InputText type="text" maxLength={250} id="category" name="category" required
                                                 value={formData.carRentalCategory}
                                                 onChange={(e) => setFormData({
                                                     ...formData,
@@ -1184,7 +1187,7 @@ function TravelRequestForm() {
                                     <div className="calendar-item">
                                         <FloatLabel>
                                             <label htmlFor="from">From:<span className="text-danger px-1">*</span></label>
-                                            <InputText type="text" id="from" name="from" required
+                                            <InputText type="text" maxLength={250} id="from" name="from" required
                                                 value={formData.carRentalFrom}
                                                 onChange={(e) => setFormData({
                                                     ...formData,
@@ -1196,7 +1199,7 @@ function TravelRequestForm() {
                                     <div className="calendar-item">
                                         <FloatLabel>
                                             <label htmlFor="to">To:<span className="text-danger px-1">*</span></label>
-                                            <InputText type="text" id="to" name="to" required
+                                            <InputText type="text" maxLength={250} id="to" name="to" required
                                                 value={formData.carRentalTo}
                                                 onChange={(e) => setFormData({
                                                     ...formData,
@@ -1208,7 +1211,7 @@ function TravelRequestForm() {
                                     <div className="calendar-item">
                                         <FloatLabel>
                                             <label htmlFor="on">On:<span className="text-danger px-1">*</span></label>
-                                            <InputText type="text" id="on" name="on" required
+                                            <InputText type="text" maxLength={250} id="on" name="on" required
                                                 value={formData.carRentalOn}
                                                 onChange={(e) => setFormData({
                                                     ...formData,
@@ -1220,7 +1223,7 @@ function TravelRequestForm() {
                                     <div className="calendar-item">
                                         <FloatLabel>
                                             <label htmlFor="until">Until:<span className="text-danger px-1">*</span></label>
-                                            <InputText type="text" id="until" name="until" required
+                                            <InputText type="text" maxLength={250} id="until" name="until" required
                                                 value={formData.carRentalUntil}
                                                 onChange={(e) => setFormData({
                                                     ...formData,
@@ -1251,7 +1254,7 @@ function TravelRequestForm() {
                                     <div className="calendar-item">
                                         <FloatLabel>
                                             <label htmlFor="drivingLicense">Driving License<span className="text-danger px-1">*</span></label>
-                                            <InputText type="text" id="drivingLicense" name="drivingLicense" required
+                                            <InputText type="text" maxLength={250} id="drivingLicense" name="drivingLicense" required
                                                 value={formData.carDrivingLicense}
                                                 onChange={(e) => setFormData({
                                                     ...formData,
@@ -1263,7 +1266,7 @@ function TravelRequestForm() {
                                     <div className="calendar-item flex-grow-1">
                                         <FloatLabel className="w-100 car-note">
                                             <label htmlFor="carRentalNote">Note</label>
-                                            <InputText id="carRentalNote" className="w-100" name="carRentalNote"
+                                            <InputText id="carRentalNote" maxLength={250} className="w-100" name="carRentalNote"
                                                 value={formData.carRentalNote}
                                                 onChange={(e) => setFormData({
                                                     ...formData,
@@ -1296,7 +1299,7 @@ function TravelRequestForm() {
                                 <div className="calendar-item">
                                     <FloatLabel>
                                         <label htmlFor="carRegNum">Car Registration Number<span className="text-danger px-1">*</span></label>
-                                        <InputText type="text" id="carRegNum" name="carRegNum" required
+                                        <InputText type="text" maxLength={250} id="carRegNum" name="carRegNum" required
                                             value={formData.personalCarRegistrationNumber}
                                             onChange={(e) => setFormData({
                                                 ...formData, // Spread the existing formData
@@ -1308,7 +1311,7 @@ function TravelRequestForm() {
                                 <div className="calendar-item">
                                     <FloatLabel>
                                         <label htmlFor="drivingLicenseNum">Driving License Number<span className="text-danger px-1">*</span></label>
-                                        <InputText type="text" id="drivingLicenseNum" name="drivingLicenseNum" required
+                                        <InputText type="text" id="drivingLicenseNum" maxLength={250} name="drivingLicenseNum" required
                                             value={formData.personalCarDrivingLicenseNumber}
                                             onChange={(e) => setFormData({
                                                 ...formData, // Spread the existing formData
@@ -1320,7 +1323,7 @@ function TravelRequestForm() {
                                 <div className="calendar-item flex-grow-1">
                                     <FloatLabel className="w-100 car-note">
                                         <label htmlFor="personalCarNote">Note</label>
-                                        <InputText id="personalCarNote" className="w-100" name="personalCarNote"
+                                        <InputText id="personalCarNote" maxLength={250} className="w-100" name="personalCarNote"
                                             value={formData.personalCarNote}
                                             onChange={(e) => setFormData({
                                                 ...formData,
@@ -1568,7 +1571,7 @@ function TravelRequestForm() {
                                     <div className="form-row d-flex align-content-stretch gap-3">
                                         <div className="calendar-item">
                                             <FloatLabel>
-                                                <InputText id="onwardJourney" value={newItinerary.onwardJourney} onChange={e => handleInputChange('onwardJourney', e)} />
+                                                <InputText id="onwardJourney" maxLength={250} value={newItinerary.onwardJourney} onChange={e => handleInputChange('onwardJourney', e)} />
                                                 <label htmlFor="onwardJourney">Onward Journey</label>
                                             </FloatLabel>
                                         </div>
@@ -1588,13 +1591,13 @@ function TravelRequestForm() {
                                         </div>
                                         <div className="calendar-item">
                                             <FloatLabel>
-                                                <InputText id="onwardTransportNumber" value={newItinerary.onwardTransportNumber} onChange={e => handleInputChange('onwardTransportNumber', e)} />
+                                                <InputText id="onwardTransportNumber" maxLength={250} value={newItinerary.onwardTransportNumber} onChange={e => handleInputChange('onwardTransportNumber', e)} />
                                                 <label htmlFor="onwardTransportNumber"> Flight/Train Number</label>
                                             </FloatLabel>
                                         </div>
                                         <div className="calendar-item flex-grow-1">
                                             <FloatLabel className="w-100 car-note">
-                                                <InputText id="onwardJourneyNote" className="w-100" value={newItinerary.onwardJourneyNote} onChange={e => handleInputChange('onwardJourneyNote', e)} />
+                                                <InputText id="onwardJourneyNote" maxLength={250} className="w-100" value={newItinerary.onwardJourneyNote} onChange={e => handleInputChange('onwardJourneyNote', e)} />
                                                 <label htmlFor="onwardJourneyNote">Onward Journey Note</label>
                                             </FloatLabel>
                                         </div>
@@ -1612,7 +1615,7 @@ function TravelRequestForm() {
                                             <div className="form-row2 gap-3">
                                                 <div >
                                                     <FloatLabel>
-                                                        <InputText id="returnJourney" value={newItinerary.returnJourney} onChange={e => handleInputChange('returnJourney', e)} />
+                                                        <InputText id="returnJourney" maxLength={250} value={newItinerary.returnJourney} onChange={e => handleInputChange('returnJourney', e)} />
                                                         <label htmlFor="returnJourney">Return Journey</label>
                                                     </FloatLabel>
                                                 </div>
@@ -1632,7 +1635,7 @@ function TravelRequestForm() {
                                                 </div>
                                                 <div >
                                                     <FloatLabel>
-                                                        <InputText id="returnTransportNumber" value={newItinerary.returnTransportNumber} onChange={e => handleInputChange('returnTransportNumber', e)} />
+                                                        <InputText id="returnTransportNumber" maxLength={250} value={newItinerary.returnTransportNumber} onChange={e => handleInputChange('returnTransportNumber', e)} />
                                                         <label htmlFor="returnTransportNumber"> Flight/Train Number</label>
                                                     </FloatLabel>
                                                 </div>
@@ -1724,17 +1727,18 @@ function TravelRequestForm() {
                             disabled={isEmailValidSubmit}
                         />
                         <div>
-                            <Button icon="pi pi-angle-double-right" rounded onClick={() => setPreviewVisible(true)} />
+                            <Button type="button" icon="pi pi-angle-double-right" rounded onClick={() => setPreviewVisible(true)} />
                             <Dialog header="Preview" visible={previewVisible} style={{ width: '80vw' }} onHide={() => { if (!previewVisible) return; setPreviewVisible(false); }}>
                                 {/* {previewVisible && { NewSummary(formData,itineraries) }} */}
                                 <NewSummary item={formData} travelInfo={itineraries} />
                                 <div className="gap-5 mt-3" style={{ display: 'flex', justifyContent: 'center' }} >
-                                    <Button icon="pi pi-angle-double-left" rounded onClick={() => setPreviewVisible(false)} />
+                                    <Button icon="pi pi-angle-double-left" type="button" rounded onClick={() => setPreviewVisible(false)} />
                                     <Button style={{
                                         borderRadius: '4px', // Set a small border radius (adjust as needed)
                                         backgroundColor: '#114B7D',
                                     }}
                                         disabled={isEmailValidSubmit}
+                                        onClick={handleFormSubmit}
                                         type="submit"
                                         label="Submit"
                                     />
@@ -1747,7 +1751,7 @@ function TravelRequestForm() {
             </div>
             <Snackbar
                 open={open}
-                autoHideDuration={6000}
+                // autoHideDuration={6000}
                 onClose={handleClose}
                 message={message}
                 action={action}
