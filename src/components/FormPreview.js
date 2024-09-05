@@ -3,7 +3,7 @@ import React from 'react';
 import "../assets/css/NewSummary.css";
 // import Divider from '@mui/joy/Divider';
 
-const NewSummary = ({ item, travelInfo }) => {
+const FormPreview = ({ item, travelInfo }) => {
 
     const formatDate = (date) => {
         if (!date) return '';
@@ -320,4 +320,4 @@ const NewSummary = ({ item, travelInfo }) => {
     );
 };
 
-export default NewSummary;
+export default FormPreview;

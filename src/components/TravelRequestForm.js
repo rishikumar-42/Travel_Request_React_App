@@ -24,7 +24,7 @@ import { Tooltip } from 'primereact/tooltip';
 import HelpIcon from '@mui/icons-material/Help';
 import { Dialog } from 'primereact/dialog';
 import "../assets/css/Style.css";
-import NewSummary from "./NewSummary.js";
+import FormPreview from "./FormPreview.js";
 
 function TravelRequestForm() {
     const primary = "#fff"; // #f44336
@@ -1727,12 +1727,12 @@ function TravelRequestForm() {
                             disabled={isEmailValidSubmit}
                         />
                         <div>
-                            <Button type="button" icon="pi pi-angle-double-right" rounded onClick={() => setPreviewVisible(true)} />
+                            <Button type="button" icon="pi pi-angle-double-right" label="Next" rounded onClick={() => setPreviewVisible(true)} />
                             <Dialog header="Preview" visible={previewVisible} style={{ width: '80vw' }} onHide={() => { if (!previewVisible) return; setPreviewVisible(false); }}>
                                 {/* {previewVisible && { NewSummary(formData,itineraries) }} */}
-                                <NewSummary item={formData} travelInfo={itineraries} />
+                                <FormPreview item={formData} travelInfo={itineraries} />
                                 <div className="gap-5 mt-3" style={{ display: 'flex', justifyContent: 'center' }} >
-                                    <Button icon="pi pi-angle-double-left" type="button" rounded onClick={() => setPreviewVisible(false)} />
+                                    <Button icon="pi pi-angle-double-left" label="Back" type="button" rounded onClick={() => setPreviewVisible(false)} />
                                     <Button style={{
                                         borderRadius: '4px', // Set a small border radius (adjust as needed)
                                         backgroundColor: '#114B7D',
