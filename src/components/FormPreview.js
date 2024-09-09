@@ -1,6 +1,6 @@
 
 import React from 'react';
-import "../assets/css/NewSummary.css";
+import "../assets/css/FormPreview.css";
 // import Divider from '@mui/joy/Divider';
 
 const FormPreview = ({ item, travelInfo }) => {

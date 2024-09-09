@@ -1141,7 +1141,7 @@ function TravelRequestForm() {
                                 <div className="calendar-item flex-shrink-1 flex-grow-1">
                                     <FloatLabel className="w-100">
                                         <label htmlFor="hotelNote">Note</label>
-                                        <InputText id="hotelNote" maxLength={250} name="hotelNote" required className="w-100"
+                                        <InputText id="hotelNote" maxLength={250} name="hotelNote" className="w-100"
                                             value={formData.hotelNote}
                                             onChange={(e) => setFormData({
                                                 ...formData, // Spread the existing formData
@@ -1695,9 +1695,9 @@ function TravelRequestForm() {
                                 <Column header="Actions" headerClassName="custom-header"
                                     body={(rowData, { rowIndex }) => (
                                         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                                            <Button icon="pi pi-pencil" style={{ marginRight: '0.5rem' }}
+                                            <Button icon="pi pi-pencil" type="button" style={{ marginRight: '0.5rem' }}
                                                 onClick={() => handleEditItinerary(rowIndex)} />
-                                            <Button severity="danger" icon="pi pi-trash"
+                                            <Button severity="danger" type="button" icon="pi pi-trash"
                                                 onClick={() => handleRemoveItinerary(rowIndex)} />
                                         </div>
                                     )}
