@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import TravelRequestFormService from "../service/TravelRequestFormService.js";
 import "../assets/css/TravelRequestForm.css";
 import 'primereact/resources/themes/saga-blue/theme.css'; // Theme
 import 'primereact/resources/primereact.min.css';
 import { AutoComplete } from "primereact/autocomplete";
+import { Toast } from 'primereact/toast';
 import { Dropdown } from 'primereact/dropdown';
 import { RadioButton } from "primereact/radiobutton";
 import { Button } from 'primereact/button';
@@ -91,6 +92,80 @@ function TravelRequestForm() {
     const [message, setMessage] = useState(false);
     const [showReturnFields, setShowReturnFields] = useState(false);
     const [saveItineraryFlag, setSaveItineraryFlag] = useState(true);
+    const [file, setFile] = useState(null);
+    const [files, setFiles] = useState([]);
+    // const [fileError, setFileError] = useState('');
+
+    const toast = useRef(null);
+
+    const showMessage = (severity, summary, detail) => {
+        toast.current.show({ severity, summary, detail, life: 10000 });
+    }
+
+    const onFileChange = (e) => {
+        const selectedFile = e.target.files[0];
+        if (selectedFile) {
+            if (selectedFile.size > 100000) {
+                // setFileError('File size exceeds the maximum limit.');
+                showMessage('error', 'Error', 'File size exceeds the maximum limit')
+                return;
+            }
+            setFile(selectedFile);
+        }
+    };
+    const handleRemovefiles = async (rowIndex) => {
+        const selectedFile = files[rowIndex];
+        console.log("selected file : ", selectedFile)
+        try {
+            await TravelRequestFormService.deleteDocuments(selectedFile.id)
+            showMessage('success', 'Success', `Successfully removed ${selectedFile.title}`)
+            setFiles(files.filter((_, i) => i !== rowIndex));
+        } catch (error) {
+            console.log("error while deleting : ", error)
+            showMessage('error', 'Error', `Error response : ${error.response.data.title}`)
+            // setFileError(error)
+        }
+    };
+
+    const onFileUpload = async () => {
+        if (!file) {
+            // setFileError('No file selected.');
+            showMessage('error', 'Error', 'No file selected.')
+            return;
+        }
+
+        try {
+            const fileResponse = await TravelRequestFormService.addDocuments(file);
+            const tempFile = {
+                id: fileResponse.id,
+                title: fileResponse.title,
+                contentUrl: fileResponse.contentUrl
+            };
+            setFiles([...files, tempFile]);
+            setFile(null)
+            showMessage('success', 'Success', `Successfully uploaded ${fileResponse.title}`)
+        } catch (error) {
+            // setFileError(error.title)
+            showMessage('error', 'Error', `Error response : ${error.response.data.title}`)
+
+        }
+
+        // const formData = new FormData();
+        // formData.append('file', file);
+
+        // axios.post(url, formData, {
+        //     headers: {
+        //         'Content-Type': 'multipart/form-data',
+        //     },
+        // })
+        //     .then((response) => {
+        //         console.log(response.data);
+        //     })
+        //     .catch((error) => {
+        //         console.error('Error uploading file:', error);
+        //         setFileError('Error uploading file.');
+        //     });
+    };
 
     const searchEmployee = (event) => {
         const query = event.query.toLowerCase();
@@ -504,7 +579,8 @@ function TravelRequestForm() {
         //approver2: {},
         manager: '',
         hod: '',
-        itineraryRelation: []
+        itineraryRelation: [],
+        attachmentRelation: []
     });
 
     // const initialTrainTicket = () => {
@@ -549,10 +625,6 @@ function TravelRequestForm() {
         const month = String(now.getMonth() + 1).padStart(2, '0'); // Month, zero-padded
         const seq = String(count).padStart(4, '0');
         const uniqId = `TR${year}${month}${seq}`;
-        setFormData(prevFormData => ({
-            ...prevFormData, // Spread the existing formData
-            travelRequestId: uniqId
-        }));
         return uniqId;
     };
 
@@ -581,6 +653,12 @@ function TravelRequestForm() {
             itineraryRelation: itineraries
         })
     }, [itineraries]);
+    useEffect(() => {
+        setFormData({
+            ...formData,
+            attachmentRelation: files
+        })
+    }, [files]);
 
 
     // handle save button
@@ -599,19 +677,32 @@ function TravelRequestForm() {
 
     // Handle form submission
     const handleFormSubmit = async (e) => {
-        setPreviewVisible(false)
         e.preventDefault();
+        setPreviewVisible(false)
         console.log("Form submission started");
         const uniqId = await createUniqueId();
         console.log("unique Id : ", uniqId);
+        setFormData({
+            ...formData,
+            travelRequestId: uniqId
+        });
+        console.log('form submit :', formData)
         try {
-            const response = await TravelRequestFormService.submitFormData(formData);
-            setMessage(`Successfully created Id : ${response.data.id}`);
-            setOpen(true);
+            const response = await TravelRequestFormService.submitFormData({
+                ...formData,
+                travelRequestId: uniqId
+            });
+            // setMessage(`Successfully created Id : ${response.data.travelRequestId}`);
+            showMessage('success', 'Success', `Successfully created Id : ${response.data.travelRequestId}`)
+            setTimeout(() => {
+                window.location.reload();
+            }, 5000);
+            // setOpen(true);
         } catch (error) {
             console.error("Error submitting form", error);
-            setMessage(`Error response : ${error.response.data.title}`);
-            setOpen(true);
+            // setMessage(`Error response : ${error.response.data.title}`);
+            showMessage('error', 'Error', `Error response : ${error.response.data.title}`)
+            // setOpen(true);
         }
     };
 
@@ -621,13 +712,13 @@ function TravelRequestForm() {
         }
     };
 
-    const handleClose = (event, reason) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-        setOpen(false);
-        window.location.reload();
-    };
+    // const handleClose = (event, reason) => {
+    //     if (reason === 'clickaway') {
+    //         return;
+    //     }
+    //     setOpen(false);
+    //     window.location.reload();
+    // };
 
     const validateEmployeeEmail = () => {
         return userList.some(user => {
@@ -718,25 +809,26 @@ function TravelRequestForm() {
     //     return (!isManagerEmailValid && !isHODEmailValid)
     // };
 
-    const action = (
-        <React.Fragment>
-            <Button color="secondary" size="small" onClick={handleClose}>
-                UNDO
-            </Button>
-            <IconButton
-                size="small"
-                aria-label="close"
-                color="inherit"
-                onClick={handleClose}
-            >
-                <CloseIcon fontSize="small" />
-            </IconButton>
-        </React.Fragment>
-    );
+    // const action = (
+    //     <React.Fragment>
+    //         <Button color="secondary" size="small" onClick={handleClose}>
+    //             UNDO
+    //         </Button>
+    //         <IconButton
+    //             size="small"
+    //             aria-label="close"
+    //             color="inherit"
+    //             onClick={handleClose}
+    //         >
+    //             <CloseIcon fontSize="small" />
+    //         </IconButton>
+    //     </React.Fragment>
+    // );
 
     return (
         <div className="form-container mx-5">
             <div className="bg-white align-items-start px-3 rounded-bottom-2 mb-3 pt-3 pb-3 shadow-sm">
+                <Toast ref={toast} position="top-center" />
                 <form className="travel-form p-0" onSubmit={handleFormSubmit} onKeyDown={handleKeyDown}>
                     <div className="bg-color px-3 py-1 rounded-top-2 d-flex justify-content-between align-items-center w-100">
                         <div className="align-items-start"><h5 className="text-white text-left mt-2">Travel Request</h5></div>
@@ -773,7 +865,7 @@ function TravelRequestForm() {
                                         ...formData,
                                         issuerDate: e.value
                                     })} showIcon />
-                                <label htmlFor="issuerDate" className="small">Issuer Date<span className="text-danger px-1">*</span></label>
+                                <label htmlFor="issuerDate" className="small">Issue Date<span className="text-danger px-1">*</span></label>
                             </FloatLabel>
                         </div>
                         <div className="p-inputgroup flex-1">
@@ -783,7 +875,7 @@ function TravelRequestForm() {
                                         ...formData,
                                         issuerNumber: e.target.value
                                     })} />
-                                <label htmlFor="number-input" className="small">Number<span className="text-danger px-1">*</span></label>
+                                <label htmlFor="number-input" className="small">Telephone Number<span className="text-danger px-1">*</span></label>
                             </FloatLabel>
                         </div>
                         {/* </FloatLabel> */}
@@ -969,15 +1061,18 @@ function TravelRequestForm() {
                             </FloatLabel>
                         </div>
                         <div className="d-flex align-items-stretch gap-3 my-4">
-                            <Dropdown placeholder="Currency *" value={currencyValue} onChange={(e) => {
-                                setCurrencyValue(e.value);
-                                setFormData({
-                                    ...formData,
-                                    travelCurrency: {
-                                        key: e.value.key,
-                                    }
-                                });
-                            }} options={currencyList} optionLabel="name" required />
+                            <FloatLabel>
+                                <Dropdown id="currency" value={currencyValue} style={{ width: '10vw' }} onChange={(e) => {
+                                    setCurrencyValue(e.value);
+                                    setFormData({
+                                        ...formData,
+                                        travelCurrency: {
+                                            key: e.value.key,
+                                        }
+                                    });
+                                }} options={currencyList} optionLabel="name" required />
+                                <label htmlFor="currency" className="small">Currency<span className="text-danger px-1">*</span></label>
+                            </FloatLabel>
                             <FloatLabel>
                                 <InputNumber id="budgetAmount" value={formData.travelBudget}
                                     onValueChange={(e) => setFormData({
@@ -992,7 +1087,7 @@ function TravelRequestForm() {
                                         ...formData,
                                         travelNote: e.target.value
                                     })} />
-                                <label htmlFor="Note" className="small">Note</label>
+                                <label htmlFor="Note" className="small">Remarks</label>
                             </FloatLabel>
                         </div>
                     </div>
@@ -1140,7 +1235,7 @@ function TravelRequestForm() {
                                 </div>
                                 <div className="calendar-item flex-shrink-1 flex-grow-1">
                                     <FloatLabel className="w-100">
-                                        <label htmlFor="hotelNote">Note</label>
+                                        <label htmlFor="hotelNote">Remarks</label>
                                         <InputText id="hotelNote" maxLength={250} name="hotelNote" className="w-100"
                                             value={formData.hotelNote}
                                             onChange={(e) => setFormData({
@@ -1265,7 +1360,7 @@ function TravelRequestForm() {
                                     </div>
                                     <div className="calendar-item flex-grow-1">
                                         <FloatLabel className="w-100 car-note">
-                                            <label htmlFor="carRentalNote">Note</label>
+                                            <label htmlFor="carRentalNote">Remarks</label>
                                             <InputText id="carRentalNote" maxLength={250} className="w-100" name="carRentalNote"
                                                 value={formData.carRentalNote}
                                                 onChange={(e) => setFormData({
@@ -1322,7 +1417,7 @@ function TravelRequestForm() {
                                 </div>
                                 <div className="calendar-item flex-grow-1">
                                     <FloatLabel className="w-100 car-note">
-                                        <label htmlFor="personalCarNote">Note</label>
+                                        <label htmlFor="personalCarNote">Remarks</label>
                                         <InputText id="personalCarNote" maxLength={250} className="w-100" name="personalCarNote"
                                             value={formData.personalCarNote}
                                             onChange={(e) => setFormData({
@@ -1448,6 +1543,35 @@ function TravelRequestForm() {
                                 </div>
                             </div>
                         )}
+                    </div>
+
+                    <hr className="separator " />
+                    <div className="px-3 pt-3">
+                        <div className="py-1 mb-1">
+                            <h6 className="text-left">Attachments</h6>
+                        </div>
+                        <div className="d-flex">
+                            <input
+                                type="file"
+                                // accept={accept}
+                                onChange={onFileChange}
+                            />
+                            <button className="btn-sm px-2 py-2 bg-gradients border-0" style={{ color: 'white' }} type="button" onClick={onFileUpload}>Upload</button>
+                            {/* {fileError && <p style={{ color: 'red' }}>{fileError}</p>} */}
+                        </div>
+
+                        {files.length > 0 &&
+                            <DataTable value={files} showGridlines tableStyle={{ minWidth: '50rem' }}>
+                                <Column sortable field="title" header="Title" headerClassName="custom-header" />
+                                <Column header="Actions" headerClassName="custom-header"
+                                    body={(rowData, { rowIndex }) => (
+                                        <div style={{ display: 'flex', justifyContent: 'left', alignItems: 'left' }}>
+                                            <Button severity="danger" type="button" icon="pi pi-trash"
+                                                onClick={() => handleRemovefiles(rowIndex)} />
+                                        </div>
+                                    )}
+                                />
+                            </DataTable>}
                     </div>
 
                     <hr className="separator mb-2" />
@@ -1585,6 +1709,7 @@ function TravelRequestForm() {
                                             <FloatLabel>
                                                 <Dropdown id="onwardPreferredTime" className="onwardDepartureDate"
                                                     value={newItinerary.onwardPreferredTime}
+                                                    style={{ width: '9vw' }}
                                                     onChange={e => handleInputChange('onwardPreferredTime', e)} options={preferredTimeList} optionLabel="name" />
                                                 <label htmlFor="onwardPreferredTime">Preferred Time</label>
                                             </FloatLabel>
@@ -1628,6 +1753,7 @@ function TravelRequestForm() {
                                                 <div className="returnpreferredTime">
                                                     <FloatLabel>
                                                         <Dropdown id="returnpreferredTime" className="onwardDepartureDate"
+                                                            style={{ width: '9vw' }}
                                                             value={newItinerary.returnPreferredTime}
                                                             onChange={e => handleInputChange('returnPreferredTime', e)} options={preferredTimeList} optionLabel="name" />
                                                         <label htmlFor="returnpreferredTime">Preferred Time</label>
@@ -1749,13 +1875,13 @@ function TravelRequestForm() {
 
                 </form>
             </div>
-            <Snackbar
+            {/* <Snackbar
                 open={open}
                 // autoHideDuration={6000}
                 onClose={handleClose}
                 message={message}
                 action={action}
-            ></Snackbar>
+            ></Snackbar> */}
         </div>
     );
 }

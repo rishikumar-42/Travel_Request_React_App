@@ -117,6 +117,34 @@ const TravelRequestFormServiceLayer = {
             throw error;
         }
     },
+    addDocuments: async (file) => {
+        try {
+            console.log("Adding")
+            const formData = new FormData();
+            formData.append('file', file);
+            const response = await axios.post(`http://localhost:8080/o/headless-delivery/v1.0/sites/${process.env.REACT_APP_API_LIFERAY_SITE_ID}/documents`, formData,{
+                headers: {
+                  'Content-Type': 'multipart/form-data',
+                },
+              });
+            console.log("Form submission response:", response); 
+            return response.data;
+        } catch (error) {
+            // console.error("Error submitting form", error);
+            throw error;
+        }
+    },
+    deleteDocuments: async (documentId) => {
+        try {
+            console.log("deleting");
+            const response = await axios.delete(`http://localhost:8080/o/headless-delivery/v1.0/documents/${documentId}`);
+            console.log("document delete response:", response.status); 
+            return response.status;
+        } catch (error) {
+            // console.error("Error submitting form", error);
+            throw error;
+        }
+    },
     fetchCount: async () => {
         try {
             console.log("Counting")
