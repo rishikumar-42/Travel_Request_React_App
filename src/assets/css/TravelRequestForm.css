@@ -77,8 +77,13 @@ h1 {
     margin-right: 0;
 }
 
+.p-inputswitch.p-highlight .p-inputswitch-slider {
+    background-color: #114B7D;
+}
+
 label {
     display: block;
+    color: black;
     /* margin-top: 0;
     margin-bottom: 2px; */
 }
@@ -562,13 +567,18 @@ span.close {
     margin-top: -21px;
     padding-left: 20px;
 }
+
 .custom-header {
-    background-color:#51829B !important; /* Replace with your desired color */
-    color: #ffff; /* Optional: set text color for better contrast */
+    background-color: #51829B !important;
+    /* Replace with your desired color */
+    color: #ffff;
+    /* Optional: set text color for better contrast */
 }
+
 .addbutton button.p-button.p-component {
-    background-color:#51829B !important; /* Replace with your desired color */
-    color: #ffff; 
+    background-color: #51829B !important;
+    /* Replace with your desired color */
+    color: #ffff;
 }
 
 
@@ -618,4 +628,15 @@ span.close {
 .Dropdown {
     width: 100%;
     /* Ensures input elements take up full width of their container */
+}
+
+input[type=file]::file-selector-button {
+    font-weight: bold;
+    background-color: #51829B !important;
+    background: linear-gradient(90deg, #003D71 0%, #5482AB 100%) !important;
+    ;
+    color: #ffff;
+    padding: 0.5em;
+    border: thin solid grey;
+    border-radius: 3px;
 }

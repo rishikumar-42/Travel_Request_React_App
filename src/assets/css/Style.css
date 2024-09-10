@@ -47,12 +47,12 @@ input:checked+.slider {
 .modal .onwardDepartureDate.p-dropdown.p-component.p-inputwrapper {
     width: 132px;
 }
-.modal .p-inputswitch .p-inputswitch-slider {
+/* .modal .p-inputswitch .p-inputswitch-slider {
     background-color: #114B7D;
 }
 .modal .p-highlight span.p-inputswitch-slider {
     background-color: #ccc !important;
-}
+} */
 .radio-group label {
     margin-left: 3px;
     color: #495057;
