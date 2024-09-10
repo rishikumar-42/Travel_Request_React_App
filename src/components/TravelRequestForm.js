@@ -37,8 +37,6 @@ function TravelRequestForm() {
     const [showTrainDetails, setTrainDetails] = useState(false);
     const [showItinerary, setShowItinerary] = useState(false);
     const [showFlightTicket, setFlightTicket] = useState(false);
-    // const [firstName, setFirstName] = useState("");
-    // const [suggestions, setSuggestions] = useState([]);
     const [userList, setUserList] = useState([]);
     const [reasonList, setReasonList] = useState([]);
     const [flightTypeList, setFlightTypeList] = useState([]);
@@ -54,20 +52,6 @@ function TravelRequestForm() {
     const [isManagerEmailValid, setIsManagerEmailValid] = useState(true);
     const [isHODEmailValid, setIsHODEmailValid] = useState(true);
     const [isEmailValidSubmit, setIsEmailValidSubmit] = useState(true);
-    // const [newItinerary, setNewItinerary] = useState({
-    //     itFrom: '',
-    //     itTo: '',
-    //     departure: null,
-    //     arrival: null,
-    //     // itrDate: '',
-    //     flightNumber: '',
-    //     returnFrom: '',
-    //     returnTo: '',
-    //     returnDeparture: null,
-    //     returnArrival: null,
-    //     returnFlightNumber: '',
-    //     price: ''
-    // });
     const [newItinerary, setNewItinerary] = useState({
         onwardJourney: '',
         onwardDepartureDate: null,
@@ -78,7 +62,6 @@ function TravelRequestForm() {
         returnArrivalDate: null,
         returnPreferredTime: '',
         returnTransportNumber: '',
-        // r_itineraryRelation_c_travelInfoERC: ""
     });
     const [editingItinerary, setEditingItinerary] = useState(null);
 
@@ -94,7 +77,6 @@ function TravelRequestForm() {
     const [saveItineraryFlag, setSaveItineraryFlag] = useState(true);
     const [file, setFile] = useState(null);
     const [files, setFiles] = useState([]);
-    // const [fileError, setFileError] = useState('');
 
     const toast = useRef(null);
 
@@ -149,22 +131,6 @@ function TravelRequestForm() {
             showMessage('error', 'Error', `Error response : ${error.response.data.title}`)
 
         }
-
-        // const formData = new FormData();
-        // formData.append('file', file);
-
-        // axios.post(url, formData, {
-        //     headers: {
-        //         'Content-Type': 'multipart/form-data',
-        //     },
-        // })
-        //     .then((response) => {
-        //         console.log(response.data);
-        //     })
-        //     .catch((error) => {
-        //         console.error('Error uploading file:', error);
-        //         setFileError('Error uploading file.');
-        //     });
     };
 
     const searchEmployee = (event) => {
@@ -173,7 +139,6 @@ function TravelRequestForm() {
             userList.filter(item => item.email.toLowerCase().includes(query))
         );
     };
-    // const [selectedPhoneCode, setSelectedPhoneCode] = useState(null);
     const handleEditItinerary = (index) => {
         const itineraryToEdit = { ...itineraries[index] }; // Create a copy to avoid direct mutation
         setNewItinerary(itineraryToEdit);
@@ -204,18 +169,6 @@ function TravelRequestForm() {
             setItineraries([...itineraries, newItinerary]);
         }
         setNewItinerary({
-            // itFrom: '',
-            // itTo: '',
-            // departure: null,
-            // arrival: null,
-            // // itrDate: '',
-            // flightNumber: '',
-            // returnFrom: '',
-            // returnTo: '',
-            // returnDeparture: null,
-            // returnArrival: null,
-            // returnFlightNumber: '',
-            // price: ''
             onwardJourney: '',
             onwardDepartureDate: null,
             onwardPreferredTime: '',
@@ -225,7 +178,6 @@ function TravelRequestForm() {
             returnArrivalDate: null,
             returnPreferredTime: '',
             returnTransportNumber: '',
-            // r_itineraryRelation_c_travelInfoERC: ""
         });
         setShowItinerary(false);
         setShowReturnFields(false);
@@ -235,32 +187,6 @@ function TravelRequestForm() {
         setItineraries(itineraries.filter((_, i) => i !== index));
     };
 
-
-    // const PhoneNumberInput = () => {
-    //     const phoneCodes = [
-    //         { code: "91", country: "India" },
-    //         { code: "966", country: "Saudi Arabia" },
-    //         { code: "98", country: "Iran" }
-    //     ];
-
-    //     return (
-    //         <div className="p-inputgroup flex-1">
-    //             <FloatLabel>
-    //                 <span className="p-inputgroup-addon">+</span>
-    //                 <Dropdown
-    //                     // autoWidth={false}
-    //                     value={selectedPhoneCode}
-    //                     onChange={(e) => setSelectedPhoneCode(e.value)}
-    //                     options={phoneCodes}
-    //                     optionLabel="code"
-    //                     placeholder="Select Code"
-    //                     className="p-mr-2 w-full md:w-14rem"
-    //                 />
-    //                 <InputNumber id="telephoneNumber" placeholder="Telephone Number" />
-    //             </FloatLabel>
-    //         </div>
-    //     );
-    // };
     const searchItem = (event) => {
         const query = event.query.toLowerCase();
         setdropDownSuggestions(
@@ -281,14 +207,6 @@ function TravelRequestForm() {
             </div>
         );
     };
-
-    // const employeeTemplate = (item) => {
-    //     return (
-    //         <div className="p-d-flex p-ai-center">
-    //             <div className="p-mr-2">{item.firstName}</div>
-    //         </div>
-    //     );
-    // };
 
     useEffect(() => {
         const getAllUsers = async () => {
@@ -399,13 +317,6 @@ function TravelRequestForm() {
             }))
         }
     }
-    // const handleInputChange = (e) => {
-    //     const { name, value } = e.target;
-    //     setNewItinerary({
-    //         ...newItinerary,
-    //         [name]: value
-    //     });
-    // };
 
     const handleInputChange = (name, e) => {
         const { value } = e.target;
@@ -415,26 +326,6 @@ function TravelRequestForm() {
             [name]: value
         });
     };
-
-    // const handleSaveItinerary = () => {
-    //     setItineraries([...itineraries, newItinerary]);
-    //     setNewItinerary({
-    //         itFrom: '',
-    //         itTo: '',
-    //         departure: '',
-    //         arrival: '',
-    //         itrDate: '',
-    //         flightNumber: '',
-    //         price: ''
-    //     });
-    //     setShowItinerary(false);
-    // };
-
-    //const calculateTotalPrice = () => {
-    //    return itineraries.reduce((total, itinerary) => {
-    //        return total + parseFloat(itinerary.price || 0);
-    //    }, 0).toFixed(2);
-    //};
 
     const handleHotelToggleChange = (event) => {
         setShowNights(event.target.checked);
@@ -512,10 +403,6 @@ function TravelRequestForm() {
         }
     };
 
-    // const handleAddItineraryClick = () => {
-    //     setShowItinerary(true);
-    // };
-
     const handleCloseItineraryClick = () => {
         setShowItinerary(false);
         setEditingItinerary(null);
@@ -582,28 +469,6 @@ function TravelRequestForm() {
         itineraryRelation: [],
         attachmentRelation: []
     });
-
-    // const initialTrainTicket = () => {
-    //     console.log("trainTypeList data : ", trainTypeList);
-    //     const firstTrainType = trainTypeList[0];
-    //     console.log("firstTrainType data : ", firstTrainType);
-    //     setTrainTypeValue(firstTrainType);
-    //     setFormData(formData => ({
-    //         ...formData, // Spread the existing formData
-    //         trainTicketType: {
-    //             key: firstTrainType.key,
-    //             name: firstTrainType.name // Update only the firstName property
-    //         }
-    //     }));
-    //     console.log("form data : ", JSON.stringify(formData));
-    // };
-
-    // const handleTrainToggleChange = async (event) => {
-    //     setTrainDetails(event.target.checked);
-    //     if (event.target.checked) {
-    //         initialTrainTicket();
-    //     }
-    // };
 
     const initialTrainTicket = () => {
         console.log("trainTypeList data : ", trainTypeList);
@@ -694,9 +559,9 @@ function TravelRequestForm() {
             });
             // setMessage(`Successfully created Id : ${response.data.travelRequestId}`);
             showMessage('success', 'Success', `Successfully created Id : ${response.data.travelRequestId}`)
-            setTimeout(() => {
-                window.location.reload();
-            }, 5000);
+            // setTimeout(() => {
+            //     window.location.reload();
+            // }, 5000);
             // setOpen(true);
         } catch (error) {
             console.error("Error submitting form", error);
@@ -711,14 +576,6 @@ function TravelRequestForm() {
             e.preventDefault(); // Prevent the default action (form submission)
         }
     };
-
-    // const handleClose = (event, reason) => {
-    //     if (reason === 'clickaway') {
-    //         return;
-    //     }
-    //     setOpen(false);
-    //     window.location.reload();
-    // };
 
     const validateEmployeeEmail = () => {
         return userList.some(user => {
@@ -799,32 +656,6 @@ function TravelRequestForm() {
         setIsEmailValidSubmit((!isManagerEmailValid || selectedItem === '') || !isHODEmailValid);
     }, [isHODEmailValid, isManagerEmailValid]);
 
-
-
-    // const emailSubmitValidation = () => {
-    //     const employeeValid = !isEmployeeEmailValid || (typeof selectedEmployee === 'object' ? selectedEmployee.email : selectedEmployee)==='';
-    //     const managerValid = !isManagerEmailValid || (typeof selectedItem === 'object' ? selectedItem.email : selectedItem)==='';
-    //     const hodValid = !isHODEmailValid && (typeof selectedItem2 === 'object' ? selectedItem2.email : selectedItem2)==='';
-    //     console.log(isManagerEmailValid , " :-- " ,isHODEmailValid)
-    //     return (!isManagerEmailValid && !isHODEmailValid)
-    // };
-
-    // const action = (
-    //     <React.Fragment>
-    //         <Button color="secondary" size="small" onClick={handleClose}>
-    //             UNDO
-    //         </Button>
-    //         <IconButton
-    //             size="small"
-    //             aria-label="close"
-    //             color="inherit"
-    //             onClick={handleClose}
-    //         >
-    //             <CloseIcon fontSize="small" />
-    //         </IconButton>
-    //     </React.Fragment>
-    // );
-
     return (
         <div className="form-container mx-5">
             <div className="bg-white align-items-start px-3 rounded-bottom-2 mb-3 pt-3 pb-3 shadow-sm">
@@ -878,13 +709,6 @@ function TravelRequestForm() {
                                 <label htmlFor="number-input" className="small">Telephone Number<span className="text-danger px-1">*</span></label>
                             </FloatLabel>
                         </div>
-                        {/* </FloatLabel> */}
-                        {/* <div className="form-single">
-                            <label htmlFor="telephoneNumber"><strong>Telephone Number</strong></label>
-                            <input type="text" id="telephoneNumber" name="telephoneNumber" />
-                        </div> */}
-                        {/* <PhoneNumberInput /> */}
-                        {/* <span className="p-inputgroup-addon">.00</span> */}
                     </div>
                     <div className="px-3 pt-3">
                         <div className="py-1 mb-2">
@@ -1330,13 +1154,6 @@ function TravelRequestForm() {
                                 </div>
                                 <div className="calendar-container d-flex align-items-stretch gap-3 my-4 mx-2">
                                     <div className="calendar-item">
-                                        {/* <label htmlFor="birthDate">Birth Date</label>
-                                            <input type="date" id="birthDate" name="birthDate" required
-                                                value={formData.carRentalBirthDate}
-                                                onChange={(e) => setFormData({
-                                                    ...formData,
-                                                    carRentalBirthDate: e.target.value
-                                                })} /> */}
                                         <FloatLabel>
                                             <Calendar id="birthDate" dateFormat="dd/mm/yy" value={formData.carRentalBirthDate}
                                                 onChange={(e) => setFormData({
@@ -1473,16 +1290,6 @@ function TravelRequestForm() {
                                         })}
                                     </div>
                                 </div>
-                                {/* <div className="form-row-checkbox">
-                                    <div className="half-width">
-                                        <label htmlFor="businessClass">Business Class</label>
-                                        <input type="checkbox" id="businessClass" name="class" required />
-                                    </div>
-                                    <div className="half-width">
-                                        <label htmlFor="economyClass">Economy Class</label>
-                                        <input type="checkbox" id="economyClass" name="class" required />
-                                    </div>
-                                </div> */}
                                 <p className="mx-2">Note: Kindly attach the 3 quotes/routes provided by Travel Agent for comparison. If the least cost-saving route is not taken, kindly provide the reason below.</p>
                                 <div className="form-dropdown-container d-flex gap-3 mx-2 reason-dropdown align-items-center mt-4">
                                     <label htmlFor="reason">Reason<span className="text-danger px-1 mt-2">*</span></label>
@@ -1595,102 +1402,7 @@ function TravelRequestForm() {
                                     <span className="close text-right justify-content-end " onClick={handleCloseItineraryClick}>&times;</span>
                                 </div>
                                 <hr class="my-1" />
-                                {/* <div className="itinerary-form">
-                                    <div className="form-row">
-                                        <div className="form-group">
 
-                                            <FloatLabel>
-                                                <InputText id="itFrom" value={newItinerary.itFrom} onChange={e => handleInputChange('itFrom', e)} />
-                                                <label for="itFrom">From</label>
-                                            </FloatLabel>
-                                        </div>
-                                        <div className="form-group">
-
-                                            <FloatLabel>
-                                                <InputText id="itTo" value={newItinerary.itTo} onChange={e => handleInputChange('itTo', e)} />
-                                                <label for="itTo">To</label>
-                                            </FloatLabel>
-                                        </div>
-                                    </div>
-                                    <div className="form-row">
-                                        <div className="form-group">
-                                            <label htmlFor="departure">Departure</label>
-
-                                            <Calendar id="departure" dateFormat="dd/mm/yy" value={newItinerary.departure} onChange={(e) => handleInputChange('departure', e)} showIcon />
-                                        </div>
-                                        <div className="form-group">
-                                            <label htmlFor="arrival">Arrival</label>
-                                            <Calendar id="arrival" dateFormat="dd/mm/yy" value={newItinerary.arrival} onChange={(e) => handleInputChange('arrival', e)} showIcon />
-                                        </div>
-                                    </div>
-                                    <br></br>
-                                    <div className="form-row">
-                                        <div className="form-group">
-                                            <FloatLabel>
-                                                <InputText id="flightNumber" value={newItinerary.flightNumber} onChange={e => handleInputChange('flightNumber', e)} />
-                                                <label for="flightNumber">Flight Number</label>
-                                            </FloatLabel>
-                                        </div>
-                                    </div>
-
-                                    <div className="form-row">
-                                        <div className="form-group">
-                                            <label htmlFor="showReturnFields">Show Return Trip</label>
-                                            <InputSwitch checked={showReturnFields} onChange={(e) => setShowReturnFields(e.value)} />
-                                        </div>
-                                    </div>
-
-                                    {showReturnFields && (
-                                        <>
-                                            <div className="form-row">
-                                                <div className="form-group">
-                                                    <FloatLabel>
-                                                        <InputText id="returnFrom" value={newItinerary.returnFrom} onChange={e => handleInputChange('returnFrom', e)} />
-                                                        <label for="returnFrom">Return From</label>
-                                                    </FloatLabel>
-                                                </div>
-                                                <div className="form-group">
-                                                    <FloatLabel>
-                                                        <InputText id="returnTo" value={newItinerary.returnTo} onChange={e => handleInputChange('returnTo', e)} />
-                                                        <label for="returnTo">Return To</label>
-                                                    </FloatLabel>
-                                                </div>
-                                            </div><div className="form-row">
-                                                <div className="form-group">
-                                                    <label htmlFor="returnDeparture">Return Departure</label>
-                                                    <Calendar id="returnDeparture" dateFormat="dd/mm/yy" value={newItinerary.returnDeparture} onChange={(e) => handleInputChange('returnDeparture', e)} showIcon />
-                                                </div>
-                                                <div className="form-group">
-                                                    <label htmlFor="returnArrival">Return Arrival</label>
-                                                    <Calendar id="returnArrival" dateFormat="dd/mm/yy" value={newItinerary.returnArrival} onChange={(e) => handleInputChange('returnArrival', e)} showIcon />
-                                                </div>
-                                            </div>
-                                            <br></br>
-                                            <div className="form-row">
-                                                <div className="form-group">
-                                                    <FloatLabel>
-                                                        <InputText id="returnFlightNumber" value={newItinerary.returnFlightNumber} onChange={e => handleInputChange('returnFlightNumber', e)} />
-                                                        <label for="returnFlightNumber">Return Flight Number</label>
-                                                    </FloatLabel>
-                                                </div>
-                                            </div>
-                                        </>
-                                    )}
-                                    <div className="form-single">
-                                        <label htmlFor="price">Price incl. VAT</label>
-                                        <input
-                                            type="text"
-                                            id="price"
-                                            name="price"
-                                            value={newItinerary.price}
-                                            onChange={handleInputChange}
-                                            required
-                                        />
-                                    </div>
-                                    <div className="form-row">
-                                        <button type="button" onClick={handleSaveItinerary}>Save</button>
-                                    </div>
-                                </div> */}
                                 <div className="itinerary-form">
                                     <div className="form-row d-flex align-content-stretch gap-3">
                                         <div className="calendar-item">
@@ -1781,32 +1493,7 @@ function TravelRequestForm() {
                     {itineraries.length > 0 && (
                         <div className="itinerary-table">
                             <h3>Saved Itineraries</h3>
-                            {/* <table>
-                                <thead>
-                                    <tr>
-                                        <th>From</th>
-                                        <th>To</th>
-                                        <th>Departure</th>
-                                        <th>Arrival</th>
-                                        <th>Date and Time</th>
-                                        <th>Flight Number</th>
-                                        <th>Price incl. VAT</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {itineraries.map((itinerary, index) => (
-                                        <tr key={index}>
-                                            <td>{itinerary.itFrom}</td>
-                                            <td>{itinerary.itTo}</td>
-                                            <td>{itinerary.departure}</td>
-                                            <td>{itinerary.arrival}</td>
-                                            <td>{itinerary.itrDate}</td>
-                                            <td>{itinerary.flightNumber}</td>
-                                            <td>{itinerary.price}</td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table> */}
+                            
                             <DataTable value={itineraries} showGridlines tableStyle={{ minWidth: '50rem' }}>
                                 {/*<Column sortable field="price" header="Price incl. VAT" /> */}
                                 <Column sortable field="onwardJourney" header="Onward Journey" headerClassName="custom-header" />
@@ -1829,9 +1516,6 @@ function TravelRequestForm() {
                                     )}
                                 />
                             </DataTable>
-                            {/* <div className="total-price">
-                                <strong>Total Price incl. VAT:</strong> {calculateTotalPrice()}
-                            </div> */}
                         </div>
                     )}
                     {/* <button type="submit">Submit</button> */}
@@ -1875,13 +1559,6 @@ function TravelRequestForm() {
 
                 </form>
             </div>
-            {/* <Snackbar
-                open={open}
-                // autoHideDuration={6000}
-                onClose={handleClose}
-                message={message}
-                action={action}
-            ></Snackbar> */}
         </div>
     );
 }
