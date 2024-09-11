@@ -868,7 +868,7 @@ function TravelRequestForm() {
                                 <label htmlFor="departureDate" className="mr-2 small">Departure Date<span className="text-danger px-1">*</span></label>
                             </FloatLabel>
                             <FloatLabel className="w-25">
-                                <Calendar id="returnDate" minDate={formData.departureDate} dateFormat="dd/mm/yy" className="w-100" value={formData.travelArrivalDate}
+                                <Calendar id="returnDate" dateFormat="dd/mm/yy" className="w-100" value={formData.travelArrivalDate}
                                     onChange={(e) => {
                                         setFormData({
                                             ...formData,
