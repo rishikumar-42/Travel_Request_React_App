@@ -194,11 +194,11 @@ const FormPreview = ({ item, travelInfo, attachments }) => {
                         </div>
                         <div className="detail-item">
                             <span className="label">On:</span>
-                            <span className="value">{item.carRentalOn || 'N/A'}</span>
+                            <span className="value">{formatDate(item.carRentalOn) || 'N/A'}</span>
                         </div>
                         <div className="detail-item">
                             <span className="label">Until:</span>
-                            <span className="value">{item.carRentalUntil || 'N/A'}</span>
+                            <span className="value">{formatDate(item.carRentalUntil) || 'N/A'}</span>
                         </div>
                         <div className="detail-item">
                             <span className="label">BirthDate:</span>
