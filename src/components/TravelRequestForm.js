@@ -348,8 +348,8 @@ function TravelRequestForm() {
                 ...prevFormData, // Spread the existing formData
                 carRentalFrom: "",
                 carRentalTo: "",
-                carRentalOn: "",
-                carRentalUntil: "",
+                carRentalOn: null,
+                carRentalUntil: null,
                 carRentalBirthDate: null,
                 carDrivingLicense: "",
                 carRentalCategory: "",
@@ -446,8 +446,8 @@ function TravelRequestForm() {
         flightTicketType: {},
         carRentalFrom: "",
         carRentalTo: "",
-        carRentalOn: "",
-        carRentalUntil: "",
+        carRentalOn: null,
+        carRentalUntil: null,
         carRentalBirthDate: null,
         carDrivingLicense: "",
         carRentalCategory: "",
@@ -1129,6 +1129,14 @@ function TravelRequestForm() {
                                     </div>
                                     <div className="calendar-item">
                                         <FloatLabel>
+                                            <Calendar id="on" dateFormat="dd/mm/yy" value={formData.carRentalOn}
+                                                onChange={(e) => setFormData({
+                                                    ...formData,
+                                                    carRentalOn: e.value
+                                                })} showIcon required />
+                                            <label for="on">On:<span className="text-danger px-1">*</span></label>
+                                        </FloatLabel>
+                                        {/* <FloatLabel>
                                             <label htmlFor="on">On:<span className="text-danger px-1">*</span></label>
                                             <InputText type="text" maxLength={250} id="on" name="on" required
                                                 value={formData.carRentalOn}
@@ -1137,10 +1145,18 @@ function TravelRequestForm() {
                                                     carRentalOn: e.target.value
                                                 })}
                                             />
-                                        </FloatLabel>
+                                        </FloatLabel> */}
                                     </div>
                                     <div className="calendar-item">
                                         <FloatLabel>
+                                            <Calendar id="until" dateFormat="dd/mm/yy" value={formData.carRentalUntil}
+                                                onChange={(e) => setFormData({
+                                                    ...formData,
+                                                    carRentalUntil: e.value
+                                                })} showIcon required />
+                                            <label for="until">Until:<span className="text-danger px-1">*</span></label>
+                                        </FloatLabel>
+                                        {/* <FloatLabel>
                                             <label htmlFor="until">Until:<span className="text-danger px-1">*</span></label>
                                             <InputText type="text" maxLength={250} id="until" name="until" required
                                                 value={formData.carRentalUntil}
@@ -1149,7 +1165,7 @@ function TravelRequestForm() {
                                                     carRentalUntil: e.target.value
                                                 })}
                                             />
-                                        </FloatLabel>
+                                        </FloatLabel> */}
                                     </div>
                                 </div>
                                 <div className="calendar-container d-flex align-items-stretch gap-3 my-4 mx-2">
@@ -1493,7 +1509,7 @@ function TravelRequestForm() {
                     {itineraries.length > 0 && (
                         <div className="itinerary-table">
                             <h3>Saved Itineraries</h3>
-                            
+
                             <DataTable value={itineraries} showGridlines tableStyle={{ minWidth: '50rem' }}>
                                 {/*<Column sortable field="price" header="Price incl. VAT" /> */}
                                 <Column sortable field="onwardJourney" header="Onward Journey" headerClassName="custom-header" />
