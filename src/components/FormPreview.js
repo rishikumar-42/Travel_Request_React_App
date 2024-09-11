@@ -1,9 +1,11 @@
 
 import React from 'react';
 import "../assets/css/FormPreview.css";
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
 // import Divider from '@mui/joy/Divider';
 
-const FormPreview = ({ item, travelInfo }) => {
+const FormPreview = ({ item, travelInfo, attachments }) => {
 
     const formatDate = (date) => {
         if (!date) return '';
@@ -13,9 +15,9 @@ const FormPreview = ({ item, travelInfo }) => {
 
     const formatDateTime = (date) => {
         if (!date) return '';
-        const options = { 
-            day: '2-digit', 
-            month: '2-digit', 
+        const options = {
+            day: '2-digit',
+            month: '2-digit',
             year: 'numeric',
             hour: '2-digit',
             minute: '2-digit',
@@ -262,6 +264,21 @@ const FormPreview = ({ item, travelInfo }) => {
                     </div>
                 </div>
 
+                <div className="toolbar">
+                    <span className="title">Attachments</span>
+                </div>
+                <div className="summary-details">
+                    <ol>
+                        {attachments.map(task => (
+                            <li key={task.id}>
+                                {task.title}
+                            </li>
+                        ))}
+                    </ol>
+                    {/* <DataTable value={attachments} showGridlines tableStyle={{ minWidth: '50rem' }}>
+                <Column sortable field="title" header="Title" headerClassName="custom-header" />
+                </DataTable> */}
+                </div>
                 <div className="toolbar">
                     <span className="title">Itineraries</span>
                 </div>
