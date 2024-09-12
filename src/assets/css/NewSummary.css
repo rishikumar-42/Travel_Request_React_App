@@ -31,7 +31,7 @@
     width: 100%;
   }
   
-  .toolbar {
+  .toolbar-summary {
     background: linear-gradient(90deg, #003D71 0%, #5482AB 100%);
     color: white;
     padding: 10px;
@@ -39,59 +39,59 @@
     margin-bottom: 10px;
     display: flex;
     align-items: center;
-    height: 10px;
+    height: 30px;
   }
-  
+
   .title {
     font-weight: 600;
     color: #fff;
   }
-  
+
   .summary-details {
     width: 100%;
   }
-  
+
   .details-grid {
     padding: 5px;
     display: grid;
     grid-template-columns: repeat(4, 1fr); /* 4 columns */
     gap: 20px; /* Increase gap between columns and rows */
   }
-  
+
   .details-grid-itinerary {
     padding: 10px;
     display: grid;
     grid-template-columns: repeat(7, 1fr); /* 7 columns for itinerary */
     gap: 20px; /* Increase gap between columns and rows */
   }
-  
+
   .detail-item {
     display: flex;
     flex-direction: column;
     margin-bottom: 20px; /* Add space below each item */
   }
-  
+
   .label {
     font-weight: bold;
     margin-bottom: 5px;
   }
-  
+
   .value {
     color: #333;
   }
-  
+
   .table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 10px;
   }
-  
+
   .table-row {
     border-bottom: 1px solid #ddd;
     background: rgba(55, 106, 151, 0.2588235294);
     font-size: 16px;
   }
-  
+
   .table-header {
     padding: 10px;
     font-weight: bold;
@@ -99,7 +99,7 @@
     text-align: left;
     border-bottom: 2px solid #ddd;
   }
-  
+
   .table-data {
     padding: 10px;
     text-align: left;
@@ -110,7 +110,8 @@
   .title-TravelDetails{
   font-weight: 600;
   }
-  .approve-button{
+
+  /* .approve-button{
     background-color: #1a6600;
     color: white;
     border: none;
@@ -119,10 +120,10 @@
     cursor: pointer;
     font-size: 16px;
     width: 80px;
-    margin-left: 900px;
+    margin-left: 800px;
     margin-top: -40px;
   }
-  
+
   .reject-button{
     background-color: #660000;
     color: white;
@@ -133,6 +134,73 @@
     font-size: 16px;
     width: 80px;
     margin-left: 1000px;
-    margin-top: -40px;
+    margin-top: -800px !important;
   }
-  
+  .rejectbtn {
+    margin-top: -28px;
+    margin-left: -79px;
+  } */
+
+
+  /* .approve-button,
+  .reject-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+  } */
+/* 
+  .approve-button {
+    background-color: #1a6600;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 80px;
+    margin-left: 800px;
+  } */
+
+  /* .reject-button {
+    background-color: #660000;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 80px;
+  } */
+.Rejectbtn{
+  margin-top: -35px !important;
+}
+  .table-summary tr th:first-child {
+    border-top-left-radius: 15px;
+  }
+  .table-summary  tr th:last-child {
+    border-top-right-radius: 15px;
+  }
+  .table-summary {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .table-summary  th {
+    background-color: #114b7d !important;
+    color: #fff;
+    border: 1px solid #fff;
+    border-bottom: 0px solid #dee2e6 !important;
+    font-weight: 500;
+    font-size: 14px;
+    text-wrap: nowrap !important;
+  }
+
+  .table-summary  td {
+    /* border-color: transparent; */
+    background: rgba(55, 106, 151, 0.2588235294);
+    color: #114b7d;
+    font-weight: 500;
+    font-size: 14px;
+    height: 35px;
+  }

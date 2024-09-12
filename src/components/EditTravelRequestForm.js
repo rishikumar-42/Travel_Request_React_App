@@ -1,11 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import TravelRequestFormService from "../service/TravelRequestFormService.js";
 import "../assets/css/TravelRequestForm.css";
 import 'primereact/resources/themes/saga-blue/theme.css'; // Theme
 import 'primereact/resources/primereact.min.css';
 import { AutoComplete } from "primereact/autocomplete";
-import { Toast } from 'primereact/toast';
 import { Dropdown } from 'primereact/dropdown';
 import { RadioButton } from "primereact/radiobutton";
 import { Button } from 'primereact/button';
@@ -25,34 +24,63 @@ import { Tooltip } from 'primereact/tooltip';
 import HelpIcon from '@mui/icons-material/Help';
 import { Dialog } from 'primereact/dialog';
 import "../assets/css/Style.css";
-import FormPreview from "./FormPreview.js";
-import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 
-function TravelRequestForm() {
+function EditTravelRequestForm() {
+    const location = useLocation();
+    const { item, travelInfo } = location.state || {};
+
+    // console.log("Issuer Date",item.issuerDate);
+    // console.log("carRental",item.carRentalCategory);
+    // console.log("travelInfo",travelInfo);
+
+
+
+  const { auth, login } = useAuth();// Access auth from context
+  const { username, password } = auth;
+  const authHeader = 'Basic ' + btoa(username + ':' + password);
+
+
+  useEffect(() => {
+    const storedUsername = localStorage.getItem('username');
+    const storedPassword = localStorage.getItem('password');
+
+    if (storedUsername && storedPassword && (username !== storedUsername || password !== storedPassword)) {
+      login(storedUsername, storedPassword);
+    }
+  }, [login, username, password]);
+
+
+  const carRentalCategorySwitch = item.carRentalCategory !== '';
+  const HotelSwitch = item.hotelLocation !== '';
+  const personCarSwitch = item.carDrivingLicense !== '';
+  const flightticketSwitch = item.flightTicketType?.name !== '';
+  const trainTicketSwitch = item.trainTicketType?.name !== '';
+
+
     const primary = "#fff"; // #f44336
     const [visible, setVisible] = useState(false);
-    const [previewVisible, setPreviewVisible] = useState(false);
-    const [showNights, setShowNights] = useState(false);
-    const [showCarDetails, setCarDetails] = useState(false);
-    const [showPerCarDetails, setPerCarDetails] = useState(false);
+    const [showNights, setShowNights] = useState(HotelSwitch);
+    const [showCarDetails, setCarDetails] = useState(carRentalCategorySwitch);
+    const [showPerCarDetails, setPerCarDetails] = useState(personCarSwitch);
     const [showTrainDetails, setTrainDetails] = useState(false);
     const [showItinerary, setShowItinerary] = useState(false);
     const [showFlightTicket, setFlightTicket] = useState(false);
     const [userList, setUserList] = useState([]);
     const [reasonList, setReasonList] = useState([]);
     const [flightTypeList, setFlightTypeList] = useState([]);
-    const [flightTypeValue, setFlightTypeValue] = useState({});
+    const [flightTypeValue, setFlightTypeValue] = useState(item.flightTicketType);
     const [trainTypeList, setTrainTypeList] = useState([]);
-    const [trainTypeValue, setTrainTypeValue] = useState({});
+    const [trainTypeValue, setTrainTypeValue] = useState(item.trainTicketType);
     const [currencyList, setCurrencyList] = useState([]);
-    const [currencyValue, setCurrencyValue] = useState({});
+    const [currencyValue, setCurrencyValue] = useState(item.travelCurrency?.name);
     const [preferredTimeList, setPreferredTimeList] = useState([]);
-    const [reasonValue, setReasonValue] = useState([]);
-    const [itineraries, setItineraries] = useState([]);
+    const [reasonValue, setReasonValue] = useState(item.flightTicketReason?.name);
+    const [itineraries, setItineraries] = useState(Array.isArray(travelInfo) ? travelInfo : []);
     const [isEmployeeEmailValid, setIsEmployeeEmailValid] = useState(true);
     const [isManagerEmailValid, setIsManagerEmailValid] = useState(true);
     const [isHODEmailValid, setIsHODEmailValid] = useState(true);
-    const [isEmailValidSubmit, setIsEmailValidSubmit] = useState(true);
     const [newItinerary, setNewItinerary] = useState({
         onwardJourney: '',
         onwardDepartureDate: null,
@@ -66,79 +94,20 @@ function TravelRequestForm() {
     });
     const [editingItinerary, setEditingItinerary] = useState(null);
 
-     const navigate = useNavigate();
-
-        const handleBack = () => {
-            navigate('/MyList');
-          };
+    const handleFieldChange = (e, field) => {
+        setNewItinerary({ ...newItinerary, [field]: e.target.value });
+    };
 
     const [dropDownSuggestions, setdropDownSuggestions] = useState([]);
-    const [selectedItem, setSelectedItem] = useState('');
+    const [selectedItem, setSelectedItem] = useState(item.manager);
     const [dropDownSuggestions2, setdropDownSuggestions2] = useState([]);
-    const [selectedItem2, setSelectedItem2] = useState('');
+    const [selectedItem2, setSelectedItem2] = useState(item.hod);
     const [employeeDropDownSuggestions, setEmployeeDropDownSuggestions] = useState([]);
-    const [selectedEmployee, setSelectedEmployee] = useState('');
+    const [selectedEmployee, setSelectedEmployee] = useState(item.email);
     const [open, setOpen] = useState(false);
     const [message, setMessage] = useState(false);
     const [showReturnFields, setShowReturnFields] = useState(false);
     const [saveItineraryFlag, setSaveItineraryFlag] = useState(true);
-    const [file, setFile] = useState(null);
-    const [files, setFiles] = useState([]);
-
-    const toast = useRef(null);
-
-    const showMessage = (severity, summary, detail) => {
-        toast.current.show({ severity, summary, detail, life: 10000 });
-    }
-
-    const onFileChange = (e) => {
-        const selectedFile = e.target.files[0];
-        if (selectedFile) {
-            if (selectedFile.size > 100000) {
-                // setFileError('File size exceeds the maximum limit.');
-                showMessage('error', 'Error', 'File size exceeds the maximum limit')
-                return;
-            }
-            setFile(selectedFile);
-        }
-    };
-    const handleRemovefiles = async (rowIndex) => {
-        const selectedFile = files[rowIndex];
-        console.log("selected file : ", selectedFile)
-        try {
-            await TravelRequestFormService.deleteDocuments(selectedFile.id)
-            showMessage('success', 'Success', `Successfully removed ${selectedFile.title}`)
-            setFiles(files.filter((_, i) => i !== rowIndex));
-        } catch (error) {
-            console.log("error while deleting : ", error)
-            showMessage('error', 'Error', `Error response : ${error.response.data.title}`)
-            // setFileError(error)
-        }
-    };
-
-    const onFileUpload = async () => {
-        if (!file) {
-            // setFileError('No file selected.');
-            showMessage('error', 'Error', 'No file selected.')
-            return;
-        }
-
-        try {
-            const fileResponse = await TravelRequestFormService.addDocuments(file);
-            const tempFile = {
-                id: fileResponse.id,
-                title: fileResponse.title,
-                contentUrl: fileResponse.contentUrl
-            };
-            setFiles([...files, tempFile]);
-            setFile(null)
-            showMessage('success', 'Success', `Successfully uploaded ${fileResponse.title}`)
-        } catch (error) {
-            // setFileError(error.title)
-            showMessage('error', 'Error', `Error response : ${error.response.data.title}`)
-
-        }
-    };
 
     const searchEmployee = (event) => {
         const query = event.query.toLowerCase();
@@ -146,6 +115,7 @@ function TravelRequestForm() {
             userList.filter(item => item.email.toLowerCase().includes(query))
         );
     };
+    // const [selectedPhoneCode, setSelectedPhoneCode] = useState(null);
     const handleEditItinerary = (index) => {
         const itineraryToEdit = { ...itineraries[index] }; // Create a copy to avoid direct mutation
         setNewItinerary(itineraryToEdit);
@@ -190,8 +160,36 @@ function TravelRequestForm() {
         setShowReturnFields(false);
     };
 
-    const handleRemoveItinerary = (index) => {
-        setItineraries(itineraries.filter((_, i) => i !== index));
+
+    const handleRemoveItinerary = async (index) => {
+        const itineraryToRemove = itineraries[index];
+        if (!itineraryToRemove) return;
+
+        try {
+            // Delete itinerary from server
+            await deleteItineraryFromServer(itineraryToRemove.id);
+
+            // Remove itinerary from state
+            setItineraries(itineraries.filter((_, i) => i !== index));
+        } catch (error) {
+            console.error('Failed to delete itinerary:', error);
+            // Optionally, show an error message to the user
+        }
+    };
+
+
+    const deleteItineraryFromServer = async (id) => {
+        try {
+            await fetch(`http://localhost:8080/o/c/traveldetailses/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Accept': 'application/json',
+                    'Authorization': authHeader,
+                  },
+            });
+        } catch (error) {
+            console.error('Error deleting itinerary:', error);
+        }
     };
 
     const searchItem = (event) => {
@@ -214,6 +212,7 @@ function TravelRequestForm() {
             </div>
         );
     };
+
 
     useEffect(() => {
         const getAllUsers = async () => {
@@ -299,6 +298,7 @@ function TravelRequestForm() {
         getAllTrainTypes();
     }, []);
 
+
     const calculateEstimatedDuration = (departureDate, arrivalDate) => {
         if (departureDate !== null && arrivalDate !== null) {
             const timeDiff = arrivalDate - departureDate;
@@ -325,6 +325,7 @@ function TravelRequestForm() {
         }
     }
 
+
     const handleInputChange = (name, e) => {
         const { value } = e.target;
         console.log(name, " : ", value);
@@ -339,11 +340,7 @@ function TravelRequestForm() {
         if (!event.target.checked) {
             setFormData(prevFormData => ({
                 ...prevFormData, // Spread the existing formData
-                hotelNumberOfNights: null,
-                hotelCheckIn: null,
-                hotelCheckOut: null,
-                hotelLocation: '',
-                hotelNote: '',
+                hotelNumberOfNights: null
             }))
         }
     };
@@ -360,7 +357,6 @@ function TravelRequestForm() {
                 carRentalBirthDate: null,
                 carDrivingLicense: "",
                 carRentalCategory: "",
-                carRentalNote: ""
             }))
         }
     };
@@ -371,8 +367,7 @@ function TravelRequestForm() {
             setFormData(prevFormData => ({
                 ...prevFormData, // Spread the existing formData
                 personalCarDrivingLicenseNumber: "",
-                personalCarRegistrationNumber: "",
-                personalCarNote: ""
+                personalCarRegistrationNumber: ""
             }))
         }
     };
@@ -390,7 +385,7 @@ function TravelRequestForm() {
             ...prevFormData, // Spread the existing formData
             flightTicketType: {
                 key: firstFlightType.key,
-                // name: firstFlightType.name // Update the trainTicketType properties
+                name: firstFlightType.name // Update the trainTicketType properties
             }
         }));
     };
@@ -427,54 +422,54 @@ function TravelRequestForm() {
         setShowReturnFields(false);
     };
 
-    const [formData, setFormData] = useState({
-        travelRequestId: "",
-        issuer: "",
-        issuerDate: null,
-        issuerNumber: null,
-        email: "",
-        firstName: "",
-        lastName: "",
-        employeeNumber: "",
-        costCenter: "",
-        entity: "",
-        positionTitle: "",
-        travelType: "",
-        travelPurpose: "",
-        participants: "",
-        destination: "",
-        travelDepartureDate: null,
-        travelArrivalDate: null,
-        travelEstimatedDuration: null,
-        travelCurrency: {},
-        travelNote: null,
-        travelBudget: null,
-        flightTicketReason: {},
-        flightTicketType: {},
-        carRentalFrom: "",
-        carRentalTo: "",
-        carRentalOn: null,
-        carRentalUntil: null,
-        carRentalBirthDate: null,
-        carDrivingLicense: "",
-        carRentalCategory: "",
-        carRentalNote: "",
-        personalCarDrivingLicenseNumber: "",
-        personalCarRegistrationNumber: "",
-        personalCarNote: "",
-        trainTicketType: {},
-        hotelLocation: "",
-        hotelNumberOfNights: null,
-        hotelCheckIn: null,
-        hotelCheckOut: null,
-        hotelNote: "",
-        //itineraryTotal: "",
-        //approver1: {},
-        //approver2: {},
-        manager: '',
-        hod: '',
-        itineraryRelation: [],
-        attachmentRelation: []
+    console.log("flightTicketType",item.flightTicketType?.name);
+
+
+    const [formData, setFormData] = React.useState({
+        travelRequestId: item.travelRequestId ||  "",
+        issuer:  item.issuer || "",
+        issuerDate: new Date(item.issuerDate) || null,
+        issuerNumber: item.issuerNumber || null,
+        email: item.email || "",
+        firstName: item.firstName ||  "",
+        lastName: item.lastName || "",
+        employeeNumber: item.employeeNumber || "",
+        costCenter: item.costCenter || "",
+        entity: item.entity || "",
+        positionTitle: item.positionTitle || "",
+        travelType: item.travelType || "",
+        travelPurpose: item.travelPurpose || "",
+        participants: item.participants || "",
+        destination: item.destination || "",
+        travelDepartureDate: new Date(item.travelDepartureDate) || null,
+        travelArrivalDate: new Date(item.travelArrivalDate) || null,
+        travelEstimatedDuration: item.travelEstimatedDuration || null,
+        travelCurrency: item.travelCurrency,
+        travelNote: item.travelNote || null,
+        travelBudget: item.travelBudget || null,
+        flightTicketReason:item.flightTicketReason,
+        flightTicketType: item.flightTicketType,
+        carRentalFrom: item.carRentalFrom || "",
+        carRentalTo: item.carRentalTo || "",
+        carRentalOn: item.carRentalOn || null,
+        carRentalUntil: item.carRentalUntil || null,
+        carRentalBirthDate: new Date(item.carRentalBirthDate) || null,
+        carDrivingLicense: item.carDrivingLicense || "",
+        carRentalCategory: item.carRentalCategory || "",
+        carRentalNote: item.carRentalNote || "",
+        personalCarDrivingLicenseNumber: item.personalCarDrivingLicenseNumber || "",
+        personalCarRegistrationNumber: item.personalCarRegistrationNumber || "",
+        personalCarNote: item.personalCarNote || "",
+        trainTicketType: item.trainTicketType,
+        hotelLocation: item.hotelLocation || "",
+        hotelNumberOfNights: item.hotelNumberOfNights || null,
+        hotelCheckIn: new Date(item.hotelCheckIn) || null,
+        hotelCheckOut:new Date(item.hotelCheckOut) || null,
+        hotelNote: item.hotelNote || "",
+        manager: item.manager || '',
+        hod: item.hod || '',
+        itineraryRelation: itineraries
+        // itineraryRelation: Array.isArray(travelInfo) ? travelInfo : []
     });
 
     const initialTrainTicket = () => {
@@ -486,7 +481,7 @@ function TravelRequestForm() {
             ...prevFormData, // Spread the existing formData
             trainTicketType: {
                 key: firstTrainType.key,
-                // name: firstTrainType.name // Update the trainTicketType properties
+                name: firstTrainType.name // Update the trainTicketType properties
             }
         }));
     };
@@ -497,6 +492,10 @@ function TravelRequestForm() {
         const month = String(now.getMonth() + 1).padStart(2, '0'); // Month, zero-padded
         const seq = String(count).padStart(4, '0');
         const uniqId = `TR${year}${month}${seq}`;
+        setFormData(prevFormData => ({
+            ...prevFormData, // Spread the existing formData
+            travelRequestId: uniqId
+        }));
         return uniqId;
     };
 
@@ -519,18 +518,27 @@ function TravelRequestForm() {
 
     }, [formData]);
 
+    // useEffect(() => {
+    //     // setFormData({
+    //     //     ...formData,
+    //     //     itineraryRelation: itineraries
+    //     // })
+    //     const updatedItineraries = [...formData.itineraryRelation, newItinerary];
+    //     setFormData(prevData => ({
+    //         ...prevData,
+    //         itineraryRelation: updatedItineraries
+    //     }));
+    // }, [itineraries]);
+
+
     useEffect(() => {
-        setFormData({
-            ...formData,
+        // Update itineraryRelation in formData when itineraries change
+        setFormData(prevData => ({
+            ...prevData,
             itineraryRelation: itineraries
-        })
+        }));
     }, [itineraries]);
-    useEffect(() => {
-        setFormData({
-            ...formData,
-            attachmentRelation: files
-        })
-    }, [files]);
+
 
 
     // handle save button
@@ -547,34 +555,52 @@ function TravelRequestForm() {
 
     }, [newItinerary, showReturnFields]);
 
+
+    const formatFormData = (data) => {
+        return {
+            ...data,
+            itineraryRelation: data.itineraryRelation.map(itinerary => ({
+                id: itinerary.id || null,
+                r_itineraryRelation_c_travelInfoId:itinerary.r_itineraryRelation_c_travelInfoId,
+                onwardJourney: itinerary.onwardJourney,
+                onwardDepartureDate: itinerary.onwardDepartureDate ? new Date(itinerary.onwardDepartureDate).toISOString() : null,
+                onwardPreferredTime: itinerary.onwardPreferredTime,
+                onwardJourneyNote: itinerary.onwardJourneyNote,
+                onwardTransportNumber: itinerary.onwardTransportNumber,
+                returnJourney: itinerary.returnJourney,
+                returnArrivalDate: itinerary.returnArrivalDate ? new Date(itinerary.returnArrivalDate).toISOString() : null,
+                returnPreferredTime: itinerary.returnPreferredTime,
+                returnTransportNumber: itinerary.returnTransportNumber,
+            })),
+        };
+    };
+
+
     // Handle form submission
     const handleFormSubmit = async (e) => {
+           console.log('Submitting formData:', formData);
+           const formattedData = formatFormData(formData);
         e.preventDefault();
-        setPreviewVisible(false)
         console.log("Form submission started");
         const uniqId = await createUniqueId();
         console.log("unique Id : ", uniqId);
-        setFormData({
-            ...formData,
-            travelRequestId: uniqId
-        });
-        console.log('form submit :', formData)
+
         try {
-            const response = await TravelRequestFormService.submitFormData({
-                ...formData,
-                travelRequestId: uniqId
-            });
-            // setMessage(`Successfully created Id : ${response.data.travelRequestId}`);
-            showMessage('success', 'Success', `Successfully created Id : ${response.data.travelRequestId}`)
-            // setTimeout(() => {
-            //     window.location.reload();
-            // }, 5000);
-            // setOpen(true);
+            let response;
+            if (item.id) {
+                // If item.id exists, update the record
+                response = await TravelRequestFormService.updateFormData(item.id, formattedData);
+                setMessage(`Successfully updated Id : ${response.data.id}`);
+            } else {
+                // Otherwise, create a new record
+                response = await TravelRequestFormService.submitFormData(formData);
+                setMessage(`Successfully created Id : ${response.data.id}`);
+            }
+            setOpen(true);
         } catch (error) {
             console.error("Error submitting form", error);
-            // setMessage(`Error response : ${error.response.data.title}`);
-            showMessage('error', 'Error', `Error response : ${error.response.data.title}`)
-            // setOpen(true);
+            setMessage(`Error response : ${error.response.data.title}`);
+            setOpen(true);
         }
     };
 
@@ -582,6 +608,13 @@ function TravelRequestForm() {
         if (e.key === 'Enter') {
             e.preventDefault(); // Prevent the default action (form submission)
         }
+    };
+
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setOpen(false);
     };
 
     const validateEmployeeEmail = () => {
@@ -606,7 +639,7 @@ function TravelRequestForm() {
     // Function to handle blur event for validation
     const handleBlur = () => {
         if (selectedEmployee === null)
-            setIsEmployeeEmailValid(false)
+            setIsEmployeeEmailValid(true)
         else
             setIsEmployeeEmailValid(validateEmployeeEmail());
     };
@@ -630,7 +663,7 @@ function TravelRequestForm() {
     // Function to handle blur event for validation
     const handleBlur2 = () => {
         if (selectedItem === null)
-            setIsManagerEmailValid(false)
+            setIsManagerEmailValid(true)
         else
             setIsManagerEmailValid(validateManagerEmail());
     };
@@ -652,24 +685,33 @@ function TravelRequestForm() {
 
     // Function to handle blur event for validation
     const handleBlur3 = () => {
-        if (selectedItem2 === '')
+        if (selectedItem === null)
             setIsHODEmailValid(true)
         else
             setIsHODEmailValid(validateHODEmail());
     };
-
-    useEffect(() => {
-        console.log("status :", (!isManagerEmailValid || !isHODEmailValid))
-        setIsEmailValidSubmit((!isManagerEmailValid || selectedItem === '') || !isHODEmailValid);
-    }, [isHODEmailValid, isManagerEmailValid]);
+    const action = (
+        <React.Fragment>
+            <Button color="secondary" size="small" onClick={handleClose}>
+                UNDO
+            </Button>
+            <IconButton
+                size="small"
+                aria-label="close"
+                color="inherit"
+                onClick={handleClose}
+            >
+                <CloseIcon fontSize="small" />
+            </IconButton>
+        </React.Fragment>
+    );
 
     return (
         <div className="form-container mx-5">
             <div className="bg-white align-items-start px-3 rounded-bottom-2 mb-3 pt-3 pb-3 shadow-sm">
-                <Toast ref={toast} position="top-center" />
                 <form className="travel-form p-0" onSubmit={handleFormSubmit} onKeyDown={handleKeyDown}>
                     <div className="bg-color px-3 py-1 rounded-top-2 d-flex justify-content-between align-items-center w-100">
-                        <div className="align-items-start"><h5 className="text-white text-left mt-2">Travel Request</h5></div>
+                        <div className="align-items-start"><h5 className="text-white text-left mt-2">Edit Travel Request</h5></div>
                         <div className="align-items-end">
                             <HelpIcon onClick={() => setVisible(true)} sx={{ color: primary }} />
                             <Dialog header="Helps" visible={visible} style={{ width: '50vw' }} onHide={() => { if (!visible) return; setVisible(false); }}>
@@ -686,13 +728,13 @@ function TravelRequestForm() {
                         <div className="p-inputgroup flex-1">
                             <FloatLabel>
                                 <InputText id="issuer" value={formData.issuer}
-                                    maxLength={250}
                                     required
                                     tooltip="Enter your issuer" tooltipOptions={{ position: 'bottom' }}
                                     onChange={(e) => setFormData({
                                         ...formData,
                                         issuer: e.target.value
-                                    })} />
+                                    })}
+                                    />
                                 <label htmlFor="issuer" className="small">Issuer<span className="text-danger px-1">*</span></label>
                             </FloatLabel>
                         </div>
@@ -713,7 +755,7 @@ function TravelRequestForm() {
                                         ...formData,
                                         issuerNumber: e.target.value
                                     })} />
-                                <label htmlFor="number-input" className="small">Telephone Number<span className="text-danger px-1">*</span></label>
+                                <label htmlFor="number-input" className="small">Number<span className="text-danger px-1">*</span></label>
                             </FloatLabel>
                         </div>
                     </div>
@@ -773,19 +815,19 @@ function TravelRequestForm() {
                                 </div>
                                 <div className="form-single">
                                     <FloatLabel>
-                                        <InputText type="text" maxLength={250} id="firstName" name="firstName" value={formData.firstName} required readOnly />
+                                        <InputText type="text" id="firstName" name="firstName" value={formData.firstName} required readOnly />
                                         <label htmlFor="firstName" className="small">First Name<span className="text-danger px-1">*</span></label>
                                     </FloatLabel>
                                 </div>
                                 <div className="form-single">
                                     <FloatLabel>
-                                        <InputText type="text" maxLength={250} id="lastName" name="lastName" value={formData.lastName} required readOnly />
+                                        <InputText type="text" id="lastName" name="lastName" value={formData.lastName} required readOnly />
                                         <label htmlFor="lastName" className="small">Last Name<span className="text-danger px-1">*</span></label>
                                     </FloatLabel>
                                 </div>
                                 <div className="form-single">
                                     <FloatLabel>
-                                        <InputText type="text" maxLength={250} id="employeeNumber" name="employeeNumber" value={formData.employeeNumber} required readOnly />
+                                        <InputText type="text" id="employeeNumber" name="employeeNumber" value={item.employeeNumber} required readOnly />
                                         <label htmlFor="employeeNumber" className="small">Employee Number<span className="text-danger px-1">*</span></label>
                                     </FloatLabel>
                                 </div>
@@ -795,19 +837,19 @@ function TravelRequestForm() {
                     <div className="d-flex justify-content-between align-items-stretch gap-3 mt-3">
                         <div className="form-single-special">
                             <FloatLabel>
-                                <InputText type="text" maxLength={250} id="costCenter" name="costCenter" value={formData.costCenter} required readOnly />
+                                <InputText type="text" id="costCenter" name="costCenter" value={formData.costCenter} required readOnly />
                                 <label htmlFor="costCenter" className="small">Cost Centre<span className="text-danger px-1">*</span></label>
                             </FloatLabel>
                         </div>
                         <div className="form-single-special">
                             <FloatLabel>
-                                <InputText type="text" maxLength={250} id="entity" name="entity" value={formData.entity} required readOnly />
+                                <InputText type="text" id="entity" name="entity" value={formData.entity} required readOnly />
                                 <label htmlFor="entity" className="small">Entity<span className="text-danger px-1">*</span></label>
                             </FloatLabel>
                         </div>
                         <div className="form-single-special">
                             <FloatLabel>
-                                <InputText type="text" maxLength={250} id="positionTitle" name="positionTitle" value={formData.positionTitle} required readOnly />
+                                <InputText type="text" id="positionTitle" name="positionTitle" value={formData.positionTitle} required readOnly />
                                 <label htmlFor="positionTitle" className="small">Position Title<span className="text-danger px-1">*</span></label>
                             </FloatLabel>
                         </div>
@@ -838,7 +880,7 @@ function TravelRequestForm() {
                         </div>
                         <div className="d-flex justify-content-between align-items-stretch gap-3 my-4">
                             <FloatLabel className="w-50">
-                                <InputTextarea id="travelPurpose" maxLength={2000} className="full-width-textarea" value={formData.travelPurpose}
+                                <InputTextarea id="travelPurpose" className="full-width-textarea" value={formData.travelPurpose}
                                     onChange={(e) => setFormData({
                                         ...formData,
                                         travelPurpose: e.target.value
@@ -846,17 +888,17 @@ function TravelRequestForm() {
                                 <label htmlFor="travelPurpose" className="small">Travel Purpose<span className="text-danger px-1">*</span></label>
                             </FloatLabel>
                             <FloatLabel className="w-50">
-                                <InputTextarea id="participants" maxLength={2000} className="full-width-textarea" value={formData.participants}
+                                <InputTextarea id="participants" className="full-width-textarea" value={formData.participants}
                                     onChange={(e) => setFormData({
                                         ...formData,
                                         participants: e.target.value
                                     })} rows={2} cols={30} />
-                                <label htmlFor="participants" className="small">Participants</label>
+                                <label htmlFor="participants" className="small">Participants<span className="text-danger px-1">*</span></label>
                             </FloatLabel>
                         </div>
                         <div className="d-flex justify-content-between align-items-stretch gap-3 my-4">
                             <FloatLabel className="w-25">
-                                <InputText id="destination" maxLength={250} className="full-width-textarea w-100" value={formData.destination}
+                                <InputText id="destination" className="full-width-textarea w-100" value={formData.destination}
                                     onChange={(e) => setFormData({
                                         ...formData,
                                         destination: e.target.value
@@ -892,18 +934,16 @@ function TravelRequestForm() {
                             </FloatLabel>
                         </div>
                         <div className="d-flex align-items-stretch gap-3 my-4">
-                            <FloatLabel>
-                                <Dropdown id="currency" value={currencyValue} style={{ width: '10vw' }} onChange={(e) => {
-                                    setCurrencyValue(e.value);
-                                    setFormData({
-                                        ...formData,
-                                        travelCurrency: {
-                                            key: e.value.key,
-                                        }
-                                    });
-                                }} options={currencyList} optionLabel="name" required />
-                                <label htmlFor="currency" className="small">Currency<span className="text-danger px-1">*</span></label>
-                            </FloatLabel>
+                            <Dropdown placeholder="Currency *" value={currencyValue} onChange={(e) => {
+                                setCurrencyValue(e.value);
+                                setFormData({
+                                    ...formData,
+                                    travelCurrency: {
+                                        key: e.value.key,
+                                    }
+                                });
+                            }} options={currencyList} optionLabel="name"
+                            optionValue="name" required />
                             <FloatLabel>
                                 <InputNumber id="budgetAmount" value={formData.travelBudget}
                                     onValueChange={(e) => setFormData({
@@ -913,7 +953,7 @@ function TravelRequestForm() {
                                 <label htmlFor="budgetAmount" className="small">Budget Amount<span className="text-danger px-1">*</span></label>
                             </FloatLabel>
                             <FloatLabel className="flex-grow-1">
-                                <InputText id="Note" maxLength={250} className="w-100" value={formData.travelNote}
+                                <InputText id="Note" className="w-100" value={formData.travelNote}
                                     onChange={(e) => setFormData({
                                         ...formData,
                                         travelNote: e.target.value
@@ -1011,6 +1051,7 @@ function TravelRequestForm() {
                                     type="checkbox"
                                     id="hotelToggle"
                                     name="hotelToggle"
+                                    checked={showNights}
                                     onChange={handleHotelToggleChange}
                                 />
                                 <span className="slider round"></span>
@@ -1022,7 +1063,7 @@ function TravelRequestForm() {
                                 <div className="calendar-item">
                                     <FloatLabel>
                                         <label htmlFor="location">Location<span className="text-danger px-1">*</span></label>
-                                        <InputText id="location" maxLength={250} name="location" required
+                                        <InputText id="location" name="location" required
                                             value={formData.hotelLocation}
                                             onChange={(e) => setFormData({
                                                 ...formData, // Spread the existing formData
@@ -1039,7 +1080,7 @@ function TravelRequestForm() {
                                                     hotelCheckIn: e.value
                                                 });
                                                 calculateEstimatedNights(e.value, formData.hotelCheckOut);
-                                            }} showTime hourFormat="24" showIcon required />
+                                            }} showTime hourFormat="24" showIcon required/>
                                         <label htmlFor="checkIn" className="mr-2">Check In<span className="text-danger px-1">*</span></label>
                                     </FloatLabel>
                                 </div>
@@ -1067,7 +1108,7 @@ function TravelRequestForm() {
                                 <div className="calendar-item flex-shrink-1 flex-grow-1">
                                     <FloatLabel className="w-100">
                                         <label htmlFor="hotelNote">Remarks</label>
-                                        <InputText id="hotelNote" maxLength={250} name="hotelNote" className="w-100"
+                                        <InputText id="hotelNote" name="hotelNote" className="w-100"
                                             value={formData.hotelNote}
                                             onChange={(e) => setFormData({
                                                 ...formData, // Spread the existing formData
@@ -1088,6 +1129,7 @@ function TravelRequestForm() {
                                     type="checkbox"
                                     id="carRentalToggle"
                                     name="carRentalToggle"
+                                    checked={showCarDetails}
                                     onChange={handleCarToggleChange}
                                 />
                                 <span className="slider round"></span>
@@ -1100,7 +1142,7 @@ function TravelRequestForm() {
                                     <div className="calendar-item">
                                         <FloatLabel>
                                             <label htmlFor="category">Category<span className="text-danger px-1">*</span></label>
-                                            <InputText type="text" maxLength={250} id="category" name="category" required
+                                            <InputText type="text" id="category" name="category" required
                                                 value={formData.carRentalCategory}
                                                 onChange={(e) => setFormData({
                                                     ...formData,
@@ -1113,7 +1155,7 @@ function TravelRequestForm() {
                                     <div className="calendar-item">
                                         <FloatLabel>
                                             <label htmlFor="from">From:<span className="text-danger px-1">*</span></label>
-                                            <InputText type="text" maxLength={250} id="from" name="from" required
+                                            <InputText type="text" id="from" name="from" required
                                                 value={formData.carRentalFrom}
                                                 onChange={(e) => setFormData({
                                                     ...formData,
@@ -1123,9 +1165,29 @@ function TravelRequestForm() {
                                         </FloatLabel>
                                     </div>
                                     <div className="calendar-item">
+                                        {/* <FloatLabel>
+                                            <label htmlFor="on">On:<span className="text-danger px-1">*</span></label>
+                                            <InputText type="text" id="on" name="on" required
+                                                value={formData.carRentalOn}
+                                                onChange={(e) => setFormData({
+                                                    ...formData,
+                                                    carRentalOn: e.target.value
+                                                })}
+                                            />
+                                        </FloatLabel> */}
+                                           <FloatLabel>
+                                            <Calendar id="on" dateFormat="dd/mm/yy" value={formData.carRentalOn}
+                                                onChange={(e) => setFormData({
+                                                    ...formData,
+                                                    carRentalOn: e.value
+                                                })} showIcon required />
+                                            <label for="on">On:<span className="text-danger px-1">*</span></label>
+                                        </FloatLabel>
+                                    </div>
+                                    <div className="calendar-item">
                                         <FloatLabel>
                                             <label htmlFor="to">To:<span className="text-danger px-1">*</span></label>
-                                            <InputText type="text" maxLength={250} id="to" name="to" required
+                                            <InputText type="text" id="to" name="to" required
                                                 value={formData.carRentalTo}
                                                 onChange={(e) => setFormData({
                                                     ...formData,
@@ -1135,26 +1197,16 @@ function TravelRequestForm() {
                                         </FloatLabel>
                                     </div>
                                     <div className="calendar-item">
-                                        <FloatLabel>
-                                            <Calendar id="on" dateFormat="dd/mm/yy" value={formData.carRentalOn}
-                                                onChange={(e) => setFormData({
-                                                    ...formData,
-                                                    carRentalOn: e.value
-                                                })} showIcon required />
-                                            <label for="on">On:<span className="text-danger px-1">*</span></label>
-                                        </FloatLabel>
                                         {/* <FloatLabel>
-                                            <label htmlFor="on">On:<span className="text-danger px-1">*</span></label>
-                                            <InputText type="text" maxLength={250} id="on" name="on" required
-                                                value={formData.carRentalOn}
+                                            <label htmlFor="until">Until:<span className="text-danger px-1">*</span></label>
+                                            <InputText type="text" id="until" name="until" required
+                                                value={formData.carRentalUntil}
                                                 onChange={(e) => setFormData({
                                                     ...formData,
-                                                    carRentalOn: e.target.value
+                                                    carRentalUntil: e.target.value
                                                 })}
                                             />
                                         </FloatLabel> */}
-                                    </div>
-                                    <div className="calendar-item">
                                         <FloatLabel>
                                             <Calendar id="until" dateFormat="dd/mm/yy" value={formData.carRentalUntil}
                                                 onChange={(e) => setFormData({
@@ -1163,16 +1215,6 @@ function TravelRequestForm() {
                                                 })} showIcon required />
                                             <label for="until">Until:<span className="text-danger px-1">*</span></label>
                                         </FloatLabel>
-                                        {/* <FloatLabel>
-                                            <label htmlFor="until">Until:<span className="text-danger px-1">*</span></label>
-                                            <InputText type="text" maxLength={250} id="until" name="until" required
-                                                value={formData.carRentalUntil}
-                                                onChange={(e) => setFormData({
-                                                    ...formData,
-                                                    carRentalUntil: e.target.value
-                                                })}
-                                            />
-                                        </FloatLabel> */}
                                     </div>
                                 </div>
                                 <div className="calendar-container d-flex align-items-stretch gap-3 my-4 mx-2">
@@ -1189,7 +1231,7 @@ function TravelRequestForm() {
                                     <div className="calendar-item">
                                         <FloatLabel>
                                             <label htmlFor="drivingLicense">Driving License<span className="text-danger px-1">*</span></label>
-                                            <InputText type="text" maxLength={250} id="drivingLicense" name="drivingLicense" required
+                                            <InputText type="text" id="drivingLicense" name="drivingLicense" required
                                                 value={formData.carDrivingLicense}
                                                 onChange={(e) => setFormData({
                                                     ...formData,
@@ -1201,7 +1243,7 @@ function TravelRequestForm() {
                                     <div className="calendar-item flex-grow-1">
                                         <FloatLabel className="w-100 car-note">
                                             <label htmlFor="carRentalNote">Remarks</label>
-                                            <InputText id="carRentalNote" maxLength={250} className="w-100" name="carRentalNote"
+                                            <InputText id="carRentalNote" className="w-100" name="carRentalNote"
                                                 value={formData.carRentalNote}
                                                 onChange={(e) => setFormData({
                                                     ...formData,
@@ -1223,6 +1265,7 @@ function TravelRequestForm() {
                                     type="checkbox"
                                     id="perCarToggle"
                                     name="perCarToggle"
+                                    checked={showPerCarDetails}
                                     onChange={handlePerCarToggleChange}
                                 />
                                 <span className="slider round"></span>
@@ -1234,7 +1277,7 @@ function TravelRequestForm() {
                                 <div className="calendar-item">
                                     <FloatLabel>
                                         <label htmlFor="carRegNum">Car Registration Number<span className="text-danger px-1">*</span></label>
-                                        <InputText type="text" maxLength={250} id="carRegNum" name="carRegNum" required
+                                        <InputText type="text" id="carRegNum" name="carRegNum" required
                                             value={formData.personalCarRegistrationNumber}
                                             onChange={(e) => setFormData({
                                                 ...formData, // Spread the existing formData
@@ -1246,7 +1289,7 @@ function TravelRequestForm() {
                                 <div className="calendar-item">
                                     <FloatLabel>
                                         <label htmlFor="drivingLicenseNum">Driving License Number<span className="text-danger px-1">*</span></label>
-                                        <InputText type="text" id="drivingLicenseNum" maxLength={250} name="drivingLicenseNum" required
+                                        <InputText type="text" id="drivingLicenseNum" name="drivingLicenseNum" required
                                             value={formData.personalCarDrivingLicenseNumber}
                                             onChange={(e) => setFormData({
                                                 ...formData, // Spread the existing formData
@@ -1257,8 +1300,8 @@ function TravelRequestForm() {
                                 </div>
                                 <div className="calendar-item flex-grow-1">
                                     <FloatLabel className="w-100 car-note">
-                                        <label htmlFor="personalCarNote">Remarks</label>
-                                        <InputText id="personalCarNote" maxLength={250} className="w-100" name="personalCarNote"
+                                        <label htmlFor="personalCarNote">Note</label>
+                                        <InputText id="personalCarNote" className="w-100" name="personalCarNote"
                                             value={formData.personalCarNote}
                                             onChange={(e) => setFormData({
                                                 ...formData,
@@ -1280,6 +1323,7 @@ function TravelRequestForm() {
                                     type="checkbox"
                                     id="flightToggle"
                                     name="flightToggle"
+                                    checked={showFlightTicket}
                                     onChange={handleflightToggleChange}
                                 />
                                 <span className="slider round"></span>
@@ -1306,7 +1350,7 @@ function TravelRequestForm() {
                                                             console.log("radio : ", formData)
                                                         }
                                                         }
-                                                        checked={flightTypeValue.key === category.key} required />
+                                                        checked={flightTypeValue.key === category.key} required/>
                                                     <label htmlFor={category.key} className="ps-1 px-2">{category.name}</label>
                                                 </div>
                                             );
@@ -1315,17 +1359,17 @@ function TravelRequestForm() {
                                 </div>
                                 <p className="mx-2">Note: Kindly attach the 3 quotes/routes provided by Travel Agent for comparison. If the least cost-saving route is not taken, kindly provide the reason below.</p>
                                 <div className="form-dropdown-container d-flex gap-3 mx-2 reason-dropdown align-items-center mt-4">
-                                    <label htmlFor="reason">Reason<span className="text-danger px-1 mt-2">*</span></label>
-                                    <Dropdown inputId="dd-city" value={reasonValue} onChange={(e) => {
-                                        setReasonValue(e.value);
-                                        setFormData({
-                                            ...formData, // Spread the existing formData
-                                            flightTicketReason: {
-                                                key: e.value.key,
-                                                // name: e.value.name // Update only the firstName property
-                                            }
-                                        });
-                                    }} options={reasonList} optionLabel="name" className="w-full" required />
+                                        <label htmlFor="reason">Reason<span className="text-danger px-1 mt-2">*</span></label>
+                                        <Dropdown inputId="dd-city" value={reasonValue} onChange={(e) => {
+                                            setReasonValue(e.value);
+                                            setFormData({
+                                                ...formData, // Spread the existing formData
+                                                flightTicketReason: {
+                                                    key: e.value.key,
+                                                    // name: e.value.name // Update only the firstName property
+                                                }
+                                            });
+                                        }} options={reasonList} optionLabel="name" optionValue="name" className="w-full" required />
                                 </div>
                             </div>
                         )}
@@ -1339,6 +1383,7 @@ function TravelRequestForm() {
                                     type="checkbox"
                                     id="trainToggle"
                                     name="trainToggle"
+                                    checked={showTrainDetails}
                                     onChange={handleTrainToggleChange}
                                 />
                                 <span className="slider round"></span>
@@ -1352,14 +1397,14 @@ function TravelRequestForm() {
                                         return (
                                             <div key={category.key} className="d-flex align-items-center">
                                                 <RadioButton inputId={category.key} name="category" value={category}
-                                                    // onChange={(e) => set(e.value)} 
+                                                    // onChange={(e) => set(e.value)}
                                                     onChange={(e) => {
                                                         setTrainTypeValue(e.value)
                                                         setFormData({
                                                             ...formData, // Spread the existing formData
                                                             trainTicketType: {
                                                                 key: e.value.key,
-                                                                // name: e.value.name // Update only the firstName property
+                                                                name: e.value.name // Update only the firstName property
                                                             }
                                                         });
                                                         console.log("radio : ", formData)
@@ -1375,40 +1420,8 @@ function TravelRequestForm() {
                         )}
                     </div>
 
-                    <hr className="separator " />
-                    <div className="px-3 pt-3">
-                        <div className="py-1 mb-1">
-                            <h6 className="text-left">Attachments</h6>
-                        </div>
-                        <div className="d-flex">
-                            <input
-                                type="file"
-                                // accept={accept}
-                                onChange={onFileChange}
-                            />
-                            <button className="btn-sm px-2 py-2 bg-gradients border-0" style={{ color: 'white' }} type="button" onClick={onFileUpload}>Upload</button>
-                            {/* {fileError && <p style={{ color: 'red' }}>{fileError}</p>} */}
-                        </div>
-
-                        {files.length > 0 &&
-                            <DataTable value={files} showGridlines tableStyle={{ minWidth: '50rem' }}>
-                                <Column sortable field="title" header="Title" headerClassName="custom-header" />
-                                <Column header="Actions" headerClassName="custom-header"
-                                    body={(rowData, { rowIndex }) => (
-                                        <div style={{ display: 'flex', justifyContent: 'left', alignItems: 'left' }}>
-                                            <Button severity="danger" type="button" icon="pi pi-trash"
-                                                onClick={() => handleRemovefiles(rowIndex)} />
-                                        </div>
-                                    )}
-                                />
-                            </DataTable>}
-                    </div>
-
                     <hr className="separator mb-2" />
                     <div className="addbutton mx-2">
-                        {/* <button type="button" onClick={handleAddItineraryClick}>
-                            {showItinerary ? "Hide Itinerary" : "Add Itinerary"}
-                        </button> */}
                         <Button onClick={() => {
                             setShowItinerary(!showItinerary);
                         }}
@@ -1425,18 +1438,17 @@ function TravelRequestForm() {
                                     <span className="close text-right justify-content-end " onClick={handleCloseItineraryClick}>&times;</span>
                                 </div>
                                 <hr class="my-1" />
-
                                 <div className="itinerary-form">
                                     <div className="form-row d-flex align-content-stretch gap-3">
                                         <div className="calendar-item">
                                             <FloatLabel>
-                                                <InputText id="onwardJourney" maxLength={250} value={newItinerary.onwardJourney} onChange={e => handleInputChange('onwardJourney', e)} />
+                                                <InputText id="onwardJourney" value={newItinerary.onwardJourney} onChange={e => handleInputChange('onwardJourney', e)} />
                                                 <label htmlFor="onwardJourney">Onward Journey</label>
                                             </FloatLabel>
                                         </div>
                                         <div className="calendar-item col-width">
                                             <FloatLabel >
-                                                <Calendar id="onwardDepartureDate" dateFormat="dd/mm/yy" value={newItinerary.onwardDepartureDate} onChange={(e) => handleInputChange('onwardDepartureDate', e)} showIcon />
+                                                <Calendar id="onwardDepartureDate" dateFormat="dd/mm/yy" value={new Date(newItinerary.onwardDepartureDate)} onChange={(e) => handleInputChange('onwardDepartureDate', e)} showIcon />
                                                 <label htmlFor="onwardDepartureDate">Departure Date</label>
                                             </FloatLabel>
                                         </div>
@@ -1444,20 +1456,19 @@ function TravelRequestForm() {
                                             <FloatLabel>
                                                 <Dropdown id="onwardPreferredTime" className="onwardDepartureDate"
                                                     value={newItinerary.onwardPreferredTime}
-                                                    style={{ width: '9vw' }}
                                                     onChange={e => handleInputChange('onwardPreferredTime', e)} options={preferredTimeList} optionLabel="name" />
                                                 <label htmlFor="onwardPreferredTime">Preferred Time</label>
                                             </FloatLabel>
                                         </div>
                                         <div className="calendar-item">
                                             <FloatLabel>
-                                                <InputText id="onwardTransportNumber" maxLength={250} value={newItinerary.onwardTransportNumber} onChange={e => handleInputChange('onwardTransportNumber', e)} />
+                                                <InputText id="onwardTransportNumber" value={newItinerary.onwardTransportNumber} onChange={e => handleInputChange('onwardTransportNumber', e)} />
                                                 <label htmlFor="onwardTransportNumber"> Flight/Train Number</label>
                                             </FloatLabel>
                                         </div>
                                         <div className="calendar-item flex-grow-1">
                                             <FloatLabel className="w-100 car-note">
-                                                <InputText id="onwardJourneyNote" maxLength={250} className="w-100" value={newItinerary.onwardJourneyNote} onChange={e => handleInputChange('onwardJourneyNote', e)} />
+                                                <InputText id="onwardJourneyNote" className="w-100" value={newItinerary.onwardJourneyNote} onChange={e => handleInputChange('onwardJourneyNote', e)} />
                                                 <label htmlFor="onwardJourneyNote">Onward Journey Note</label>
                                             </FloatLabel>
                                         </div>
@@ -1475,20 +1486,19 @@ function TravelRequestForm() {
                                             <div className="form-row2 gap-3">
                                                 <div >
                                                     <FloatLabel>
-                                                        <InputText id="returnJourney" maxLength={250} value={newItinerary.returnJourney} onChange={e => handleInputChange('returnJourney', e)} />
+                                                        <InputText id="returnJourney" value={newItinerary.returnJourney} onChange={e => handleInputChange('returnJourney', e)} />
                                                         <label htmlFor="returnJourney">Return Journey</label>
                                                     </FloatLabel>
                                                 </div>
                                                 <div className="col-width">
                                                     <FloatLabel>
-                                                        <Calendar id="returnArrivalDate" dateFormat="dd/mm/yy" value={newItinerary.returnArrivalDate} onChange={(e) => handleInputChange('returnArrivalDate', e)} showIcon />
+                                                        <Calendar id="returnArrivalDate" dateFormat="dd/mm/yy" value={new Date(newItinerary.returnArrivalDate)} onChange={(e) => handleInputChange('returnArrivalDate', e)} showIcon />
                                                         <label htmlFor="returnArrivalDate">Arrival Date</label>
                                                     </FloatLabel>
                                                 </div>
                                                 <div className="returnpreferredTime">
                                                     <FloatLabel>
                                                         <Dropdown id="returnpreferredTime" className="onwardDepartureDate"
-                                                            style={{ width: '9vw' }}
                                                             value={newItinerary.returnPreferredTime}
                                                             onChange={e => handleInputChange('returnPreferredTime', e)} options={preferredTimeList} optionLabel="name" />
                                                         <label htmlFor="returnpreferredTime">Preferred Time</label>
@@ -1496,7 +1506,7 @@ function TravelRequestForm() {
                                                 </div>
                                                 <div >
                                                     <FloatLabel>
-                                                        <InputText id="returnTransportNumber" maxLength={250} value={newItinerary.returnTransportNumber} onChange={e => handleInputChange('returnTransportNumber', e)} />
+                                                        <InputText id="returnTransportNumber" value={newItinerary.returnTransportNumber} onChange={e => handleInputChange('returnTransportNumber', e)} />
                                                         <label htmlFor="returnTransportNumber"> Flight/Train Number</label>
                                                     </FloatLabel>
                                                 </div>
@@ -1513,37 +1523,83 @@ function TravelRequestForm() {
                             </div>
                         </div>
                     )}
-                    {itineraries.length > 0 && (
+                    {itineraries.length >= 0 && (
                         <div className="itinerary-table">
-                            <h3>Saved Itineraries</h3>
-
-                            <DataTable value={itineraries} showGridlines tableStyle={{ minWidth: '50rem' }}>
-                                {/*<Column sortable field="price" header="Price incl. VAT" /> */}
+                            {/* <DataTable value={itineraries} showGridlines tableStyle={{ minWidth: '50rem' }}>
                                 <Column sortable field="onwardJourney" header="Onward Journey" headerClassName="custom-header" />
                                 <Column sortable field="onwardDepartureDate" header="Departure Date" body={(rowData) => formatDate(rowData.onwardDepartureDate)} headerClassName="custom-header" />
                                 <Column sortable field="onwardPreferredTime" header="Onward Preferred Time" body={(rowData) => formatPickList(rowData.onwardPreferredTime)} headerClassName="custom-header" />
                                 <Column sortable field="onwardTransportNumber" header="Onward Transport Number" headerClassName="custom-header" />
+                                <Column sortable field="onwardJourneyNote" header="Note" headerClassName="custom-header" />
                                 <Column sortable field="returnJourney" header="Return Journey" headerClassName="custom-header" />
                                 <Column sortable field="returnArrivalDate" header="Arrival Date" body={(rowData) => formatDate(rowData.returnArrivalDate)} headerClassName="custom-header" />
                                 <Column sortable field="returnPreferredTime" header="Return Preferred Time" body={(rowData) => formatPickList(rowData.returnPreferredTime)} headerClassName="custom-header" />
                                 <Column sortable field="returnTransportNumber" header="Return Transport Number" headerClassName="custom-header" />
-                                <Column sortable field="onwardJourneyNote" header="Note" headerClassName="custom-header" />
                                 <Column header="Actions" headerClassName="custom-header"
                                     body={(rowData, { rowIndex }) => (
                                         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                                            <Button icon="pi pi-pencil" type="button" style={{ marginRight: '0.5rem' }}
+                                            <Button icon="pi pi-pencil" style={{ marginRight: '0.5rem' }}
                                                 onClick={() => handleEditItinerary(rowIndex)} />
-                                            <Button severity="danger" type="button" icon="pi pi-trash"
+                                            <Button severity="danger" icon="pi pi-trash"
                                                 onClick={() => handleRemoveItinerary(rowIndex)} />
                                         </div>
                                     )}
                                 />
-                            </DataTable>
+                            </DataTable> */}
+                             <div>
+            <DataTable value={itineraries} showGridlines tableStyle={{ minWidth: '50rem' }}>
+                <Column sortable field="onwardJourney" header="Onward Journey" headerClassName="custom-header" />
+                <Column sortable field="onwardDepartureDate" header="Departure Date" body={(rowData) => formatDate(rowData.onwardDepartureDate)} headerClassName="custom-header" />
+                <Column sortable field="onwardPreferredTime" header="Onward Preferred Time" body={(rowData) => formatPickList(rowData.onwardPreferredTime)} headerClassName="custom-header" />
+                <Column sortable field="onwardTransportNumber" header="Onward Transport Number" headerClassName="custom-header" />
+                <Column sortable field="onwardJourneyNote" header="Note" headerClassName="custom-header" />
+                <Column sortable field="returnJourney" header="Return Journey" headerClassName="custom-header" />
+                <Column sortable field="returnArrivalDate" header="Arrival Date" body={(rowData) => formatDate(rowData.returnArrivalDate)} headerClassName="custom-header" />
+                <Column sortable field="returnPreferredTime" header="Return Preferred Time" body={(rowData) => formatPickList(rowData.returnPreferredTime)} headerClassName="custom-header" />
+                <Column sortable field="returnTransportNumber" header="Return Transport Number" headerClassName="custom-header" />
+                <Column header="Actions" headerClassName="custom-header"
+                    body={(rowData, { rowIndex }) => (
+                        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                            <Button icon="pi pi-pencil" style={{ marginRight: '0.5rem' }} type="button" onClick={() => handleEditItinerary(rowIndex)} />
+                            <Button severity="danger" icon="pi pi-trash" onClick={() => handleRemoveItinerary(rowIndex)} />
+                        </div>
+                    )}
+                />
+            </DataTable>
+
+            {showItinerary && (
+                <div>
+                    <InputText value={newItinerary.onwardJourney} onChange={(e) => handleFieldChange(e, 'onwardJourney')} placeholder="Onward Journey" />
+                    <Calendar value={newItinerary.onwardDepartureDate} onChange={(e) => setNewItinerary({ ...newItinerary, onwardDepartureDate: e.value })} placeholder="Departure Date" />
+                    <InputText value={newItinerary.onwardPreferredTime} onChange={(e) => handleFieldChange(e, 'onwardPreferredTime')} placeholder="Onward Preferred Time" />
+                    <InputText value={newItinerary.onwardTransportNumber} onChange={(e) => handleFieldChange(e, 'onwardTransportNumber')} placeholder="Onward Transport Number" />
+                    <InputText value={newItinerary.onwardJourneyNote} onChange={(e) => handleFieldChange(e, 'onwardJourneyNote')} placeholder="Note" />
+                    <InputText value={newItinerary.returnJourney} onChange={(e) => handleFieldChange(e, 'returnJourney')} placeholder="Return Journey" />
+                    <Calendar value={newItinerary.returnArrivalDate} onChange={(e) => setNewItinerary({ ...newItinerary, returnArrivalDate: e.value })} placeholder="Arrival Date" />
+                    <InputText value={newItinerary.returnPreferredTime} onChange={(e) => handleFieldChange(e, 'returnPreferredTime')} placeholder="Return Preferred Time" />
+                    <InputText value={newItinerary.returnTransportNumber} onChange={(e) => handleFieldChange(e, 'returnTransportNumber')} placeholder="Return Transport Number" />
+                    <Button label="Save" onClick={handleSaveItinerary} />
+                    <Button label="Cancel" onClick={() => setShowItinerary(false)} />
+                </div>
+            )}
+        </div>
                         </div>
                     )}
                     {/* <button type="submit">Submit</button> */}
-                    <div className="gap-5" style={{ display: 'flex', justifyContent: 'center' }}>
-                        <Button className="mb-3" style={{
+                    <div style={{ display: 'flex', justifyContent: 'center' }}>
+    <Button className="mb-3" style={{
+        border: 'none',
+        borderRadius: '4px',
+        backgroundColor: '#114B7D',
+        padding: '0.5rem 1rem',
+        width: '15%',
+        fontWeight: 'bold'
+    }}
+        type="submit"
+        label="Update"
+    />
+
+                        {/* <Button className="mb-3" style={{
                             border: 'none', // Remove border
                             borderRadius: '4px', // Set a small border radius (adjust as needed)
                             backgroundColor: '#114B7D',
@@ -1553,41 +1609,25 @@ function TravelRequestForm() {
                         }}
                             onClick={() => setFormData(prevFormData => ({
                                 ...prevFormData, // Spread the existing formData
-                                status: { code: 2 }
+                                status: { code: 6 } //cancel - incomplete
                             }))}
                             type="submit"
-                            label="Save As Draft"
-                            disabled={isEmailValidSubmit}
-                        />
-                        <div>
-                            <Button type="button" icon="pi pi-angle-double-right" label="Next" rounded onClick={() => setPreviewVisible(true)} />
-                            <Button type="button"  className="back-button-travel" icon="pi pi-angle-double-left" label="Back" rounded  onClick={handleBack} />
-                            <Dialog header="Preview" visible={previewVisible} style={{ width: '80vw' }} onHide={() => { if (!previewVisible) return; setPreviewVisible(false); }}>
-                                {/* {previewVisible && { NewSummary(formData,itineraries) }} */}
-                                <FormPreview item={formData} travelInfo={itineraries} attachments={files}/>
-                                <div className="gap-5 mt-3" style={{ display: 'flex', justifyContent: 'center' }} >
-                                    <Button icon="pi pi-angle-double-left" label="Back" type="button" rounded onClick={() => setPreviewVisible(false)} />
-                                    <Button style={{
-                                        borderRadius: '4px', // Set a small border radius (adjust as needed)
-                                        backgroundColor: '#114B7D',
-                                    }}
-                                        disabled={isEmailValidSubmit}
-                                        onClick={handleFormSubmit}
-                                        type="submit"
-                                        label="Submit"
-                                    />
-                                </div>
-
-                            </Dialog>
-
-
-                        </div>
-                    </div>
+                            label="Cancel"
+                            // disabled={isEmailValidSubmit}
+                        /> */}
+</div>
 
                 </form>
             </div>
+            <Snackbar
+                open={open}
+                autoHideDuration={6000}
+                onClose={handleClose}
+                message={message}
+                action={action}
+            ></Snackbar>
         </div>
     );
 }
 
-export default TravelRequestForm;
+export default EditTravelRequestForm;

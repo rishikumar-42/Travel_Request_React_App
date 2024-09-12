@@ -14,24 +14,6 @@ function setAxios() {
 
 
 const TravelRequestFormServiceLayer = {
-    fetchUserDetails: async (name) => {
-        try {
-            const response = await axios.get(`o/c/employee-tables/47185`, {
-                params: {
-                    filter: `firstName eq '${name}%'`,
-                    pageSize: 10,
-                },
-            });
-            const users = response.data.items || [];
-            console.log("Fetched users:", users);
-            return users;
-
-        } catch (error) {
-            console.error("Error fetching user details", error);
-            throw error;
-        }
-    },
-
     fetchUsers: async () => {
         try {
             await setAxios();
@@ -45,6 +27,18 @@ const TravelRequestFormServiceLayer = {
             throw error;
         }
     },
+
+     updateFormData: async (id,formData) => {
+            try {
+                console.log("update")
+                const response = await axios.put(`http://localhost:8080/o/c/travelinfos/${id}`, JSON.stringify(formData));
+                console.log("Form update response:", response);
+                return response;
+            } catch (error) {
+                // console.error("Error submitting form", error);
+                throw error;
+            }
+        },
 
     fetchReasonPicklist: async () => {
         try {
