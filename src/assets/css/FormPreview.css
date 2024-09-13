@@ -1,6 +1,6 @@
 /* NewSummary.css */
 
-.summary-container {
+.preview-summary-container {
     background-color: white;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -12,26 +12,14 @@
     align-items: flex-start;
   }
   
-  .back-button {
-    background-color: #003366;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 10px;
-    cursor: pointer;
-    margin-top: 20px;
-    font-size: 16px;
-    width: 80px;
-  }
-  
-  .summary-content {
+  .preview-summary-content {
     font-family: Arial, sans-serif;
     font-size: 16px;
     color: #333;
     width: 100%;
   }
   
-  .toolbar {
+  .preview-toolbar {
     background: linear-gradient(90deg, #003D71 0%, #5482AB 100%);
     color: white;
     padding: 10px;
@@ -39,100 +27,50 @@
     margin-bottom: 10px;
     display: flex;
     align-items: center;
-    height: 10px;
+    height: 20px;
   }
   
-  .title {
+  .preview-title {
     font-weight: 600;
     color: #fff;
   }
   
-  .summary-details {
+  .preview-summary-details {
     width: 100%;
   }
   
-  .details-grid {
+  .preview-details-grid {
     padding: 5px;
     display: grid;
     grid-template-columns: repeat(4, 1fr); /* 4 columns */
     gap: 20px; /* Increase gap between columns and rows */
   }
   
-  .details-grid-itinerary {
-    padding: 10px;
-    display: grid;
-    grid-template-columns: repeat(7, 1fr); /* 7 columns for itinerary */
-    gap: 20px; /* Increase gap between columns and rows */
-  }
-  
-  .detail-item {
+  .preview-detail-item {
     display: flex;
     flex-direction: column;
     margin-bottom: 20px; /* Add space below each item */
   }
   
-  .label {
+  .preview-label {
     font-weight: bold;
     margin-bottom: 5px;
   }
   
-  .value {
+  .preview-value {
     color: #333;
   }
-  
-  .table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
-  }
-  
-  .table-row {
-    border-bottom: 1px solid #ddd;
-    background: rgba(55, 106, 151, 0.2588235294);
-    font-size: 16px;
-  }
-  
-  .table-header {
-    padding: 10px;
-    font-weight: bold;
-    color: white;
-    text-align: left;
-    border-bottom: 2px solid #ddd;
-  }
-  
-  .table-data {
-    padding: 10px;
-    text-align: left;
-  }
-  .thead{
-    background: linear-gradient(90deg, #003D71 0%, #d3dbdb 100%);
-  }
-  .title-TravelDetails{
-  font-weight: 600;
-  }
-  .approve-button{
-    background-color: #1a6600;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 10px;
-    cursor: pointer;
-    font-size: 16px;
-    width: 80px;
-    margin-left: 900px;
-    margin-top: -40px;
-  }
-  
-  .reject-button{
-    background-color: #660000;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 10px;
-    cursor: pointer;
-    font-size: 16px;
-    width: 80px;
-    margin-left: 1000px;
-    margin-top: -40px;
-  }
-  
+
+  .preview-custom-header {
+    background-color: #003D71 !important;
+    color: #ffff;
+    font-size: 10px;
+}
+
+tbody, td, tfoot, th, thead, tr {
+  border-color: inherit;
+  border-style: solid;
+  border-width: 0;
+  font-size: 12px;
+  font-weight: 500;
+}

@@ -474,7 +474,8 @@ function TravelRequestForm() {
         manager: '',
         hod: '',
         itineraryRelation: [],
-        attachmentRelation: []
+        attachmentRelation: [],
+        approveStatus: {}
     });
 
     const initialTrainTicket = () => {
@@ -1543,34 +1544,26 @@ function TravelRequestForm() {
                     )}
                     {/* <button type="submit">Submit</button> */}
                     <div className="gap-5" style={{ display: 'flex', justifyContent: 'center' }}>
-                        <Button className="mb-3" style={{
-                            border: 'none', // Remove border
-                            borderRadius: '4px', // Set a small border radius (adjust as needed)
-                            backgroundColor: '#114B7D',
-                            padding: '0.5rem 1rem', // Adjust padding to control button size
-                            width: '15%', // Set the width of the button (e.g., 25% of the container)
-                            fontWeight: 'bold'
-                        }}
+                        <Button className="mb-3" 
                             onClick={() => setFormData(prevFormData => ({
                                 ...prevFormData, // Spread the existing formData
-                                status: { code: 2 }
+                                status: { code: 2 },
+                                approveStatus: {key: 'draft'}
                             }))}
                             type="submit"
                             label="Save As Draft"
                             disabled={isEmailValidSubmit}
                         />
+                        <Button className="mb-3" type="button" icon="pi pi-angle-double-right" label="Next" rounded onClick={() => setPreviewVisible(true)} />
+                        <Button type="button"  className="back-button-travel mb-3" icon="pi pi-angle-double-left" label="Back" rounded  onClick={handleBack} />
                         <div>
-                            <Button type="button" icon="pi pi-angle-double-right" label="Next" rounded onClick={() => setPreviewVisible(true)} />
-                            <Button type="button"  className="back-button-travel" icon="pi pi-angle-double-left" label="Back" rounded  onClick={handleBack} />
+                            
                             <Dialog header="Preview" visible={previewVisible} style={{ width: '80vw' }} onHide={() => { if (!previewVisible) return; setPreviewVisible(false); }}>
                                 {/* {previewVisible && { NewSummary(formData,itineraries) }} */}
                                 <FormPreview item={formData} travelInfo={itineraries} attachments={files}/>
                                 <div className="gap-5 mt-3" style={{ display: 'flex', justifyContent: 'center' }} >
                                     <Button icon="pi pi-angle-double-left" label="Back" type="button" rounded onClick={() => setPreviewVisible(false)} />
-                                    <Button style={{
-                                        borderRadius: '4px', // Set a small border radius (adjust as needed)
-                                        backgroundColor: '#114B7D',
-                                    }}
+                                    <Button
                                         disabled={isEmailValidSubmit}
                                         onClick={handleFormSubmit}
                                         type="submit"
