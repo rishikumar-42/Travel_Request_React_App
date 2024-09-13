@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import "../assets/css/NewSummary.css";
 import axios from 'axios';
 import { useAuth } from '../contexts/AuthContext';
+import TravelRequestFormServiceLayer from '../service/TravelRequestFormService';
 
 const NewSummary = ({ item = {}, travelInfo = [], onBack, isDashboardNavigate = false }) => {
   const [workflowTasks, setWorkflowTasks] = useState([]);
@@ -51,7 +52,7 @@ const NewSummary = ({ item = {}, travelInfo = [], onBack, isDashboardNavigate = 
       return;
     }
 
-    const {  id: workflowTaskId  } = currentTask;
+    const { id: workflowTaskId } = currentTask;
     const payload = {
       comment: transitionName.charAt(0).toUpperCase() + transitionName.slice(1),
       transitionName,
@@ -73,6 +74,14 @@ const NewSummary = ({ item = {}, travelInfo = [], onBack, isDashboardNavigate = 
       alert(`Failed to ${transitionName} task.`);
     }
   };
+
+  const handleCancel = async () => {
+    if(item.approveStatus?.key === 'draft'){
+      await TravelRequestFormServiceLayer.updatePatchFormData(item.id,{approveStatus:{key:"cancelled"}});
+    }else if(item.approveStatus?.key === 'pendingAtApprover1'){
+      await TravelRequestFormServiceLayer.updatePatchFormData(item.id,{approveStatus:{key:"cancelled"}});
+    }
+  }
 
   // Determine button visibility
   const isPendingAtApprover1 = item.approveStatus?.key === 'pendingAtApprover1';
@@ -199,19 +208,19 @@ const NewSummary = ({ item = {}, travelInfo = [], onBack, isDashboardNavigate = 
 
         <div className="toolbar-summary">
           <span className="title">Personal Car Details</span>
-         </div>
-         <div className="summary-details">
-         <div className="details-grid">
-             <div className="detail-item">
+        </div>
+        <div className="summary-details">
+          <div className="details-grid">
+            <div className="detail-item">
               <span className="label">Car Registration Number:</span>
-               <span className="value">{item.personalCarRegistrationNumber || 'N/A'}</span>
-             </div>
-             <div className="detail-item">
-               <span className="label">Driving License Number:</span>
-               <span className="value">{item.personalCarDrivingLicenseNumber || 'N/A'}</span>
-             </div>
-           </div>
-         </div>
+              <span className="value">{item.personalCarRegistrationNumber || 'N/A'}</span>
+            </div>
+            <div className="detail-item">
+              <span className="label">Driving License Number:</span>
+              <span className="value">{item.personalCarDrivingLicenseNumber || 'N/A'}</span>
+            </div>
+          </div>
+        </div>
 
         <div className="summary-details">
           <table className="table-summary">
@@ -252,28 +261,33 @@ const NewSummary = ({ item = {}, travelInfo = [], onBack, isDashboardNavigate = 
           </table>
         </div>
 
-        <button className="back-button" onClick={onBack}>Back</button>
+        <div className="gap-5" style={{ display: 'flex', justifyContent: 'left' }}>
+          <button className="back-button" onClick={onBack}>Back</button>
+          {(item.approveStatus?.key === 'draft' || item.approveStatus?.key === 'pendingAtApprover1') &&
+            <button className="back-button" onClick={handleCancel}>Cancel</button>
+          }
+        </div>
 
         {isDashboardNavigate && (
           <div className="action-buttons">
-          
-            {(isPendingAtApprover1 && auth.username === item.manager ) && !isTaskCompleted &&(
+
+            {(isPendingAtApprover1 && auth.username === item.manager) && !isTaskCompleted && (
               <>
                 <div>
-                <button className="approve-button" onClick={() => handleTransition('ok')}>Approver1</button>
+                  <button className="approve-button" onClick={() => handleTransition('ok')}>Approver1</button>
                 </div>
                 <div className='Rejectbtn'>
-                <button className="reject-button" onClick={() => handleTransition('reject')}>Reject</button>
+                  <button className="reject-button" onClick={() => handleTransition('reject')}>Reject</button>
                 </div>
               </>
             )}
-            {(isPendingAtApprover2 && auth.username === item.hod) && !isTaskCompleted &&(
+            {(isPendingAtApprover2 && auth.username === item.hod) && !isTaskCompleted && (
               <>
-               <div>
-                <button className="approve-button" onClick={() => handleTransition('Approve')}>Approver2</button>
+                <div>
+                  <button className="approve-button" onClick={() => handleTransition('Approve')}>Approver2</button>
                 </div>
                 <div className='Rejectbtn'>
-                <button className="reject-button" onClick={() => handleTransition('REJECT')}>Reject</button>
+                  <button className="reject-button" onClick={() => handleTransition('REJECT')}>Reject</button>
                 </div>
               </>
             )}

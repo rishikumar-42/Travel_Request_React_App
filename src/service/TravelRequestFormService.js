@@ -39,6 +39,17 @@ const TravelRequestFormServiceLayer = {
                 throw error;
             }
         },
+     updatePatchFormData: async (id,patchData) => {
+            try {
+                console.log("patch")
+                const response = await axios.patch(`http://localhost:8080/o/c/travelinfos/${id}`, JSON.stringify(patchData));
+                console.log("Form update response:", response);
+                return response;
+            } catch (error) {
+                // console.error("Error submitting form", error);
+                throw error;
+            }
+        },
 
     fetchReasonPicklist: async () => {
         try {
