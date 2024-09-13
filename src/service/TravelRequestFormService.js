@@ -40,9 +40,14 @@ const TravelRequestFormServiceLayer = {
             }
         },
      updatePatchFormData: async (id,patchData) => {
+        await setAxios();
             try {
                 console.log("patch")
-                const response = await axios.patch(`http://localhost:8080/o/c/travelinfos/${id}`, JSON.stringify(patchData));
+                const response = await axios.patch(`http://localhost:8080/o/c/travelinfos/${id}`, JSON.stringify(patchData),{
+                    headers:{
+          'Content-Type': 'application/json'
+                    }
+                });
                 console.log("Form update response:", response);
                 return response;
             } catch (error) {
