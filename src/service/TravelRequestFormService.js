@@ -1,12 +1,16 @@
 import axios from "axios";
 import { Buffer } from 'buffer';
+import { useAuth } from "../contexts/AuthContext";
 
 function setAxios() {
-    const username = process.env.REACT_APP_USERNAME;
-    const password = process.env.REACT_APP_PASSWORD;
-    const credentials = `${username}:${password}`;
-    const encodedCred = Buffer.from(credentials, 'latin1').toString('base64');
-    const authHeader = `Basic ${encodedCred}`;
+    // const username = process.env.REACT_APP_USERNAME;
+    // const password = process.env.REACT_APP_PASSWORD;
+    // const credentials = `${username}:${password}`;
+    // const encodedCred = Buffer.from(credentials, 'latin1').toString('base64');
+    // const authHeader = `Basic ${encodedCred}`;
+    const username = localStorage.getItem('username');
+    const password = localStorage.getItem('password');
+    const authHeader = 'Basic ' + btoa(username + ':' + password);
 
     axios.defaults.headers.common['Authorization'] = authHeader;
     axios.defaults.headers.common['Content-Type'] = 'application/json';
@@ -28,33 +32,33 @@ const TravelRequestFormServiceLayer = {
         }
     },
 
-     updateFormData: async (id,formData) => {
-            try {
-                console.log("update")
-                const response = await axios.put(`http://localhost:8080/o/c/travelinfos/${id}`, JSON.stringify(formData));
-                console.log("Form update response:", response);
-                return response;
-            } catch (error) {
-                // console.error("Error submitting form", error);
-                throw error;
-            }
-        },
-     updatePatchFormData: async (id,patchData) => {
+    updateFormData: async (id, formData) => {
+        try {
+            console.log("update")
+            const response = await axios.put(`http://localhost:8080/o/c/travelinfos/${id}`, JSON.stringify(formData));
+            console.log("Form update response:", response);
+            return response;
+        } catch (error) {
+            // console.error("Error submitting form", error);
+            throw error;
+        }
+    },
+    updatePatchFormData: async (id, patchData) => {
         await setAxios();
-            try {
-                console.log("patch")
-                const response = await axios.patch(`http://localhost:8080/o/c/travelinfos/${id}`, JSON.stringify(patchData),{
-                    headers:{
-          'Content-Type': 'application/json'
-                    }
-                });
-                console.log("Form update response:", response);
-                return response;
-            } catch (error) {
-                // console.error("Error submitting form", error);
-                throw error;
-            }
-        },
+        try {
+            console.log("patch")
+            const response = await axios.patch(`http://localhost:8080/o/c/travelinfos/${id}`, JSON.stringify(patchData), {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            console.log("Form update response:", response);
+            return response;
+        } catch (error) {
+            // console.error("Error submitting form", error);
+            throw error;
+        }
+    },
 
     fetchReasonPicklist: async () => {
         try {
@@ -120,7 +124,7 @@ const TravelRequestFormServiceLayer = {
         try {
             console.log("submittion")
             const response = await axios.post(`http://localhost:8080/o/c/travelinfos/`, JSON.stringify(formData));
-            console.log("Form submission response:", response); 
+            console.log("Form submission response:", response);
             return response;
         } catch (error) {
             // console.error("Error submitting form", error);
@@ -132,12 +136,12 @@ const TravelRequestFormServiceLayer = {
             console.log("Adding")
             const formData = new FormData();
             formData.append('file', file);
-            const response = await axios.post(`http://localhost:8080/o/headless-delivery/v1.0/sites/${process.env.REACT_APP_API_LIFERAY_SITE_ID}/documents`, formData,{
+            const response = await axios.post(`http://localhost:8080/o/headless-delivery/v1.0/sites/${process.env.REACT_APP_API_LIFERAY_SITE_ID}/documents`, formData, {
                 headers: {
-                  'Content-Type': 'multipart/form-data',
+                    'Content-Type': 'multipart/form-data',
                 },
-              });
-            console.log("Form submission response:", response); 
+            });
+            console.log("Form submission response:", response);
             return response.data;
         } catch (error) {
             // console.error("Error submitting form", error);
@@ -148,7 +152,7 @@ const TravelRequestFormServiceLayer = {
         try {
             console.log("deleting");
             const response = await axios.delete(`http://localhost:8080/o/headless-delivery/v1.0/documents/${documentId}`);
-            console.log("document delete response:", response.status); 
+            console.log("document delete response:", response.status);
             return response.status;
         } catch (error) {
             // console.error("Error submitting form", error);
@@ -159,7 +163,7 @@ const TravelRequestFormServiceLayer = {
         try {
             console.log("Counting")
             const response = await axios.get(`http://localhost:8080/o/c/travelinfos/?fields=totalCount`);
-            console.log("Fetch count : ", response); 
+            console.log("Fetch count : ", response);
             return response;
         } catch (error) {
             // console.error("Error submitting form", error);
