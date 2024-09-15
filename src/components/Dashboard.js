@@ -13,7 +13,7 @@ const Dashboard = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
-  const [currentUserId, setCurrentUserId] = useState(null);
+  const [currentUseremail, setCurrentUserId] = useState(null);
 
   const { auth, login } = useAuth(); // Access auth from context
   const { username, password } = auth;
@@ -135,16 +135,29 @@ const Dashboard = () => {
     .filter(item => {
       const approver1Name = (item.manager);
       const approver2Name = (item.hod);
-      const user = (currentUserId);
+      const user = (currentUseremail);
       // Filter based on user being either Approver 1 or Approver 2
       return approver1Name === user || approver2Name === user;
     })
     .filter(item => {
+      console.log("manager",item.manager);
+      console.log("hod",item.hod);
+      console.log("userLogin",currentUseremail);
       if (activeTab === 'pending') {
-        return item.approveStatus?.key === 'pendingAtApprover1' || item.approveStatus?.key === 'pendingAtApprover2';
+        if(item.manager === currentUseremail){
+        return item.approveStatus?.key === 'pendingAtApprover1' 
+        }
+        else if(item.hod === currentUseremail){
+        return item.approveStatus?.key === 'pendingAtApprover2';
+        }
       }
       if (activeTab === 'approved') {
+        if(item.manager === currentUseremail){
         return item.approveStatus?.key === 'approved' || item.approveStatus?.key === 'pendingAtApprover2';
+        }
+        if(item.hod === currentUseremail){
+          return item.approveStatus?.key === 'approved';
+          }
       }
       return item.approveStatus?.key === activeTab;
     })
