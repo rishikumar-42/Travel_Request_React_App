@@ -282,7 +282,7 @@ const NewSummary = ({ item = {}, travelInfo = [], onBack, isDashboardNavigate = 
         </div>
 
         <div className="gap-5" style={{ display: 'flex', justifyContent: 'left' }}>
-          <button className="back-button" onClick={handleRefresh}>Back</button>
+          <button className="back-button" onClick={onBack}>Back</button>
           {(item.approveStatus?.key === 'draft' || item.approveStatus?.key === 'pendingAtApprover1') && !isTaskCompleted &&
             <button className="back-button" onClick={handleCancel}>Cancel</button>
           }
