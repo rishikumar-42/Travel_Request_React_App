@@ -150,7 +150,7 @@
     cursor: pointer;
     border-radius: 4px;
   } */
-/* 
+
   .approve-button {
     background-color: #1a6600;
     color: white;
@@ -159,11 +159,11 @@
     padding: 10px;
     cursor: pointer;
     font-size: 16px;
-    width: 80px;
+    width: 85px;
     margin-left: 800px;
-  } */
+  } 
 
-  /* .reject-button {
+  .reject-button {
     background-color: #660000;
     color: white;
     border: none;
@@ -171,8 +171,10 @@
     padding: 10px;
     cursor: pointer;
     font-size: 16px;
-    width: 80px;
-  } */
+    width: 85px;
+    margin-left: 900px;
+    margin-top: -10px;
+  } 
 .Rejectbtn{
   margin-top: -35px !important;
 }

@@ -46,6 +46,11 @@ const NewSummary = ({ item = {}, travelInfo = [], onBack, isDashboardNavigate = 
     fetchWorkflowTasks();
   }, [authHeader, item.id]);
 
+
+  const handleRefresh = () => {
+    window.location.reload();
+  };
+
   const handleTransition = async (transitionName) => {
     if (!currentTask) {
       alert('No task available to perform the action.');
@@ -262,8 +267,8 @@ const NewSummary = ({ item = {}, travelInfo = [], onBack, isDashboardNavigate = 
         </div>
 
         <div className="gap-5" style={{ display: 'flex', justifyContent: 'left' }}>
-          <button className="back-button" onClick={onBack}>Back</button>
-          {(item.approveStatus?.key === 'draft' || item.approveStatus?.key === 'pendingAtApprover1') &&
+          <button className="back-button" onClick={handleRefresh}>Back</button>
+          {(item.approveStatus?.key === 'draft' || item.approveStatus?.key === 'pendingAtApprover1') && !isTaskCompleted &&
             <button className="back-button" onClick={handleCancel}>Cancel</button>
           }
         </div>

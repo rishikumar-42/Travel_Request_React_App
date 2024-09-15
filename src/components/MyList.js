@@ -8,7 +8,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import { useNavigate } from 'react-router-dom';
 
 const MyList = () => {
-  const [activeTab, setActiveTab] = useState('pending');
+  const [activeTab, setActiveTab] = useState('pendingAtApprover1 || pendingAtApprover2');
   const [data, setData] = useState({ items: [] });
   const [loading, setLoading] = useState(true);
   const [selectedItem, setSelectedItem] = useState(null);
@@ -121,7 +121,7 @@ const MyList = () => {
     setCurrentPage(1);
   };
 
-  const handlePageChange = (newPage) => {
+  const handlePageChange = (event,newPage) => {
     setCurrentPage(newPage);
   };
 
@@ -224,11 +224,16 @@ const MyList = () => {
 
     .filter(item => {
       if (activeTab === 'all') {
-        return  item.email !== currentEmailAddress &&  
-          (item.status?.label === activeTab || activeTab === 'all');
-      } else {
-        return item.email === currentEmailAddress && 
-          item.status?.label === activeTab;
+        return  item.email !== currentEmailAddress &&  item.creator?.id === currentUserId  &&
+          (item.approveStatus?.key === activeTab || activeTab === 'all');
+      } 
+      else if (activeTab === 'pendingAtApprover1 || pendingAtApprover2') {
+        return item.email === currentEmailAddress &&  item.creator?.id === currentUserId  &&
+         (item.approveStatus?.key === 'pendingAtApprover1' || item.approveStatus?.key === 'pendingAtApprover2');
+      }
+      else {
+        return item.email === currentEmailAddress && item.creator?.id === currentUserId  &&
+          item.approveStatus?.key === activeTab;
       }
     })
 
@@ -250,8 +255,8 @@ const MyList = () => {
         <>
           <div className="tabs">
             <button
-              className={`tab-button ${activeTab === 'pending' ? 'active' : ''}`}
-              onClick={() => handleTabClick('pending')}
+              className={`tab-button ${activeTab === 'pendingAtApprover1 || pendingAtApprover2' ? 'active' : ''}`}
+              onClick={() => handleTabClick('pendingAtApprover1 || pendingAtApprover2')}
             >
               In Progress Requests
             </button>
@@ -268,14 +273,14 @@ const MyList = () => {
               Approved Requests
             </button>
             <button
-              className={`tab-button ${activeTab === 'InComplete' ? 'active' : ''}`}
-              onClick={() => handleTabClick('InComplete')}
+              className={`tab-button ${activeTab === 'cancelled' ? 'active' : ''}`}
+              onClick={() => handleTabClick('cancelled')}
             >
               Cancelled Requests
             </button>
             <button
-              className={`tab-button ${activeTab === 'denied' ? 'active' : ''}`}
-              onClick={() => handleTabClick('denied')}
+              className={`tab-button ${activeTab === 'rejected' ? 'active' : ''}`}
+              onClick={() => handleTabClick('rejected')}
             >
               Denied Requests
             </button>
@@ -283,7 +288,7 @@ const MyList = () => {
               className={`tab-button ${activeTab === 'all' ? 'active' : ''}`}
               onClick={() => handleTabClick('all')}
             >
-              Create for Others
+              Created for others
             </button>
           </div>
 
@@ -300,11 +305,11 @@ const MyList = () => {
           <div className="toolbar2">
             <div className="toolbar2-content">
               <span>
-              {activeTab === 'pending' && 'My In-Progress Requests'}
+              {activeTab === 'pendingAtApprover1 || pendingAtApprover2' && 'My In-Progress Requests'}
               {activeTab === 'draft' && 'My Draft Requests'}
               {activeTab === 'approved' && 'My Approved Requests'}
-              {activeTab === 'InComplete' && 'My Cancelled Requests'}
-              {activeTab === 'denied' && 'My Denied Requests'}
+              {activeTab === 'cancelled' && 'My Cancelled Requests'}
+              {activeTab === 'rejected' && 'My Denied Requests'}
               {activeTab === 'all' && 'All Requests'}
               </span>
             </div>
@@ -345,7 +350,8 @@ const MyList = () => {
                           <td className="td-mylist">{item.manager || 'N/A'}</td>
                           <td className="td-mylist">{item.hod|| 'N/A'}</td>
                           <td className="td-mylist">{item.travelBudget || 'N/A'}</td>
-                          <td className="td-mylist">{item.status?.label || 'N/A'}</td>
+                          <td className="td-mylist">{item.approveStatus?.name || 'N/A'}</td>
+                          {/* <td className="td-mylist">{item.status?.label || 'N/A'}</td> */}
                           {activeTab === 'draft' && (
                             <td className="td-mylist">
                              <EditIcon

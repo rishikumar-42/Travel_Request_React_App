@@ -26,6 +26,7 @@ import { Dialog } from 'primereact/dialog';
 import "../assets/css/Style.css";
 import { useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 function EditTravelRequestForm() {
     const location = useLocation();
@@ -51,6 +52,11 @@ function EditTravelRequestForm() {
     }
   }, [login, username, password]);
 
+
+  const navigate = useNavigate();
+  const handleBack = () => {
+    navigate('/MyList');
+  };
 
   const carRentalCategorySwitch = item.carRentalCategory !== '';
   const HotelSwitch = item.hotelLocation !== '';
@@ -451,8 +457,8 @@ function EditTravelRequestForm() {
         flightTicketType: item.flightTicketType,
         carRentalFrom: item.carRentalFrom || "",
         carRentalTo: item.carRentalTo || "",
-        carRentalOn: item.carRentalOn || null,
-        carRentalUntil: item.carRentalUntil || null,
+        carRentalOn: new Date(item.carRentalOn) || null,
+        carRentalUntil: new Date(item.carRentalUntil) || null,
         carRentalBirthDate: new Date(item.carRentalBirthDate) || null,
         carDrivingLicense: item.carDrivingLicense || "",
         carRentalCategory: item.carRentalCategory || "",
@@ -755,7 +761,7 @@ function EditTravelRequestForm() {
                                         ...formData,
                                         issuerNumber: e.target.value
                                     })} />
-                                <label htmlFor="number-input" className="small">Number<span className="text-danger px-1">*</span></label>
+                                <label htmlFor="number-input" className="small">Telephone Number<span className="text-danger px-1">*</span></label>
                             </FloatLabel>
                         </div>
                     </div>
@@ -1592,12 +1598,14 @@ function EditTravelRequestForm() {
         borderRadius: '4px',
         backgroundColor: '#114B7D',
         padding: '0.5rem 1rem',
-        width: '15%',
-        fontWeight: 'bold'
+        width: '12%',
+        fontWeight: 'bold',
+        marginLeft: '10px'
     }}
         type="submit"
         label="Update"
     />
+     <Button type="button"  className="back-button-draft mb-3" icon="pi pi-angle-double-left" label="Back" rounded  onClick={handleBack} />
 
                         {/* <Button className="mb-3" style={{
                             border: 'none', // Remove border
