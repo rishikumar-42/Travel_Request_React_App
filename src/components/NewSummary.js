@@ -51,6 +51,13 @@ const NewSummary = ({ item = {}, travelInfo = [], onBack, isDashboardNavigate = 
     window.location.reload();
   };
 
+  const formatDate = (dateString) => {
+    if (!dateString) return 'N/A';
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    const date = new Date(dateString);
+    return date.toLocaleDateString(undefined, options);
+  };
+
   const handleTransition = async (transitionName) => {
     if (!currentTask) {
       alert('No task available to perform the action.');
@@ -86,6 +93,14 @@ const NewSummary = ({ item = {}, travelInfo = [], onBack, isDashboardNavigate = 
     }else if(item.approveStatus?.key === 'pendingAtApprover1'){
       await TravelRequestFormServiceLayer.updatePatchFormData(item.id,{approveStatus:{key:"cancelled"}});
     }
+    console.log(currentTask);
+    console.log("work insta",currentTask.workflowInstanceId)
+    // await axios.delete(`http://localhost:8080/o/headless-admin-workflow/v1.0/workflow-instances/${currentTask.workflowInstanceId}`, {
+    //   headers: {
+    //     'Authorization': authHeader,
+    //     'Content-Type': 'application/json'
+    //   }
+    // });
   }
 
   // Determine button visibility
@@ -194,15 +209,15 @@ const NewSummary = ({ item = {}, travelInfo = [], onBack, isDashboardNavigate = 
             </div>
             <div className="detail-item">
               <span className="label">On:</span>
-              <span className="value">{item.carRentalOn || 'N/A'}</span>
+              <span className="value">{formatDate(item.carRentalOn) || 'N/A'}</span>
             </div>
             <div className="detail-item">
               <span className="label">Until:</span>
-              <span className="value">{item.carRentalUntil || 'N/A'}</span>
+              <span className="value">{formatDate(item.carRentalUntil) || 'N/A'}</span>
             </div>
             <div className="detail-item">
               <span className="label">Birth Date:</span>
-              <span className="value">{item.carRentalBirthDate || 'N/A'}</span>
+              <span className="value">{formatDate(item.carRentalBirthDate) || 'N/A'}</span>
             </div>
             <div className="detail-item">
               <span className="label">Driving License:</span>
@@ -246,11 +261,11 @@ const NewSummary = ({ item = {}, travelInfo = [], onBack, isDashboardNavigate = 
                 {travelInfo.map((info, index) => (
                   <tr key={index}>
                     <td className='table-row'>{info.onwardJourney || 'N/A'}</td>
-                    <td className='table-row'>{info.onwardDepartureDate || 'N/A'}</td>
+                    <td className='table-row'>{formatDate(info.onwardDepartureDate) || 'N/A'}</td>
                     <td className="table-row">{info.onwardPreferredTime && info.onwardPreferredTime.name ? info.onwardPreferredTime.name : 'N/A'}</td>
                     <td className='table-row'>{info.onwardTransportNumber || 'N/A'}</td>
                     <td className='table-row'>{info.returnJourney || 'N/A'}</td>
-                    <td className='table-row'>{info.returnArrivalDate || 'N/A'}</td>
+                    <td className='table-row'>{formatDate(info.returnArrivalDate) || 'N/A'}</td>
                     <td className="table-row">{info.returnPreferredTime && info.returnPreferredTime.name ? info.returnPreferredTime.name : 'N/A'}</td>
                     <td className='table-row'>{info.returnTransportNumber || 'N/A'}</td>
                   </tr>
