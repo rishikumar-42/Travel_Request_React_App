@@ -25,7 +25,7 @@ const NewSummary = ({ item = {}, travelInfo = [], onBack, isDashboardNavigate = 
   useEffect(() => {
     const fetchWorkflowTasks = async () => {
       try {
-        const response = await fetch('http://localhost:8080/o/headless-admin-workflow/v1.0/workflow-tasks/assigned-to-me', {
+        const response = await fetch('http://localhost:8080/o/headless-admin-workflow/v1.0/workflow-instances', {
           method: 'GET',
           headers: {
             'Accept': 'application/json',
@@ -33,6 +33,7 @@ const NewSummary = ({ item = {}, travelInfo = [], onBack, isDashboardNavigate = 
           },
         });
         const data = await response.json();
+        console.log("data : ", data)
         const task = data.items.find(task => task.objectReviewed.id === item.id);
         console.log("task", task);
         setCurrentTask(task);
@@ -88,19 +89,20 @@ const NewSummary = ({ item = {}, travelInfo = [], onBack, isDashboardNavigate = 
   };
 
   const handleCancel = async () => {
-    if(item.approveStatus?.key === 'draft'){
-      await TravelRequestFormServiceLayer.updatePatchFormData(item.id,{approveStatus:{key:"cancelled"}});
-    }else if(item.approveStatus?.key === 'pendingAtApprover1'){
-      await TravelRequestFormServiceLayer.updatePatchFormData(item.id,{approveStatus:{key:"cancelled"}});
+    if (item.approveStatus?.key === 'draft') {
+      await TravelRequestFormServiceLayer.updatePatchFormData(item.id, { approveStatus: { key: "cancelled" } });
+    } else if (item.approveStatus?.key === 'pendingAtApprover1') {
+      await TravelRequestFormServiceLayer.updatePatchFormData(item.id, { approveStatus: { key: "cancelled" } });
+      console.log(currentTask);
+      console.log("work insta", currentTask.id)
+      await axios.delete(`http://localhost:8080/o/headless-admin-workflow/v1.0/workflow-instances/${currentTask.id}`, {
+        headers: {
+          'Authorization': authHeader,
+          'Content-Type': 'application/json'
+        }
+      });
     }
-    console.log(currentTask);
-    console.log("work insta",currentTask.workflowInstanceId)
-    // await axios.delete(`http://localhost:8080/o/headless-admin-workflow/v1.0/workflow-instances/${currentTask.workflowInstanceId}`, {
-    //   headers: {
-    //     'Authorization': authHeader,
-    //     'Content-Type': 'application/json'
-    //   }
-    // });
+
   }
 
   // Determine button visibility
