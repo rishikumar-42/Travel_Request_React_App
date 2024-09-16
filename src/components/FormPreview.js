@@ -7,6 +7,17 @@ import { Column } from 'primereact/column';
 
 const FormPreview = ({ item, travelInfo, attachments }) => {
 
+    const OnwardJourneyLink = (rowData) => {
+
+        console.log("url : ", rowData.contentUrl)
+        let urlObj = new URL(rowData.contentUrl, "http://localhost:8080");
+        urlObj.searchParams.delete('download');
+        let newUrl = urlObj.toString();
+        console.log("new url : ", newUrl)
+
+        return newUrl
+    };
+
     const formatDate = (date) => {
         if (!date) return '';
         const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
@@ -275,7 +286,10 @@ const FormPreview = ({ item, travelInfo, attachments }) => {
                     <ol>
                         {attachments.map(task => (
                             <li key={task.id}>
-                                {task.title}
+                                {/* {task.title} */}
+                                <a href={OnwardJourneyLink(task)} target="_blank" rel="noopener noreferrer">
+                                    {task.title}
+                                </a>
                             </li>
                         ))}
                     </ol>
@@ -286,7 +300,7 @@ const FormPreview = ({ item, travelInfo, attachments }) => {
                 <div className="preview-summary-details">
                     <DataTable value={travelInfo} showGridlines tableStyle={{ minWidth: '50rem' }}>
                         {/*<Column sortable field="price" header="Price incl. VAT" /> */}
-                        <Column sortable field="onwardJourney" header="Onward Journey" headerClassName="preview-custom-header" />
+                        <Column sortable field="onwardJourney" header="Onward Journey (From - To)" headerClassName="preview-custom-header" />
                         <Column sortable field="onwardDepartureDate" header="Departure Date" body={(rowData) => formatDate(rowData.onwardDepartureDate)} headerClassName="preview-custom-header" />
                         <Column sortable field="onwardPreferredTime" header="Onward Preferred Time" body={(rowData) => formatPickList(rowData.onwardPreferredTime)} headerClassName="preview-custom-header" />
                         <Column sortable field="onwardTransportNumber" header="Onward Transport Number" headerClassName="preview-custom-header" />

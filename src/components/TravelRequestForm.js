@@ -66,11 +66,26 @@ function TravelRequestForm() {
     });
     const [editingItinerary, setEditingItinerary] = useState(null);
 
-     const navigate = useNavigate();
+    const navigate = useNavigate();
 
-        const handleBack = () => {
-            navigate('/MyList');
-          };
+    const handleBack = () => {
+        navigate('/MyList');
+    };
+
+    const OnwardJourneyLink = (rowData) => {
+
+        console.log("url : ", rowData.contentUrl)
+        let urlObj = new URL(rowData.contentUrl, "http://localhost:8080"); 
+        urlObj.searchParams.delete('download');
+        let newUrl = urlObj.toString();
+        console.log("new url : ", newUrl)
+
+        return (
+            <a href={newUrl} target="_blank" rel="noopener noreferrer">
+                {rowData.title}
+            </a>
+        );
+    };
 
     const [dropDownSuggestions, setdropDownSuggestions] = useState([]);
     const [selectedItem, setSelectedItem] = useState('');
@@ -142,6 +157,7 @@ function TravelRequestForm() {
 
     const searchEmployee = (event) => {
         const query = event.query.toLowerCase();
+        console.log("query : ", query)
         setEmployeeDropDownSuggestions(
             userList.filter(item => item.email.toLowerCase().includes(query))
         );
@@ -196,14 +212,18 @@ function TravelRequestForm() {
 
     const searchItem = (event) => {
         const query = event.query.toLowerCase();
+        console.log("query 2 : ", query)
+        const email = (typeof selectedEmployee === 'object' ? selectedEmployee.email.toLowerCase() : selectedEmployee.toLowerCase());
         setdropDownSuggestions(
-            userList.filter(item => item.email.toLowerCase().includes(query) && (item.email.toLowerCase() !== selectedEmployee.email.toLowerCase()))
+            userList.filter(item => item.email.toLowerCase().includes(query) && (item.email.toLowerCase() !== email))
         );
     };
     const searchItem2 = (event) => {
         const query = event.query.toLowerCase();
+        const employeeEmail = (typeof selectedEmployee === 'object' ? selectedEmployee.email.toLowerCase() : selectedEmployee.toLowerCase());
+        const managerEmail = (typeof selectedItem === 'object' ? selectedItem.email.toLowerCase() : selectedItem.toLowerCase())
         setdropDownSuggestions2(
-            userList.filter(item => item.email.toLowerCase().includes(query) && (item.email.toLowerCase() !== selectedItem.email.toLowerCase()) && (item.email.toLowerCase() !== selectedEmployee.email.toLowerCase()))
+            userList.filter(item => item.email.toLowerCase().includes(query) && (item.email.toLowerCase() !== managerEmail) && (item.email.toLowerCase() !== employeeEmail))
         );
     };
 
@@ -534,6 +554,8 @@ function TravelRequestForm() {
     }, [files]);
 
 
+
+
     // handle save button
     useEffect(() => {
         console.log("Itenarary : ", newItinerary);
@@ -567,9 +589,9 @@ function TravelRequestForm() {
             });
             // setMessage(`Successfully created Id : ${response.data.travelRequestId}`);
             showMessage('success', 'Success', `Successfully created Id : ${response.data.travelRequestId}`)
-            // setTimeout(() => {
-            //     window.location.reload();
-            // }, 5000);
+            setTimeout(() => {
+                handleBack();
+            }, 3000);
             // setOpen(true);
         } catch (error) {
             console.error("Error submitting form", error);
@@ -606,7 +628,7 @@ function TravelRequestForm() {
 
     // Function to handle blur event for validation
     const handleBlur = () => {
-        if (selectedEmployee === null)
+        if (selectedEmployee === '')
             setIsEmployeeEmailValid(false)
         else
             setIsEmployeeEmailValid(validateEmployeeEmail());
@@ -630,7 +652,7 @@ function TravelRequestForm() {
 
     // Function to handle blur event for validation
     const handleBlur2 = () => {
-        if (selectedItem === null)
+        if (selectedItem === '')
             setIsManagerEmailValid(false)
         else
             setIsManagerEmailValid(validateManagerEmail());
@@ -769,7 +791,7 @@ function TravelRequestForm() {
                                             required
                                         />
                                         <label htmlFor="employeeEmail" className="small"><strong>Email <span className="text-danger px-1">*</span></strong></label>
-                                        {!isEmployeeEmailValid && <span htmlFor="employeeEmail" className="small mt-1"><strong style={{ color: 'red' }}>Email not in the list</strong></span>}
+                                        {!isEmployeeEmailValid && <span htmlFor="employeeEmail" className="small mt-1"><strong style={{ color: 'red' }}>Invalid Email</strong></span>}
                                     </FloatLabel>
                                 </div>
                                 <div className="form-single">
@@ -966,7 +988,7 @@ function TravelRequestForm() {
                                         tooltip="Disabled"
                                     />
                                     <label htmlFor="manager" className="small">Manager<span className="text-danger px-1">*</span></label>
-                                    {!isManagerEmailValid && <span htmlFor="manager" className="small"> <strong style={{ color: 'red' }}>Email not in the list</strong></span>}
+                                    {!isManagerEmailValid && <span htmlFor="manager" className="small"> <strong style={{ color: 'red' }}>Invalid Email</strong></span>}
                                 </FloatLabel>
                             </div>
                             <div className="w-50">
@@ -998,7 +1020,7 @@ function TravelRequestForm() {
                                     />
                                     <label htmlFor="hod" className="small">Head Of Department/GM/VP</label>
 
-                                    {!isHODEmailValid && <span htmlFor="hod" className="small"> <strong style={{ color: 'red' }}>Email not in the list</strong></span>}
+                                    {!isHODEmailValid && <span htmlFor="hod" className="small"> <strong style={{ color: 'red' }}>Invalid Email</strong></span>}
                                 </FloatLabel>
                             </div>
                         </div>
@@ -1393,7 +1415,7 @@ function TravelRequestForm() {
 
                         {files.length > 0 &&
                             <DataTable value={files} showGridlines tableStyle={{ minWidth: '50rem' }}>
-                                <Column sortable field="title" header="Title" headerClassName="custom-header" />
+                                <Column sortable field="title" header="Title" headerClassName="custom-header" body={(rowData) => OnwardJourneyLink(rowData)} />
                                 <Column header="Actions" headerClassName="custom-header"
                                     body={(rowData, { rowIndex }) => (
                                         <div style={{ display: 'flex', justifyContent: 'left', alignItems: 'left' }}>
@@ -1432,7 +1454,7 @@ function TravelRequestForm() {
                                         <div className="calendar-item">
                                             <FloatLabel>
                                                 <InputText id="onwardJourney" maxLength={250} value={newItinerary.onwardJourney} onChange={e => handleInputChange('onwardJourney', e)} />
-                                                <label htmlFor="onwardJourney">Onward Journey</label>
+                                                <label htmlFor="onwardJourney">Onward Journey (From - To)</label>
                                             </FloatLabel>
                                         </div>
                                         <div className="calendar-item col-width">
@@ -1477,7 +1499,7 @@ function TravelRequestForm() {
                                                 <div >
                                                     <FloatLabel>
                                                         <InputText id="returnJourney" maxLength={250} value={newItinerary.returnJourney} onChange={e => handleInputChange('returnJourney', e)} />
-                                                        <label htmlFor="returnJourney">Return Journey</label>
+                                                        <label htmlFor="returnJourney">Return Journey (From - To)</label>
                                                     </FloatLabel>
                                                 </div>
                                                 <div className="col-width">
@@ -1520,7 +1542,7 @@ function TravelRequestForm() {
 
                             <DataTable value={itineraries} showGridlines tableStyle={{ minWidth: '50rem' }}>
                                 {/*<Column sortable field="price" header="Price incl. VAT" /> */}
-                                <Column sortable field="onwardJourney" header="Onward Journey" headerClassName="custom-header" />
+                                <Column sortable field="onwardJourney" header="Onward Journey (From - To)" headerClassName="custom-header" />
                                 <Column sortable field="onwardDepartureDate" header="Departure Date" body={(rowData) => formatDate(rowData.onwardDepartureDate)} headerClassName="custom-header" />
                                 <Column sortable field="onwardPreferredTime" header="Onward Preferred Time" body={(rowData) => formatPickList(rowData.onwardPreferredTime)} headerClassName="custom-header" />
                                 <Column sortable field="onwardTransportNumber" header="Onward Transport Number" headerClassName="custom-header" />
@@ -1544,23 +1566,23 @@ function TravelRequestForm() {
                     )}
                     {/* <button type="submit">Submit</button> */}
                     <div className="gap-5" style={{ display: 'flex', justifyContent: 'center' }}>
-                        <Button className="mb-3" 
+                        <Button className="mb-3"
                             onClick={() => setFormData(prevFormData => ({
                                 ...prevFormData, // Spread the existing formData
                                 status: { code: 2 },
-                                approveStatus: {key: 'draft'}
+                                approveStatus: { key: 'draft' }
                             }))}
                             type="submit"
                             label="Save As Draft"
                             disabled={isEmailValidSubmit}
                         />
                         <Button className="mb-3" type="button" icon="pi pi-angle-double-right" label="Next" rounded onClick={() => setPreviewVisible(true)} />
-                        <Button type="button"  className="back-button-travel mb-3" icon="pi pi-angle-double-left" label="Back" rounded  onClick={handleBack} />
+                        <Button type="button" className="back-button-travel mb-3" icon="pi pi-angle-double-left" label="Back" rounded onClick={handleBack} />
                         <div>
-                            
+
                             <Dialog header="Preview" visible={previewVisible} style={{ width: '80vw' }} onHide={() => { if (!previewVisible) return; setPreviewVisible(false); }}>
                                 {/* {previewVisible && { NewSummary(formData,itineraries) }} */}
-                                <FormPreview item={formData} travelInfo={itineraries} attachments={files}/>
+                                <FormPreview item={formData} travelInfo={itineraries} attachments={files} />
                                 <div className="gap-5 mt-3" style={{ display: 'flex', justifyContent: 'center' }} >
                                     <Button icon="pi pi-angle-double-left" label="Back" type="button" rounded onClick={() => setPreviewVisible(false)} />
                                     <Button
