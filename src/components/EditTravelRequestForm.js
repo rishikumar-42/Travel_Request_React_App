@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import TravelRequestFormService from "../service/TravelRequestFormService.js";
 import "../assets/css/TravelRequestForm.css";
@@ -27,10 +27,11 @@ import "../assets/css/Style.css";
 import { useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { Toast } from "primereact/toast";
 
 function EditTravelRequestForm() {
     const location = useLocation();
-    const { item, travelInfo } = location.state || {};
+    const { item, travelInfo, attachmentInfo } = location.state || {};
 
     // console.log("Issuer Date",item.issuerDate);
     // console.log("carRental",item.carRentalCategory);
@@ -84,6 +85,7 @@ function EditTravelRequestForm() {
     const [preferredTimeList, setPreferredTimeList] = useState([]);
     const [reasonValue, setReasonValue] = useState(item.flightTicketReason?.name);
     const [itineraries, setItineraries] = useState(Array.isArray(travelInfo) ? travelInfo : []);
+    const [attachments, setAttachments] = useState(Array.isArray(attachmentInfo) ? attachmentInfo : []);
     const [isEmployeeEmailValid, setIsEmployeeEmailValid] = useState(true);
     const [isManagerEmailValid, setIsManagerEmailValid] = useState(true);
     const [isHODEmailValid, setIsHODEmailValid] = useState(true);
@@ -114,6 +116,77 @@ function EditTravelRequestForm() {
     const [message, setMessage] = useState(false);
     const [showReturnFields, setShowReturnFields] = useState(false);
     const [saveItineraryFlag, setSaveItineraryFlag] = useState(true);
+    const [file, setFile] = useState(null);
+
+    const toast = useRef(null);
+
+    const showMessage = (severity, summary, detail) => {
+        toast.current.show({ severity, summary, detail, life: 10000 });
+    }
+
+    const onFileChange = (e) => {
+        const selectedFile = e.target.files[0];
+        if (selectedFile) {
+            if (selectedFile.size > 100000) {
+                // setFileError('File size exceeds the maximum limit.');
+                showMessage('error', 'Error', 'File size exceeds the maximum limit')
+                return;
+            }
+            setFile(selectedFile);
+        }
+    };
+
+    const handleRemovefiles = async (rowIndex) => {
+        const selectedFile = attachments[rowIndex];
+        console.log("selected file : ", selectedFile)
+        try {
+            await TravelRequestFormService.deleteDocuments(selectedFile.fileId)
+            showMessage('success', 'Success', `Successfully removed ${selectedFile.title}`)
+            setAttachments(attachments.filter((_, i) => i !== rowIndex));
+        } catch (error) {
+            console.log("error while deleting : ", error)
+            showMessage('error', 'Error', `Error response : ${error.response.data.title}`)
+            // setFileError(error)
+        }
+    };
+
+    const onFileUpload = async () => {
+        if (!file) {
+            // setFileError('No file selected.');
+            showMessage('error', 'Error', 'No file selected.')
+            return;
+        }
+
+        try {
+            const fileResponse = await TravelRequestFormService.addDocuments(file);
+            const tempFile = {
+                fileId: fileResponse.id,
+                title: fileResponse.title,
+                contentUrl: fileResponse.contentUrl
+            };
+            setAttachments([...attachments, tempFile]);
+            showMessage('success', 'Success', `Successfully uploaded ${fileResponse.title}`)
+        } catch (error) {
+            // setFileError(error.title)
+            showMessage('error', 'Error', `Error response : ${error.response.data.title}`)
+
+        }
+    };
+
+    const OnwardJourneyLink = (rowData) => {
+
+        console.log("url : ", rowData.contentUrl)
+        let urlObj = new URL(rowData.contentUrl, "http://localhost:8080"); 
+        urlObj.searchParams.delete('download');
+        let newUrl = urlObj.toString();
+        console.log("new url : ", newUrl)
+
+        return (
+            <a href={newUrl} target="_blank" rel="noopener noreferrer">
+                {rowData.title}
+            </a>
+        );
+    };
 
     const searchEmployee = (event) => {
         const query = event.query.toLowerCase();
@@ -474,7 +547,8 @@ function EditTravelRequestForm() {
         hotelNote: item.hotelNote || "",
         manager: item.manager || '',
         hod: item.hod || '',
-        itineraryRelation: itineraries
+        itineraryRelation: itineraries,
+        attachmentRelation: attachments
         // itineraryRelation: Array.isArray(travelInfo) ? travelInfo : []
     });
 
@@ -578,6 +652,13 @@ function EditTravelRequestForm() {
                 returnPreferredTime: itinerary.returnPreferredTime,
                 returnTransportNumber: itinerary.returnTransportNumber,
             })),
+            attachmentRelation: attachments.map(attachment => ({
+                id: attachment.id || null,
+                r_attachmentRelation_c_travelInfoId:attachment.r_attachmentRelation_c_travelInfoId,
+                title: attachment.title,
+                fileId: attachment.fileId,
+                contentUrl: attachment.contentUrl
+            }))
         };
     };
 
@@ -715,6 +796,7 @@ function EditTravelRequestForm() {
     return (
         <div className="form-container mx-5">
             <div className="bg-white align-items-start px-3 rounded-bottom-2 mb-3 pt-3 pb-3 shadow-sm">
+            <Toast ref={toast} position="top-center" />
                 <form className="travel-form p-0" onSubmit={handleFormSubmit} onKeyDown={handleKeyDown}>
                     <div className="bg-color px-3 py-1 rounded-top-2 d-flex justify-content-between align-items-center w-100">
                         <div className="align-items-start"><h5 className="text-white text-left mt-2">Edit Travel Request</h5></div>
@@ -1424,6 +1506,35 @@ function EditTravelRequestForm() {
                                 </div>
                             </div>
                         )}
+                    </div>
+
+                    <hr className="separator " />
+                    <div className="px-3 pt-3">
+                        <div className="py-1 mb-1">
+                            <h6 className="text-left">Attachments</h6>
+                        </div>
+                        <div className="d-flex">
+                            <input
+                                type="file"
+                                // accept={accept}
+                                onChange={onFileChange}
+                            />
+                            <button className="btn-sm px-2 py-2 bg-gradients border-0" style={{ color: 'white' }} type="button" onClick={onFileUpload}>Upload</button>
+                            {/* {fileError && <p style={{ color: 'red' }}>{fileError}</p>} */}
+                        </div>
+
+                        {attachments.length > 0 &&
+                            <DataTable value={attachments} showGridlines tableStyle={{ minWidth: '50rem' }}>
+                                <Column sortable field="title" header="Title" headerClassName="custom-header" body={(rowData) => OnwardJourneyLink(rowData)} />
+                                <Column header="Actions" headerClassName="custom-header"
+                                    body={(rowData, { rowIndex }) => (
+                                        <div style={{ display: 'flex', justifyContent: 'left', alignItems: 'left' }}>
+                                            <Button severity="danger" type="button" icon="pi pi-trash"
+                                                onClick={() => handleRemovefiles(rowIndex)} />
+                                        </div>
+                                    )}
+                                />
+                            </DataTable>}
                     </div>
 
                     <hr className="separator mb-2" />

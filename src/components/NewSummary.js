@@ -1,13 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import "../assets/css/NewSummary.css";
 import axios from 'axios';
 import { useAuth } from '../contexts/AuthContext';
 import TravelRequestFormServiceLayer from '../service/TravelRequestFormService';
+import { Toast } from 'primereact/toast';
 
-const NewSummary = ({ item = {}, travelInfo = [], onBack, isDashboardNavigate = false }) => {
+const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, isDashboardNavigate = false }) => {
   const [workflowTasks, setWorkflowTasks] = useState([]);
   const [currentTask, setCurrentTask] = useState(null);
   const [isTaskCompleted, setIsTaskCompleted] = useState(false);
+  const [cancelFlag, setCancelFlag] = useState(true);
+
 
   const { auth, login } = useAuth(); // Access auth from context
   const { username, password } = auth;
@@ -22,7 +25,7 @@ const NewSummary = ({ item = {}, travelInfo = [], onBack, isDashboardNavigate = 
     }
   }, [login, username, password]);
 
-  useEffect(() => {
+  // useEffect(() => {
     const fetchWorkflowTasks = async () => {
       try {
         const response = await fetch('http://localhost:8080/o/headless-admin-workflow/v1.0/workflow-instances', {
@@ -39,17 +42,36 @@ const NewSummary = ({ item = {}, travelInfo = [], onBack, isDashboardNavigate = 
         setCurrentTask(task);
         setWorkflowTasks(data.items || []);
         setIsTaskCompleted(!!task && task.completed);
+        return task;
       } catch (err) {
         console.error('Failed to fetch workflow tasks:', err);
       }
     };
 
-    fetchWorkflowTasks();
-  }, [authHeader, item.id]);
+  //   fetchWorkflowTasks();
+  // }, [authHeader, item.id]);
 
 
   const handleRefresh = () => {
     window.location.reload();
+  };
+
+  const toast = useRef(null);
+
+  const showMessage = (severity, summary, detail) => {
+    toast.current.show({ severity, summary, detail, life: 10000 });
+  }
+
+
+  const OnwardJourneyLink = (rowData) => {
+
+    console.log("url : ", rowData.contentUrl)
+    let urlObj = new URL(rowData.contentUrl, "http://localhost:8080");
+    urlObj.searchParams.delete('download');
+    let newUrl = urlObj.toString();
+    console.log("new url : ", newUrl)
+
+    return newUrl
   };
 
   const formatDate = (dateString) => {
@@ -89,20 +111,27 @@ const NewSummary = ({ item = {}, travelInfo = [], onBack, isDashboardNavigate = 
   };
 
   const handleCancel = async () => {
-    if (item.approveStatus?.key === 'draft') {
-      await TravelRequestFormServiceLayer.updatePatchFormData(item.id, { approveStatus: { key: "cancelled" } });
-    } else if (item.approveStatus?.key === 'pendingAtApprover1') {
-      await TravelRequestFormServiceLayer.updatePatchFormData(item.id, { approveStatus: { key: "cancelled" } });
-      console.log(currentTask);
-      console.log("work insta", currentTask.id)
-      await axios.delete(`http://localhost:8080/o/headless-admin-workflow/v1.0/workflow-instances/${currentTask.id}`, {
-        headers: {
-          'Authorization': authHeader,
-          'Content-Type': 'application/json'
-        }
-      });
+    try {
+      if (item.approveStatus?.key === 'draft') {
+        await TravelRequestFormServiceLayer.updatePatchFormData(item.id, { approveStatus: { key: "cancelled" } });
+      } else if (item.approveStatus?.key === 'pendingAtApprover1') {
+        await TravelRequestFormServiceLayer.updatePatchFormData(item.id, { approveStatus: { key: "cancelled" } });
+        const currentTask = await fetchWorkflowTasks();
+        console.log(currentTask);
+        console.log("work insta", currentTask.id)
+        await axios.delete(`http://localhost:8080/o/headless-admin-workflow/v1.0/workflow-instances/${currentTask.id}`, {
+          headers: {
+            'Authorization': authHeader,
+            'Content-Type': 'application/json'
+          }
+        });
+      }
+      showMessage('success', 'Success', `Successfully Cancelled ${item.travelRequestId}`);
+      setCancelFlag(false);
+    } catch (error) {
+      console.log("error while deleting : ", error)
+      showMessage('error', 'Error', `Error response : ${error.response.data.title}`)
     }
-
   }
 
   // Determine button visibility
@@ -113,6 +142,7 @@ const NewSummary = ({ item = {}, travelInfo = [], onBack, isDashboardNavigate = 
 
   return (
     <div className="summary-container">
+      <Toast ref={toast} position="top-center" />
       <div className="summary-content">
         <div className="toolbar-summary">
           <span className="title">Traveler Request</span>
@@ -244,6 +274,21 @@ const NewSummary = ({ item = {}, travelInfo = [], onBack, isDashboardNavigate = 
           </div>
         </div>
 
+        <div className="preview-toolbar">
+          <span className="preview-title">Attachments</span>
+        </div>
+        <div className="preview-summary-details">
+          <ol>
+            {attachmentInfo.map(task => (
+              <li key={task.id}>
+                <a href={OnwardJourneyLink(task)} target="_blank" rel="noopener noreferrer">
+                  {task.title}
+                </a>
+              </li>
+            ))}
+          </ol>
+        </div>
+
         <div className="summary-details">
           <table className="table-summary">
             <thead className='thead'>
@@ -285,7 +330,7 @@ const NewSummary = ({ item = {}, travelInfo = [], onBack, isDashboardNavigate = 
 
         <div className="gap-5" style={{ display: 'flex', justifyContent: 'left' }}>
           <button className="back-button" onClick={onBack}>Back</button>
-          {(item.approveStatus?.key === 'draft' || item.approveStatus?.key === 'pendingAtApprover1') && !isTaskCompleted &&
+          {(item.approveStatus?.key === 'draft' || item.approveStatus?.key === 'pendingAtApprover1') && cancelFlag &&
             <button className="back-button" onClick={handleCancel}>Cancel</button>
           }
         </div>

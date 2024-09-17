@@ -13,6 +13,7 @@ const MyList = () => {
   const [loading, setLoading] = useState(true);
   const [selectedItem, setSelectedItem] = useState(null);
   const [selectedItemTravelInfo, setSelectedItemTravelInfo] = useState({});
+  const [selectedItemAttachmentsInfo, setSelectedItemAttachmentsInfo] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
@@ -92,13 +93,28 @@ const MyList = () => {
         },
       });
 
+      const attachmentResponse = await fetch(`http://localhost:8080/o/c/travelattachments?filter=r_attachmentRelation_c_travelInfoId eq \'${item.id}\'`, {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': authHeader,
+        },
+      });
+
+      const attachmentInfo = await attachmentResponse.json()
+      console.log("attachments : " , attachmentInfo.items)
+
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      if (!attachmentResponse.ok) {
+        throw new Error(`HTTP error! Status: ${attachmentResponse.status}`);
       }
 
       const travelInfo = await response.json();
       console.log('Travel Information Response:', travelInfo);
       setSelectedItemTravelInfo(travelInfo.items || []); // Ensure it's an array
+      setSelectedItemAttachmentsInfo(attachmentInfo.items || []);
     } catch (error) {
       console.error('Error fetching travel information:', error);
       setSelectedItemTravelInfo([]);
@@ -140,13 +156,24 @@ const MyList = () => {
             'Authorization': authHeader,
           },
         });
+        const attachmentResponse = await fetch(`http://localhost:8080/o/c/travelattachments?filter=r_attachmentRelation_c_travelInfoId eq \'${item.id}\'`, {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+            'Authorization': authHeader,
+          },
+        });
 
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
+        if (!attachmentResponse.ok) {
+          throw new Error(`HTTP error! Status: ${attachmentResponse.status}`);
+        }
 
         const travelInfo = await response.json();
-        navigate('/EditTravelRequestForm', { state: { item, travelInfo: travelInfo.items || [] } });
+        const attachmentInfo = await attachmentResponse.json();
+        navigate('/EditTravelRequestForm', { state: { item, travelInfo: travelInfo.items || [], attachmentInfo: attachmentInfo.items || [] } });
       } catch (error) {
         console.error('Error fetching travel information:', error);
         navigate('/EditTravelRequestForm', { state: { item, travelInfo: [] } });
@@ -249,6 +276,7 @@ const MyList = () => {
        <NewSummary
        item={selectedItem}
        travelInfo={selectedItemTravelInfo}
+       attachmentInfo={selectedItemAttachmentsInfo}
        onBack={handleBack}
      />
       ) : (
@@ -323,7 +351,7 @@ const MyList = () => {
                 <table className="table-mylist">
                   <thead className='thead'>
                     <tr>
-                      <th className="th">Travel Number</th>
+                      <th className="th">Travel Request Id</th>
                       <th className="th">Name</th>
                       <th className="th">Travel Purpose</th>
                       <th className="th">Approver 1</th>
@@ -342,7 +370,7 @@ const MyList = () => {
                             className="clickable-id"
                             onClick={() => handleRowClick(item)}
                           >
-                            {item.id || 'N/A'}
+                            {item.travelRequestId || 'N/A'}
                           </span>
                         </td>
                           <td className="td-mylist">{`${item.firstName || 'N/A'} ${item.lastName || 'N/A'}`}</td>

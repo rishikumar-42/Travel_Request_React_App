@@ -72,10 +72,24 @@ function TravelRequestForm() {
         navigate('/MyList');
     };
 
+    // const formatfiles = (files) => {
+    // const formatfiles = (fileResponses) => {
+    //     return fileResponses.map(fileResponse => ({
+    //         attachments: {
+    //             id: fileResponse.id,
+    //             link: {
+    //                 href: fileResponse.contentUrl,
+    //                 label: fileResponse.title
+    //             },
+    //             name: fileResponse.title
+    //         }
+    //     }));
+    // }
+    
     const OnwardJourneyLink = (rowData) => {
 
         console.log("url : ", rowData.contentUrl)
-        let urlObj = new URL(rowData.contentUrl, "http://localhost:8080"); 
+        let urlObj = new URL(rowData.contentUrl, "http://localhost:8080");
         urlObj.searchParams.delete('download');
         let newUrl = urlObj.toString();
         console.log("new url : ", newUrl)
@@ -121,7 +135,7 @@ function TravelRequestForm() {
         const selectedFile = files[rowIndex];
         console.log("selected file : ", selectedFile)
         try {
-            await TravelRequestFormService.deleteDocuments(selectedFile.id)
+            await TravelRequestFormService.deleteDocuments(selectedFile.fileId)
             showMessage('success', 'Success', `Successfully removed ${selectedFile.title}`)
             setFiles(files.filter((_, i) => i !== rowIndex));
         } catch (error) {
@@ -141,7 +155,7 @@ function TravelRequestForm() {
         try {
             const fileResponse = await TravelRequestFormService.addDocuments(file);
             const tempFile = {
-                id: fileResponse.id,
+                fileId: fileResponse.id,
                 title: fileResponse.title,
                 contentUrl: fileResponse.contentUrl
             };
