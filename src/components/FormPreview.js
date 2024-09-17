@@ -139,7 +139,7 @@ const FormPreview = ({ item, travelInfo, attachments }) => {
                             <span className="preview-value">{item.travelBudget || 'N/A'}</span>
                         </div>
                         <div className="preview-detail-item">
-                            <span className="preview-label">Travel Note:</span>
+                            <span className="preview-label">Remarks:</span>
                             <span className="preview-value">{item.travelNote || 'N/A'}</span>
                         </div>
                     </div>
@@ -184,7 +184,7 @@ const FormPreview = ({ item, travelInfo, attachments }) => {
                             <span className="preview-value">{item.hotelNumberOfNights || 'N/A'}</span>
                         </div>
                         <div className="preview-detail-item">
-                            <span className="preview-label">Note:</span>
+                            <span className="preview-label">Remarks:</span>
                             <span className="preview-value">{item.hotelNote || 'N/A'}</span>
                         </div>
                     </div>
@@ -224,7 +224,7 @@ const FormPreview = ({ item, travelInfo, attachments }) => {
                             <span className="preview-value">{item.carDrivingLicense || 'N/A'}</span>
                         </div>
                         <div className="preview-detail-item">
-                            <span className="preview-label">Note:</span>
+                            <span className="preview-label">Remarks:</span>
                             <span className="preview-value">{item.carRentalNote || 'N/A'}</span>
                         </div>
                     </div>
@@ -244,7 +244,7 @@ const FormPreview = ({ item, travelInfo, attachments }) => {
                             <span className="preview-value">{item.personalCarDrivingLicenseNumber || 'N/A'}</span>
                         </div>
                         <div className="preview-detail-item">
-                            <span className="preview-label">Note:</span>
+                            <span className="preview-label">Remarks:</span>
                             <span className="preview-value">{item.personalCarNote || 'N/A'}</span>
                         </div>
                     </div>
@@ -256,7 +256,7 @@ const FormPreview = ({ item, travelInfo, attachments }) => {
                 <div className="preview-summary-details">
                     <div className="preview-details-grid">
                         <div className="preview-detail-item">
-                            <span className="preview-label">Flight Ticket:</span>
+                            <span className="preview-label">Ticket Type:</span>
                             <span className="preview-value">
                                 {item.flightTicketType !== null ? item.flightTicketType.key : 'N/A'}
                             </span>
@@ -273,7 +273,7 @@ const FormPreview = ({ item, travelInfo, attachments }) => {
                 <div className="preview-summary-details">
                     <div className="preview-details-grid">
                         <div className="preview-detail-item">
-                            <span className="preview-label">Train Ticket:</span>
+                            <span className="preview-label">Ticket Type:</span>
                             <span className="preview-value"> {item.trainTicketType !== null ? item.trainTicketType.key : 'N/A'}</span>
                         </div>
                     </div>
@@ -299,7 +299,6 @@ const FormPreview = ({ item, travelInfo, attachments }) => {
                 </div>
                 <div className="preview-summary-details">
                     <DataTable value={travelInfo} showGridlines tableStyle={{ minWidth: '50rem' }}>
-                        {/*<Column sortable field="price" header="Price incl. VAT" /> */}
                         <Column sortable field="onwardJourney" header="Onward Journey (From - To)" headerClassName="preview-custom-header" />
                         <Column sortable field="onwardDepartureDate" header="Departure Date" body={(rowData) => formatDate(rowData.onwardDepartureDate)} headerClassName="preview-custom-header" />
                         <Column sortable field="onwardPreferredTime" header="Onward Preferred Time" body={(rowData) => formatPickList(rowData.onwardPreferredTime)} headerClassName="preview-custom-header" />
@@ -308,7 +307,7 @@ const FormPreview = ({ item, travelInfo, attachments }) => {
                         <Column sortable field="returnArrivalDate" header="Arrival Date" body={(rowData) => formatDate(rowData.returnArrivalDate)} headerClassName="preview-custom-header" />
                         <Column sortable field="returnPreferredTime" header="Return Preferred Time" body={(rowData) => formatPickList(rowData.returnPreferredTime)} headerClassName="preview-custom-header" />
                         <Column sortable field="returnTransportNumber" header="Return Transport Number" headerClassName="preview-custom-header" />
-                        <Column sortable field="onwardJourneyNote" header="Note" headerClassName="preview-custom-header" />
+                        <Column sortable field="onwardJourneyNote" header="Remarks" headerClassName="preview-custom-header" />
                     </DataTable>
                 </div>
             </div>

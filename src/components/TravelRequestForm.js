@@ -1495,7 +1495,7 @@ function TravelRequestForm() {
                                         <div className="calendar-item flex-grow-1">
                                             <FloatLabel className="w-100 car-note">
                                                 <InputText id="onwardJourneyNote" maxLength={250} className="w-100" value={newItinerary.onwardJourneyNote} onChange={e => handleInputChange('onwardJourneyNote', e)} />
-                                                <label htmlFor="onwardJourneyNote">Onward Journey Note</label>
+                                                <label htmlFor="onwardJourneyNote">Remarks</label>
                                             </FloatLabel>
                                         </div>
 
@@ -1560,11 +1560,11 @@ function TravelRequestForm() {
                                 <Column sortable field="onwardDepartureDate" header="Departure Date" body={(rowData) => formatDate(rowData.onwardDepartureDate)} headerClassName="custom-header" />
                                 <Column sortable field="onwardPreferredTime" header="Onward Preferred Time" body={(rowData) => formatPickList(rowData.onwardPreferredTime)} headerClassName="custom-header" />
                                 <Column sortable field="onwardTransportNumber" header="Onward Transport Number" headerClassName="custom-header" />
-                                <Column sortable field="returnJourney" header="Return Journey" headerClassName="custom-header" />
+                                <Column sortable field="returnJourney" header="Return Journey (From - To)" headerClassName="custom-header" />
                                 <Column sortable field="returnArrivalDate" header="Arrival Date" body={(rowData) => formatDate(rowData.returnArrivalDate)} headerClassName="custom-header" />
                                 <Column sortable field="returnPreferredTime" header="Return Preferred Time" body={(rowData) => formatPickList(rowData.returnPreferredTime)} headerClassName="custom-header" />
                                 <Column sortable field="returnTransportNumber" header="Return Transport Number" headerClassName="custom-header" />
-                                <Column sortable field="onwardJourneyNote" header="Note" headerClassName="custom-header" />
+                                <Column sortable field="onwardJourneyNote" header="Remarks" headerClassName="custom-header" />
                                 <Column header="Actions" headerClassName="custom-header"
                                     body={(rowData, { rowIndex }) => (
                                         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>

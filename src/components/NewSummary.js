@@ -4,6 +4,8 @@ import axios from 'axios';
 import { useAuth } from '../contexts/AuthContext';
 import TravelRequestFormServiceLayer from '../service/TravelRequestFormService';
 import { Toast } from 'primereact/toast';
+import { Column } from 'primereact/column';
+import { DataTable } from 'primereact/datatable';
 
 const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, isDashboardNavigate = false }) => {
   const [workflowTasks, setWorkflowTasks] = useState([]);
@@ -26,27 +28,27 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
   }, [login, username, password]);
 
   // useEffect(() => {
-    const fetchWorkflowTasks = async () => {
-      try {
-        const response = await fetch('http://localhost:8080/o/headless-admin-workflow/v1.0/workflow-instances', {
-          method: 'GET',
-          headers: {
-            'Accept': 'application/json',
-            'Authorization': authHeader,
-          },
-        });
-        const data = await response.json();
-        console.log("data : ", data)
-        const task = data.items.find(task => task.objectReviewed.id === item.id);
-        console.log("task", task);
-        setCurrentTask(task);
-        setWorkflowTasks(data.items || []);
-        setIsTaskCompleted(!!task && task.completed);
-        return task;
-      } catch (err) {
-        console.error('Failed to fetch workflow tasks:', err);
-      }
-    };
+  const fetchWorkflowTasks = async () => {
+    try {
+      const response = await fetch('http://localhost:8080/o/headless-admin-workflow/v1.0/workflow-instances', {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': authHeader,
+        },
+      });
+      const data = await response.json();
+      console.log("data : ", data)
+      const task = data.items.find(task => task.objectReviewed.id === item.id);
+      console.log("task", task);
+      setCurrentTask(task);
+      setWorkflowTasks(data.items || []);
+      setIsTaskCompleted(!!task && task.completed);
+      return task;
+    } catch (err) {
+      console.error('Failed to fetch workflow tasks:', err);
+    }
+  };
 
   //   fetchWorkflowTasks();
   // }, [authHeader, item.id]);
@@ -74,11 +76,30 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
     return newUrl
   };
 
+  const formatPickList = (data) => {
+    if (!data) return '';
+    return data.name;
+};
+
   const formatDate = (dateString) => {
     if (!dateString) return 'N/A';
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
     const date = new Date(dateString);
     return date.toLocaleDateString(undefined, options);
+  };
+
+  const formatDateTime = (date) => {
+    if (!date) return '';
+    const options = {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false // You can set this to true if you want 12-hour time format
+    };
+    return new Intl.DateTimeFormat('en-GB', options).format(new Date(date));
   };
 
   const handleTransition = async (transitionName) => {
@@ -145,10 +166,34 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
       <Toast ref={toast} position="top-center" />
       <div className="summary-content">
         <div className="toolbar-summary">
+          <span className="title">Issuer</span>
+        </div>
+        <div className="summary-details">
+          <div className="details-grid">
+            <div className="detail-item">
+              <span className="label">Issuer Name:</span>
+              <span className="value">{item.issuer || 'N/A'}</span>
+            </div>
+            <div className="detail-item">
+              <span className="label">Issuer Date:</span>
+              <span className="value">{formatDate(item.issuerDate) || 'N/A'}</span>
+            </div>
+            <div className="detail-item">
+              <span className="label">Issuer Number:</span>
+              <span className="value">{item.issuerNumber || 'N/A'}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* <div className="toolbar-summary">
           <span className="title">Traveler Request</span>
         </div>
         <div className="summary-details">
           <div className="details-grid">
+            <div className="detail-item">
+              <span className="label">Travel Request Id:</span>
+              <span className="value">{item.travelRequestId || 'N/A'}</span>
+            </div>
             <div className="detail-item">
               <span className="label">Employee Name:</span>
               <span className="value">{item.firstName + " " + item.lastName || 'N/A'}</span>
@@ -195,8 +240,115 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
             </div>
           </div>
         </div>
+ */}
 
         <div className="toolbar-summary">
+          <span className="title">Traveler Identification</span>
+        </div>
+        <div className="summary-details">
+          <div className="details-grid">
+            <div className="detail-item">
+              <span className="label">Employee First Name:</span>
+              <span className="value">{item.firstName || 'N/A'}</span>
+            </div>
+            <div className="detail-item">
+              <span className="label">Employee Last Name:</span>
+              <span className="value">{item.lastName || 'N/A'}</span>
+            </div>
+            <div className="detail-item">
+              <span className="label">Employee Number:</span>
+              <span className="value">{item.employeeNumber || 'N/A'}</span>
+            </div>
+            <div className="detail-item">
+              <span className="label">Position Title:</span>
+              <span className="value">{item.positionTitle || 'N/A'}</span>
+            </div>
+            <div className="detail-item">
+              <span className="label">Entity:</span>
+              <span className="value">{item.entity || 'N/A'}</span>
+            </div>
+            <div className="detail-item">
+              <span className="label">Cost Center:</span>
+              <span className="value">{item.costCenter || 'N/A'}</span>
+            </div>
+          </div>
+        </div>
+
+
+
+        <div className="toolbar-summary">
+          <span className="title">Travel details</span>
+        </div>
+        <div className="summary-details">
+          <div className="details-grid">
+            <div className="detail-item">
+              <span className="label">Travel Request Id:</span>
+              <span className="value">{item.travelRequestId || 'N/A'}</span>
+            </div>
+            <div className="detail-item">
+              <span className="label">Travel Type::</span>
+              <span className="value">{item.travelType || 'N/A'}</span>
+            </div>
+            <div className="detail-item">
+              <span className="label">Travel Purpose:</span>
+              <span className="value">{item.travelPurpose || 'N/A'}</span>
+            </div>
+            <div className="detail-item">
+              <span className="label">Participants:</span>
+              <span className="value">{item.participants || 'N/A'}</span>
+            </div>
+            <div className="detail-item">
+              <span className="label">Destination:</span>
+              <span className="value">{item.destination || 'N/A'}</span>
+            </div>
+            <div className="detail-item">
+              <span className="label">Departure Date:</span>
+              <span className="value">{formatDate(item.travelDepartureDate) || 'N/A'}</span>
+            </div>
+            <div className="detail-item">
+              <span className="label">Return Date:</span>
+              <span className="value">{formatDate(item.travelArrivalDate) || 'N/A'}</span>
+            </div>
+            <div className="detail-item">
+              <span className="label">Estimated Duration:</span>
+              <span className="value">{item.travelEstimatedDuration || 'N/A'}</span>
+            </div>
+            <div className="detail-item">
+              <span className="label">Currency:</span>
+              <span className="value">{item.travelCurrency === null ? 'N/A' : item.travelCurrency.key || 'N/A'}</span>
+            </div>
+            <div className="detail-item">
+              <span className="label">Budget:</span>
+              <span className="value">{item.travelBudget || 'N/A'}</span>
+            </div>
+            <div className="detail-item">
+              <span className="label">Remarks:</span>
+              <span className="value">{item.travelNote || 'N/A'}</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="toolbar-summary">
+          <span className="title">Approvers</span>
+        </div>
+        <div className="summary-details">
+          <div className="details-grid">
+            <div className="detail-item">
+              <span className="label">Approver 1:</span>
+              <span className="value">{item.manager || 'N/A'}</span>
+            </div>
+            <div className="detail-item">
+              <span className="label">Approver 2:</span>
+              <span className="value">{item.hod || 'N/A'}</span>
+            </div>
+            <div className="detail-item">
+              <span className="label">Status:</span>
+              <span className="value">{item.approveStatus?.name || 'N/A'}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* <div className="toolbar-summary">
           <span className="title">Travel Details</span>
         </div>
         <div className="summary-details">
@@ -220,10 +372,39 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
               <span className="value"> {item.trainTicketType && item.trainTicketType.name ? item.trainTicketType.name : 'N/A'}</span>
             </div>
           </div>
+        </div> */}
+        <div className="toolbar-summary">
+          <span className="title">Hotel</span>
+        </div>
+        <div className="summary-details">
+          <div className="details-grid">
+            <div className="detail-item">
+              <span className="label">Location:</span>
+              <span className="value">
+                {item.hotelLocation || 'N/A'}
+              </span>
+            </div>
+            <div className="detail-item">
+              <span className="label">Check In:</span>
+              <span className="value"> {formatDateTime(item.hotelCheckIn) || 'N/A'}</span>
+            </div>
+            <div className="detail-item">
+              <span className="label">Check Out:</span>
+              <span className="value"> {formatDateTime(item.hotelCheckOut) || 'N/A'}</span>
+            </div>
+            <div className="detail-item">
+              <span className="label">Number of Nights:</span>
+              <span className="value">{item.hotelNumberOfNights || 'N/A'}</span>
+            </div>
+            <div className="detail-item">
+              <span className="label">Remarks:</span>
+              <span className="value">{item.hotelNote || 'N/A'}</span>
+            </div>
+          </div>
         </div>
 
         <div className="toolbar-summary">
-          <span className="title">Car Rental Details</span>
+          <span className="title">Car Rental</span>
         </div>
         <div className="summary-details">
           <div className="details-grid">
@@ -255,11 +436,15 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
               <span className="label">Driving License:</span>
               <span className="value">{item.carRentalDrivingLicense || 'N/A'}</span>
             </div>
+            <div className="detail-item">
+              <span className="label">Remarks:</span>
+              <span className="value">{item.carRentalNote || 'N/A'}</span>
+            </div>
           </div>
         </div>
 
         <div className="toolbar-summary">
-          <span className="title">Personal Car Details</span>
+          <span className="title">Personal Car</span>
         </div>
         <div className="summary-details">
           <div className="details-grid">
@@ -270,6 +455,43 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
             <div className="detail-item">
               <span className="label">Driving License Number:</span>
               <span className="value">{item.personalCarDrivingLicenseNumber || 'N/A'}</span>
+            </div>
+            <div className="detail-item">
+              <span className="label">Remarks:</span>
+              <span className="value">{item.personalCarNote || 'N/A'}</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="toolbar-summary">
+          <span className="title">Flight Ticket</span>
+        </div>
+        <div className="summary-details">
+          <div className="details-grid">
+            <div className="detail-item">
+              <span className="label">Ticket Type:</span>
+              <span className="value">
+                {item.flightTicketType && item.flightTicketType.name ? item.flightTicketType.name : 'N/A'}
+              </span>
+            </div>
+            <div className="detail-item">
+              <span className="label">Reason:</span>
+              <span className="value"> {item.flightTicketReason && item.flightTicketReason.name ? item.flightTicketReason.name :
+                'N/A'}</span>
+            </div>
+          </div>
+        </div>
+
+
+        <div className="toolbar-summary">
+          <span className="title">Train Ticket</span>
+        </div>
+        <div className="summary-details">
+          <div className="details-grid">
+            <div className="detail-item">
+              <span className="label">Ticket Type:</span>
+              <span className="value"> {item.trainTicketType && item.trainTicketType.name ? item.trainTicketType.name :
+                'N/A'}</span>
             </div>
           </div>
         </div>
@@ -289,8 +511,11 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
           </ol>
         </div>
 
+        <div className="preview-toolbar">
+          <span className="preview-title">Itineraries</span>
+        </div>
         <div className="summary-details">
-          <table className="table-summary">
+          {/* <table className="table-summary">
             <thead className='thead'>
               <tr>
                 <th className='table-header'>Onward Journey</th>
@@ -325,7 +550,18 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
                 </tr>
               </tbody>
             )}
-          </table>
+          </table> */}
+          <DataTable value={travelInfo} showGridlines tableStyle={{ minWidth: '50rem' }}>
+            <Column sortable field="onwardJourney" header="Onward Journey (From - To)" headerClassName="preview-custom-header" />
+            <Column sortable field="onwardDepartureDate" header="Departure Date" body={(rowData) => formatDate(rowData.onwardDepartureDate)} headerClassName="preview-custom-header" />
+            <Column sortable field="onwardPreferredTime" header="Onward Preferred Time" body={(rowData) => formatPickList(rowData.onwardPreferredTime)} headerClassName="preview-custom-header" />
+            <Column sortable field="onwardTransportNumber" header="Onward Transport Number" headerClassName="preview-custom-header" />
+            <Column sortable field="returnJourney" header="Return Journey (From - To)" headerClassName="preview-custom-header" />
+            <Column sortable field="returnArrivalDate" header="Arrival Date" body={(rowData) => formatDate(rowData.returnArrivalDate)} headerClassName="preview-custom-header" />
+            <Column sortable field="returnPreferredTime" header="Return Preferred Time" body={(rowData) => formatPickList(rowData.returnPreferredTime)} headerClassName="preview-custom-header" />
+            <Column sortable field="returnTransportNumber" header="Return Transport Number" headerClassName="preview-custom-header" />
+            <Column sortable field="onwardJourneyNote" header="Remarks" headerClassName="preview-custom-header" />
+          </DataTable>
         </div>
 
         <div className="gap-5" style={{ display: 'flex', justifyContent: 'left' }}>
@@ -361,7 +597,7 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
           </div>
         )}
       </div>
-    </div>
+    </div >
   );
 };
 
