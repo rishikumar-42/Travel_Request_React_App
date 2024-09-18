@@ -28,27 +28,27 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
   }, [login, username, password]);
 
   useEffect(() => {
-  const fetchWorkflowTasks = async () => {
-    try {
-      const response = await fetch('http://localhost:8080/o/headless-admin-workflow/v1.0/workflow-tasks/assigned-to-me', {
-        method: 'GET',
-        headers: {
-          'Accept': 'application/json',
-          'Authorization': authHeader,
-        },
-      });
-      const data = await response.json();
-      console.log("data : ", data)
-      const task = data.items.find(task => task.objectReviewed.id === item.id);
-      console.log("task", task);
-      setCurrentTask(task);
-      setWorkflowTasks(data.items || []);
-      setIsTaskCompleted(!!task && task.completed);
-      return task;
-    } catch (err) {
-      console.error('Failed to fetch workflow tasks:', err);
-    }
-  };
+    const fetchWorkflowTasks = async () => {
+      try {
+        const response = await fetch('http://localhost:8080/o/headless-admin-workflow/v1.0/workflow-tasks/assigned-to-me', {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+            'Authorization': authHeader,
+          },
+        });
+        const data = await response.json();
+        console.log("data : ", data)
+        const task = data.items.find(task => task.objectReviewed.id === item.id);
+        console.log("task", task);
+        setCurrentTask(task);
+        setWorkflowTasks(data.items || []);
+        setIsTaskCompleted(!!task && task.completed);
+        return task;
+      } catch (err) {
+        console.error('Failed to fetch workflow tasks:', err);
+      }
+    };
 
     fetchWorkflowTasks();
   }, [authHeader, item.id]);
@@ -103,7 +103,7 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
   const formatPickList = (data) => {
     if (!data) return '';
     return data.name;
-};
+  };
 
   const formatDate = (dateString) => {
     if (!dateString) return 'N/A';
@@ -190,12 +190,12 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
       <Toast ref={toast} position="top-center" />
       <div className="summary-content">
         <div className="toolbar-summary">
-          <span className="title">Issuer</span>
+          <span className="title">Issuer Details</span>
         </div>
         <div className="summary-details">
           <div className="details-grid">
             <div className="detail-item">
-              <span className="label">Issuer Name:</span>
+              <span className="label">Issuer:</span>
               <span className="value">{item.issuer || 'N/A'}</span>
             </div>
             <div className="detail-item">
@@ -203,7 +203,7 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
               <span className="value">{formatDate(item.issuerDate) || 'N/A'}</span>
             </div>
             <div className="detail-item">
-              <span className="label">Issuer Number:</span>
+              <span className="label">Telephone Number:</span>
               <span className="value">{item.issuerNumber || 'N/A'}</span>
             </div>
           </div>
@@ -272,11 +272,15 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
         <div className="summary-details">
           <div className="details-grid">
             <div className="detail-item">
-              <span className="label">Employee First Name:</span>
+              <span className="label">Email:</span>
+              <span className="value">{item.email || 'N/A'}</span>
+            </div>
+            <div className="detail-item">
+              <span className="label">First Name:</span>
               <span className="value">{item.firstName || 'N/A'}</span>
             </div>
             <div className="detail-item">
-              <span className="label">Employee Last Name:</span>
+              <span className="label">Last Name:</span>
               <span className="value">{item.lastName || 'N/A'}</span>
             </div>
             <div className="detail-item">
@@ -524,15 +528,26 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
           <span className="title">Attachments</span>
         </div>
         <div className="summary-details">
-          <ol>
-            {attachmentInfo.map(task => (
+          {/* <ol> */}
+            {/* {attachmentInfo.map(task => (
               <li key={task.id}>
                 <a href={OnwardJourneyLink(task)} target="_blank" rel="noopener noreferrer">
                   {task.title}
                 </a>
               </li>
-            ))}
-          </ol>
+            ))} */}
+            {attachmentInfo.length > 0 ?  <ol>
+              {attachmentInfo.map(task => (
+                <li key={task.id}>
+                  <a href={OnwardJourneyLink(task)} target="_blank" rel="noopener noreferrer">
+                    {task.title}
+                  </a>
+                </li>
+              ))}
+            </ol> : (
+              <p>No available attachments</p>
+            )}
+          {/* </ol> */}
         </div>
 
         <div className="toolbar-summary">

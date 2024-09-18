@@ -46,20 +46,20 @@ const FormPreview = ({ item, travelInfo, attachments }) => {
         <div className="preview-summary-container">
             <div className="preview-summary-content">
                 <div className="preview-toolbar">
-                    <span className="preview-title">Issuer</span>
+                    <span className="preview-title">Issuer Details</span>
                 </div>
                 <div className="preview-summary-details">
                     <div className="preview-details-grid">
                         <div className="preview-detail-item">
-                            <span className="preview-label">Issuer Name:</span>
+                            <span className="preview-label">Issuer:</span>
                             <span className="preview-value">{item.issuer || 'N/A'}</span>
                         </div>
                         <div className="preview-detail-item">
-                            <span className="preview-label">Issuer Date:</span>
+                            <span className="preview-label">Issue Date:</span>
                             <span className="preview-value">{formatDate(item.issuerDate) || 'N/A'}</span>
                         </div>
                         <div className="preview-detail-item">
-                            <span className="preview-label">Issuer Number:</span>
+                            <span className="preview-label">Telephone Number:</span>
                             <span className="preview-value">{item.issuerNumber || 'N/A'}</span>
                         </div>
                     </div>
@@ -71,11 +71,15 @@ const FormPreview = ({ item, travelInfo, attachments }) => {
                 <div className="preview-summary-details">
                     <div className="preview-details-grid">
                         <div className="preview-detail-item">
-                            <span className="preview-label">Employee First Name:</span>
+                            <span className="preview-label">Email:</span>
+                            <span className="preview-value">{item.email || 'N/A'}</span>
+                        </div>
+                        <div className="preview-detail-item">
+                            <span className="preview-label">First Name:</span>
                             <span className="preview-value">{item.firstName || 'N/A'}</span>
                         </div>
                         <div className="preview-detail-item">
-                            <span className="preview-label">Employee Last Name:</span>
+                            <span className="preview-label">Last Name:</span>
                             <span className="preview-value">{item.lastName || 'N/A'}</span>
                         </div>
                         <div className="preview-detail-item">
@@ -283,7 +287,7 @@ const FormPreview = ({ item, travelInfo, attachments }) => {
                     <span className="preview-title">Attachments</span>
                 </div>
                 <div className="preview-summary-details">
-                    <ol>
+                {attachments.length > 0 ?  <ol>
                         {attachments.map(task => (
                             <li key={task.id}>
                                 {/* {task.title} */}
@@ -292,7 +296,9 @@ const FormPreview = ({ item, travelInfo, attachments }) => {
                                 </a>
                             </li>
                         ))}
-                    </ol>
+                    </ol> : (
+              <p>No available attachments</p>
+            )}
                 </div>
                 <div className="preview-toolbar">
                     <span className="preview-title">Itineraries</span>
