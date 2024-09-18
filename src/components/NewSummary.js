@@ -27,8 +27,34 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
     }
   }, [login, username, password]);
 
-  // useEffect(() => {
+  useEffect(() => {
   const fetchWorkflowTasks = async () => {
+    try {
+      const response = await fetch('http://localhost:8080/o/headless-admin-workflow/v1.0/workflow-tasks/assigned-to-me', {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': authHeader,
+        },
+      });
+      const data = await response.json();
+      console.log("data : ", data)
+      const task = data.items.find(task => task.objectReviewed.id === item.id);
+      console.log("task", task);
+      setCurrentTask(task);
+      setWorkflowTasks(data.items || []);
+      setIsTaskCompleted(!!task && task.completed);
+      return task;
+    } catch (err) {
+      console.error('Failed to fetch workflow tasks:', err);
+    }
+  };
+
+    fetchWorkflowTasks();
+  }, [authHeader, item.id]);
+
+
+  const fetchWorkflowInstances = async () => {
     try {
       const response = await fetch('http://localhost:8080/o/headless-admin-workflow/v1.0/workflow-instances', {
         method: 'GET',
@@ -50,8 +76,6 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
     }
   };
 
-  //   fetchWorkflowTasks();
-  // }, [authHeader, item.id]);
 
 
   const handleRefresh = () => {
@@ -137,7 +161,7 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
         await TravelRequestFormServiceLayer.updatePatchFormData(item.id, { approveStatus: { key: "cancelled" } });
       } else if (item.approveStatus?.key === 'pendingAtApprover1') {
         await TravelRequestFormServiceLayer.updatePatchFormData(item.id, { approveStatus: { key: "cancelled" } });
-        const currentTask = await fetchWorkflowTasks();
+        const currentTask = await fetchWorkflowInstances();
         console.log(currentTask);
         console.log("work insta", currentTask.id)
         await axios.delete(`http://localhost:8080/o/headless-admin-workflow/v1.0/workflow-instances/${currentTask.id}`, {
@@ -175,7 +199,7 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
               <span className="value">{item.issuer || 'N/A'}</span>
             </div>
             <div className="detail-item">
-              <span className="label">Issuer Date:</span>
+              <span className="label">Issue Date:</span>
               <span className="value">{formatDate(item.issuerDate) || 'N/A'}</span>
             </div>
             <div className="detail-item">
@@ -286,7 +310,7 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
               <span className="value">{item.travelRequestId || 'N/A'}</span>
             </div>
             <div className="detail-item">
-              <span className="label">Travel Type::</span>
+              <span className="label">Travel Type:</span>
               <span className="value">{item.travelType || 'N/A'}</span>
             </div>
             <div className="detail-item">
@@ -315,7 +339,7 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
             </div>
             <div className="detail-item">
               <span className="label">Currency:</span>
-              <span className="value">{item.travelCurrency === null ? 'N/A' : item.travelCurrency.key || 'N/A'}</span>
+              <span className="value">{item.travelCurrency === null ? 'N/A' : item.travelCurrency?.key || 'N/A'}</span>
             </div>
             <div className="detail-item">
               <span className="label">Budget:</span>
@@ -496,10 +520,10 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
           </div>
         </div>
 
-        <div className="preview-toolbar">
-          <span className="preview-title">Attachments</span>
+        <div className="toolbar-summary">
+          <span className="title">Attachments</span>
         </div>
-        <div className="preview-summary-details">
+        <div className="summary-details">
           <ol>
             {attachmentInfo.map(task => (
               <li key={task.id}>
@@ -511,8 +535,8 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
           </ol>
         </div>
 
-        <div className="preview-toolbar">
-          <span className="preview-title">Itineraries</span>
+        <div className="toolbar-summary">
+          <span className="title">Itineraries</span>
         </div>
         <div className="summary-details">
           {/* <table className="table-summary">
@@ -565,8 +589,8 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
         </div>
 
         <div className="gap-5" style={{ display: 'flex', justifyContent: 'left' }}>
-          <button className="back-button" onClick={onBack}>Back</button>
-          {(item.approveStatus?.key === 'draft' || item.approveStatus?.key === 'pendingAtApprover1') && cancelFlag &&
+          <button className="back-button" onClick={handleRefresh}>Back</button>
+          {(item.approveStatus?.key === 'draft' || item.approveStatus?.key === 'pendingAtApprover1') && cancelFlag && !isDashboardNavigate &&
             <button className="back-button" onClick={handleCancel}>Cancel</button>
           }
         </div>

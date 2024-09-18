@@ -227,7 +227,7 @@ const Dashboard = () => {
                 <table className="table-dashboard">
                   <thead className='thead'>
                     <tr>
-                      <th className="th">Travel Number</th>
+                      <th className="th">Travel Request Id</th>
                       <th className="th">Name</th>
                       <th className="th">Travel Purpose</th>
                       <th className="th">Approver 1</th>
@@ -245,7 +245,7 @@ const Dashboard = () => {
                               className="clickable-id"
                               onClick={() => handleIdClick(item)}
                             >
-                              {item.id || 'N/A'}
+                              {item.travelRequestId || 'N/A'}
                             </span>
                           </td>
                           <td className="td">{`${item.firstName || 'N/A'} ${item.lastName || 'N/A'}`}</td>

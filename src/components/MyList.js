@@ -358,7 +358,7 @@ const MyList = () => {
                       <th className="th">Approver 2</th>
                       <th className="th">Budget</th>
                       <th className="th">Status</th>
-                      {activeTab === 'draft' && <th className="th">Action</th>}
+                      {(activeTab === 'draft' || activeTab === 'pendingAtApprover1 || pendingAtApprover2' || activeTab === 'all' ) && <th className="th">Action</th>}
                     </tr>
                   </thead>
                   <tbody>
@@ -380,7 +380,7 @@ const MyList = () => {
                           <td className="td-mylist">{item.travelBudget || 'N/A'}</td>
                           <td className="td-mylist">{item.approveStatus?.name || 'N/A'}</td>
                           {/* <td className="td-mylist">{item.status?.label || 'N/A'}</td> */}
-                          {activeTab === 'draft' && (
+                          {/* {(activeTab === 'draft' || activeTab === 'pendingAtApprover1 || pendingAtApprover2')  && (
                             <td className="td-mylist">
                              <EditIcon
                                 onClick={() => handleEditClick(item)}
@@ -391,7 +391,45 @@ const MyList = () => {
                                   style={{ cursor: 'pointer'}}
                                 />
                             </td>
-                          )}
+                          )} */}
+                            <td className="td-mylist">
+                          {activeTab === 'pendingAtApprover1 || pendingAtApprover2' && item.approveStatus?.key === 'pendingAtApprover1' && (
+            <EditIcon
+              onClick={() => handleEditClick(item)}
+              style={{ cursor: 'pointer' }}
+            />
+          )}
+          {activeTab === 'draft' && (
+            <>
+              <EditIcon
+                onClick={() => handleEditClick(item)}
+                style={{ cursor: 'pointer', marginRight: '10px' }}
+              />
+              <DeleteIcon
+                onClick={() => handleDelete(item.id)}
+                style={{ cursor: 'pointer' }}
+              />
+              </>
+          )}
+            {activeTab === 'all' && item.approveStatus?.key === 'pendingAtApprover1' && (
+            <EditIcon
+              onClick={() => handleEditClick(item)}
+              style={{ cursor: 'pointer' }}
+            />
+          )}
+          {activeTab === 'all' && item.approveStatus?.key === 'draft' && (
+            <>
+              <EditIcon
+                onClick={() => handleEditClick(item)}
+                style={{ cursor: 'pointer', marginRight: '10px' }}
+              />
+              <DeleteIcon
+                onClick={() => handleDelete(item.id)}
+                style={{ cursor: 'pointer' }}
+              />
+              </>
+          )}
+          </td>
                         </tr>
                       ))
                     ) : (
