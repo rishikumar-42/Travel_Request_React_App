@@ -62,8 +62,9 @@ function EditTravelRequestForm() {
   const carRentalCategorySwitch = item.carRentalCategory !== '';
   const HotelSwitch = item.hotelLocation !== '';
   const personCarSwitch = item.carDrivingLicense !== '';
-  const flightticketSwitch = item.flightTicketType?.name !== '';
-  const trainTicketSwitch = item.trainTicketType?.name !== '';
+  const flightticketSwitch = item.flightTicketType !== undefined;
+  const trainTicketSwitch = item.trainTicketType !== undefined;
+  console.log("train switch : ",item.trainTicketType !== undefined)
 
 
     const primary = "#fff"; // #f44336
@@ -71,9 +72,9 @@ function EditTravelRequestForm() {
     const [showNights, setShowNights] = useState(HotelSwitch);
     const [showCarDetails, setCarDetails] = useState(carRentalCategorySwitch);
     const [showPerCarDetails, setPerCarDetails] = useState(personCarSwitch);
-    const [showTrainDetails, setTrainDetails] = useState(false);
+    const [showTrainDetails, setTrainDetails] = useState(trainTicketSwitch);
     const [showItinerary, setShowItinerary] = useState(false);
-    const [showFlightTicket, setFlightTicket] = useState(false);
+    const [showFlightTicket, setFlightTicket] = useState(flightticketSwitch);
     const [userList, setUserList] = useState([]);
     const [reasonList, setReasonList] = useState([]);
     const [flightTypeList, setFlightTypeList] = useState([]);
