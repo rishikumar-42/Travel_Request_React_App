@@ -905,18 +905,20 @@ function TravelRequestForm() {
                                     onChange={(e) => {
                                         setFormData({
                                             ...formData,
-                                            travelDepartureDate: e.value
+                                            travelDepartureDate: e.value,
+                                            travelEstimatedDuration: null,
+                                            travelArrivalDate: null
                                         })
-                                        calculateEstimatedDuration(e.value, formData.travelArrivalDate)
+                                        // calculateEstimatedDuration(e.value, formData.travelArrivalDate)
                                     }} showIcon />
                                 <label htmlFor="departureDate" className="mr-2 small">Departure Date<span className="text-danger px-1">*</span></label>
                             </FloatLabel>
                             <FloatLabel className="w-25">
-                                <Calendar id="returnDate" dateFormat="dd/mm/yy" className="w-100" value={formData.travelArrivalDate}
+                                <Calendar id="returnDate" minDate={formData.travelArrivalDate} dateFormat="dd/mm/yy" className="w-100" value={formData.travelArrivalDate}
                                     onChange={(e) => {
                                         setFormData({
                                             ...formData,
-                                            travelArrivalDate: e.value
+                                            travelArrivalDate: e.value,
                                         })
                                         calculateEstimatedDuration(formData.travelDepartureDate, e.value)
                                     }}
@@ -1073,16 +1075,18 @@ function TravelRequestForm() {
                                             onChange={(e) => {
                                                 setFormData({
                                                     ...formData,
-                                                    hotelCheckIn: e.value
+                                                    hotelCheckIn: e.value,
+                                                    hotelCheckOut: null,
+                                                    hotelNumberOfNights: null
                                                 });
-                                                calculateEstimatedNights(e.value, formData.hotelCheckOut);
+                                                // calculateEstimatedNights(e.value, formData.hotelCheckOut);
                                             }} showTime hourFormat="24" showIcon required />
                                         <label htmlFor="checkIn" className="mr-2">Check In<span className="text-danger px-1">*</span></label>
                                     </FloatLabel>
                                 </div>
                                 <div className="calendar-item col-width">
                                     <FloatLabel>
-                                        <Calendar id="checkOut" dateFormat="dd/mm/yy" value={formData.hotelCheckOut}
+                                        <Calendar id="checkOut" minDate={formData.hotelCheckIn} dateFormat="dd/mm/yy" value={formData.hotelCheckOut}
                                             onChange={(e) => {
                                                 setFormData({
                                                     ...formData,
