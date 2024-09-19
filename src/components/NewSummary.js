@@ -132,7 +132,7 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
   const handleTransition = async (transitionName) => {
     if (!currentTask) {
       // alert('No task available to perform the action.');
-      showMessage('warn','Warning', 'No task available to perform the action.' );
+      showMessage('warn', 'Warning', 'No task available to perform the action.');
       return;
     }
 
@@ -170,21 +170,21 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
   const handleDialogSubmit = () => {
     if (dialogType === 'ok') {
       handleTransition('ok');
-      item.approver1Comment = comment; 
+      item.approver1Comment = comment;
       TravelRequestFormServiceLayer.updatePatchFormData(item.id, { approver1Comment: comment });
     } else if (dialogType === 'reject') {
       handleTransition('reject');
-      item.approver1Comment = comment; 
+      item.approver1Comment = comment;
       TravelRequestFormServiceLayer.updatePatchFormData(item.id, { approver1Comment: comment });
     }
     else if (dialogType === 'Approve') {
       handleTransition('Approve');
-      item.approver1Comment = comment; 
+      item.approver1Comment = comment;
       TravelRequestFormServiceLayer.updatePatchFormData(item.id, { approver2Comment: comment });
     }
     else if (dialogType === 'REJECT') {
       handleTransition('REJECT');
-      item.approver1Comment = comment; 
+      item.approver1Comment = comment;
       TravelRequestFormServiceLayer.updatePatchFormData(item.id, { approver2Comment: comment });
     }
   };
@@ -563,24 +563,24 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
         </div>
         <div className="summary-details">
           {/* <ol> */}
-            {/* {attachmentInfo.map(task => (
+          {/* {attachmentInfo.map(task => (
               <li key={task.id}>
                 <a href={OnwardJourneyLink(task)} target="_blank" rel="noopener noreferrer">
                   {task.title}
                 </a>
               </li>
             ))} */}
-            {attachmentInfo.length > 0 ?  <ol>
-              {attachmentInfo.map(task => (
-                <li key={task.id}>
-                  <a href={OnwardJourneyLink(task)} target="_blank" rel="noopener noreferrer">
-                    {task.title}
-                  </a>
-                </li>
-              ))}
-            </ol> : (
-              <p>No available attachments</p>
-            )}
+          {attachmentInfo.length > 0 ? <ol>
+            {attachmentInfo.map(task => (
+              <li key={task.id}>
+                <a href={OnwardJourneyLink(task)} target="_blank" rel="noopener noreferrer">
+                  {task.title}
+                </a>
+              </li>
+            ))}
+          </ol> : (
+            <p>No available attachments</p>
+          )}
           {/* </ol> */}
         </div>
 
@@ -637,54 +637,57 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
           </DataTable>
         </div>
 
-        <div className="gap-5" style={{ display: 'flex', justifyContent: 'left' }}>
-          <button className="back-button" onClick={handleRefresh}>Back</button>
-          {(item.approveStatus?.key === 'draft' || item.approveStatus?.key === 'pendingAtApprover1') && cancelFlag && !isDashboardNavigate &&
-            <button className="back-button" onClick={handleCancel}>Cancel</button>
-          }
-        </div>
-
-        {isDashboardNavigate && (
-          <div className="action-buttons">
-
-            {(isPendingAtApprover1 && auth.username === item.manager) && !isTaskCompleted && (
-              <>
-                <div>
-                  <button className="approve-button" onClick={() => openDialog('ok')}>Approver1</button>
-                </div>
-                <div className='Rejectbtn'>
-                  <button className="reject-button" onClick={() => openDialog('reject')}>Reject</button>
-                </div>
-              </>
-            )}
-            {(isPendingAtApprover2 && auth.username === item.hod) && !isTaskCompleted && (
-              <>
-                <div>
-                  <button className="approve-button" onClick={() => openDialog('Approve')}>Approver2</button>
-                </div>
-                <div className='Rejectbtn'>
-                  <button className="reject-button" onClick={() => openDialog('REJECT')}>Reject</button>
-                </div>
-              </>
-            )}
+        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <div className="gap-5" style={{ display: 'flex' }}>
+            <button className="back-button" onClick={handleRefresh}>Back</button>
+            {(item.approveStatus?.key === 'draft' || item.approveStatus?.key === 'pendingAtApprover1') && cancelFlag && !isDashboardNavigate &&
+              <button className="back-button" onClick={handleCancel}>Cancel</button>
+            }
           </div>
-        )}
-      {isDialogOpen && (
-        <div className="dialog-overlay">
-          <div className="dialog">
-            <h2>{dialogType === 'ok' || 'Approve' ? 'Approve Comment' : 'Reject Comment'}</h2>
-            <textarea
-              value={comment}
-              onChange={(e) => setComment(e.target.value)}
-              placeholder="Enter your comment here..."
-            />
-            <div className="dialog-buttons">
-              <button className='cacnel-dialog' onClick={() => setIsDialogOpen(false)}>Cancel</button>
-              <button className='done-dialog' onClick={handleDialogSubmit}>Done</button>
+          {/* </div> */}
+
+          {isDashboardNavigate && (
+            <div className="gap-4" style={{ display: 'flex', justifyContent: 'right' }}>
+
+              {(isPendingAtApprover1 && auth.username === item.manager) && !isTaskCompleted && (
+                <>
+                  <div>
+                    <button className="back-button" onClick={() => openDialog('ok')}>Approve</button>
+                  </div>
+                  <div>
+                    <button className="back-button" onClick={() => openDialog('reject')}>Reject</button>
+                  </div>
+                </>
+              )}
+              {(isPendingAtApprover2 && auth.username === item.hod) && !isTaskCompleted && (
+                <>
+                  <div>
+                    <button className="back-button" onClick={() => openDialog('Approve')}>Approve</button>
+                  </div>
+                  <div>
+                    <button className="back-button" onClick={() => openDialog('REJECT')}>Reject</button>
+                  </div>
+                </>
+              )}
+            </div>
+          )}
+        </div>
+        {isDialogOpen && (
+          <div className="dialog-overlay">
+            <div className="dialog">
+              <h2>{(dialogType === 'ok' || dialogType === 'Approve' ) ? 'Approve Comment' : 'Reject Comment'}</h2>
+              <textarea
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+                placeholder="Enter your comment here..."
+              />
+              <div className="dialog-buttons">
+                <button className='cancel-dialog' onClick={() => setIsDialogOpen(false)}>Cancel</button>
+                <button className='done-dialog' onClick={handleDialogSubmit}>Done</button>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
       </div>
     </div >
   );
