@@ -88,7 +88,7 @@ function EditTravelRequestForm() {
     const [itineraries, setItineraries] = useState(Array.isArray(travelInfo) ? travelInfo : []);
     const [attachments, setAttachments] = useState(Array.isArray(attachmentInfo) ? attachmentInfo : []);
     const [isEmployeeEmailValid, setIsEmployeeEmailValid] = useState(true);
-    const [isTelephoneNumberValid, setIsTelephoneNumberValid] = useState(false);
+    const [isTelephoneNumberValid, setIsTelephoneNumberValid] = useState(/^\d{9,15}$/.test(item.issuerNumber));
     const [isManagerEmailValid, setIsManagerEmailValid] = useState(true);
     const [isHODEmailValid, setIsHODEmailValid] = useState(true);
     const [newItinerary, setNewItinerary] = useState({
@@ -728,8 +728,9 @@ function EditTravelRequestForm() {
         });
     };
 
+    const pattern = /^\d{9,15}$/;
+
     const validateTelephoneNumber = (input) => {
-        const pattern = /^\d{9,15}$/;
         console.log("issuer no : ",pattern.test(input))
         setIsTelephoneNumberValid(pattern.test(input));
     };
@@ -1730,6 +1731,7 @@ function EditTravelRequestForm() {
         fontWeight: 'bold',
         marginLeft: '10px'
     }}
+        disabled={!isTelephoneNumberValid}
         type="submit"
         label="Update"
     />
