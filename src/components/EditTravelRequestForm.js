@@ -1021,7 +1021,7 @@ function EditTravelRequestForm() {
                                 <label htmlFor="departureDate" className="mr-2 small">Departure Date<span className="text-danger px-1">*</span></label>
                             </FloatLabel>
                             <FloatLabel className="w-25">
-                                <Calendar id="returnDate" minDate={formData.travelArrivalDate} dateFormat="dd/mm/yy" className="w-100" value={formData.travelArrivalDate}
+                                <Calendar id="returnDate" minDate={formData.travelDepartureDate} dateFormat="dd/mm/yy" className="w-100" value={formData.travelArrivalDate}
                                     onChange={(e) => {
                                         setFormData({
                                             ...formData,
@@ -1270,26 +1270,7 @@ function EditTravelRequestForm() {
                                             />
                                         </FloatLabel>
                                     </div>
-                                    <div className="calendar-item">
-                                        {/* <FloatLabel>
-                                            <label htmlFor="on">On:<span className="text-danger px-1">*</span></label>
-                                            <InputText type="text" id="on" name="on" required
-                                                value={formData.carRentalOn}
-                                                onChange={(e) => setFormData({
-                                                    ...formData,
-                                                    carRentalOn: e.target.value
-                                                })}
-                                            />
-                                        </FloatLabel> */}
-                                           <FloatLabel>
-                                            <Calendar id="on" dateFormat="dd/mm/yy" value={formData.carRentalOn}
-                                                onChange={(e) => setFormData({
-                                                    ...formData,
-                                                    carRentalOn: e.value
-                                                })} showIcon required />
-                                            <label for="on">On:<span className="text-danger px-1">*</span></label>
-                                        </FloatLabel>
-                                    </div>
+                                    
                                     <div className="calendar-item">
                                         <FloatLabel>
                                             <label htmlFor="to">To:<span className="text-danger px-1">*</span></label>
@@ -1300,6 +1281,17 @@ function EditTravelRequestForm() {
                                                     carRentalTo: e.target.value
                                                 })}
                                             />
+                                        </FloatLabel>
+                                    </div>
+                                    <div className="calendar-item">
+                                        <FloatLabel>
+                                            <Calendar id="on" dateFormat="dd/mm/yy" value={formData.carRentalOn}
+                                                onChange={(e) => setFormData({
+                                                    ...formData,
+                                                    carRentalOn: e.value,
+                                                    carRentalUntil: null
+                                                })} showIcon required />
+                                            <label for="on">On:<span className="text-danger px-1">*</span></label>
                                         </FloatLabel>
                                     </div>
                                     <div className="calendar-item">
@@ -1314,7 +1306,7 @@ function EditTravelRequestForm() {
                                             />
                                         </FloatLabel> */}
                                         <FloatLabel>
-                                            <Calendar id="until" dateFormat="dd/mm/yy" value={formData.carRentalUntil}
+                                            <Calendar id="until" minDate={formData.carRentalOn} dateFormat="dd/mm/yy" value={formData.carRentalUntil}
                                                 onChange={(e) => setFormData({
                                                     ...formData,
                                                     carRentalUntil: e.value

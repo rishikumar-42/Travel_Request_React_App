@@ -927,7 +927,7 @@ function TravelRequestForm() {
                                 <label htmlFor="departureDate" className="mr-2 small">Departure Date<span className="text-danger px-1">*</span></label>
                             </FloatLabel>
                             <FloatLabel className="w-25">
-                                <Calendar id="returnDate" minDate={formData.travelArrivalDate} dateFormat="dd/mm/yy" className="w-100" value={formData.travelArrivalDate}
+                                <Calendar id="returnDate" minDate={formData.travelDepartureDate} dateFormat="dd/mm/yy" className="w-100" value={formData.travelArrivalDate}
                                     onChange={(e) => {
                                         setFormData({
                                             ...formData,
@@ -1193,7 +1193,8 @@ function TravelRequestForm() {
                                             <Calendar id="on" dateFormat="dd/mm/yy" value={formData.carRentalOn}
                                                 onChange={(e) => setFormData({
                                                     ...formData,
-                                                    carRentalOn: e.value
+                                                    carRentalOn: e.value,
+                                                    carRentalUntil: null
                                                 })} showIcon required />
                                             <label for="on">On:<span className="text-danger px-1">*</span></label>
                                         </FloatLabel>
@@ -1210,7 +1211,7 @@ function TravelRequestForm() {
                                     </div>
                                     <div className="calendar-item">
                                         <FloatLabel>
-                                            <Calendar id="until" dateFormat="dd/mm/yy" value={formData.carRentalUntil}
+                                            <Calendar id="until" minDate={formData.carRentalOn} dateFormat="dd/mm/yy" value={formData.carRentalUntil}
                                                 onChange={(e) => setFormData({
                                                     ...formData,
                                                     carRentalUntil: e.value
