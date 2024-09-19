@@ -8,9 +8,9 @@ import { AutoComplete } from "primereact/autocomplete";
 import { Dropdown } from 'primereact/dropdown';
 import { RadioButton } from "primereact/radiobutton";
 import { Button } from 'primereact/button';
-import Snackbar from '@mui/material/Snackbar';
-import IconButton from '@mui/material/IconButton';
-import CloseIcon from '@mui/icons-material/Close';
+// import Snackbar from '@mui/material/Snackbar';
+// import IconButton from '@mui/material/IconButton';
+// import CloseIcon from '@mui/icons-material/Close';
 import { FloatLabel } from 'primereact/floatlabel';
 import 'primeicons/primeicons.css';
 import { InputText } from "primereact/inputtext";
@@ -113,8 +113,8 @@ function EditTravelRequestForm() {
     const [selectedItem2, setSelectedItem2] = useState(item.hod);
     const [employeeDropDownSuggestions, setEmployeeDropDownSuggestions] = useState([]);
     const [selectedEmployee, setSelectedEmployee] = useState(item.email);
-    const [open, setOpen] = useState(false);
-    const [message, setMessage] = useState(false);
+    // const [open, setOpen] = useState(false);
+    // const [message, setMessage] = useState(false);
     const [showReturnFields, setShowReturnFields] = useState(false);
     const [saveItineraryFlag, setSaveItineraryFlag] = useState(true);
     const [file, setFile] = useState(null);
@@ -122,7 +122,7 @@ function EditTravelRequestForm() {
     const toast = useRef(null);
 
     const showMessage = (severity, summary, detail) => {
-        toast.current.show({ severity, summary, detail, life: 10000 });
+        toast.current.show({ severity, summary, detail, life: 5000 });
     }
 
     const onFileChange = (e) => {
@@ -678,17 +678,20 @@ function EditTravelRequestForm() {
             if (item.id) {
                 // If item.id exists, update the record
                 response = await TravelRequestFormService.updateFormData(item.id, formattedData);
-                setMessage(`Successfully updated Id : ${response.data.id}`);
+                // setMessage(`Successfully updated Id : ${response.data.id}`);
+                showMessage('success', 'Success',`Successfully updated Id : ${response.data.travelRequestId}`);
             } else {
                 // Otherwise, create a new record
                 response = await TravelRequestFormService.submitFormData(formData);
-                setMessage(`Successfully created Id : ${response.data.id}`);
+                // setMessage(`Successfully created Id : ${response.data.id}`);
+                showMessage('success', 'Success', `Successfully created Id : ${response.data.travelRequestId}`);
             }
-            setOpen(true);
+            // setOpen(true);
         } catch (error) {
             console.error("Error submitting form", error);
-            setMessage(`Error response : ${error.response.data.title}`);
-            setOpen(true);
+            // setMessage(`Error response : ${error.response.data.title}`);
+            showMessage('error', 'Error', `Error response : ${error.response.data.title}`)
+            // setOpen(true);
         }
     };
 
@@ -698,12 +701,12 @@ function EditTravelRequestForm() {
         }
     };
 
-    const handleClose = (event, reason) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-        setOpen(false);
-    };
+    // const handleClose = (event, reason) => {
+    //     if (reason === 'clickaway') {
+    //         return;
+    //     }
+    //     setOpen(false);
+    // };
 
     const validateEmployeeEmail = () => {
         return userList.some(user => {
@@ -778,21 +781,21 @@ function EditTravelRequestForm() {
         else
             setIsHODEmailValid(validateHODEmail());
     };
-    const action = (
-        <React.Fragment>
-            <Button color="secondary" size="small" onClick={handleClose}>
-                UNDO
-            </Button>
-            <IconButton
-                size="small"
-                aria-label="close"
-                color="inherit"
-                onClick={handleClose}
-            >
-                <CloseIcon fontSize="small" />
-            </IconButton>
-        </React.Fragment>
-    );
+    // const action = (
+    //     <React.Fragment>
+    //         <Button color="secondary" size="small" onClick={handleClose}>
+    //             UNDO
+    //         </Button>
+    //         <IconButton
+    //             size="small"
+    //             aria-label="close"
+    //             color="inherit"
+    //             onClick={handleClose}
+    //         >
+    //             <CloseIcon fontSize="small" />
+    //         </IconButton>
+    //     </React.Fragment>
+    // );
 
     return (
         <div className="form-container mx-5">
@@ -1739,13 +1742,13 @@ function EditTravelRequestForm() {
 
                 </form>
             </div>
-            <Snackbar
+            {/* <Snackbar
                 open={open}
                 autoHideDuration={6000}
                 onClose={handleClose}
                 message={message}
                 action={action}
-            ></Snackbar>
+            ></Snackbar> */}
         </div>
     );
 }

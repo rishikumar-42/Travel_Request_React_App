@@ -128,7 +128,8 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
 
   const handleTransition = async (transitionName) => {
     if (!currentTask) {
-      alert('No task available to perform the action.');
+      // alert('No task available to perform the action.');
+      showMessage('warn','Warning', 'No task available to perform the action.' );
       return;
     }
 
@@ -146,12 +147,14 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
           'Content-Type': 'application/json'
         }
       });
-      alert(`${transitionName.charAt(0).toUpperCase() + transitionName.slice(1)} action successful.`);
+      // alert(`${transitionName.charAt(0).toUpperCase() + transitionName.slice(1)} action successful.`);
+      showMessage('success', 'Success', `${transitionName.charAt(0).toUpperCase() + transitionName.slice(1)} action successful.`);
       setIsTaskCompleted(true);
       // Optionally refresh the tasks or redirect
     } catch (err) {
       console.error(`Failed to ${transitionName} task:`, err);
-      alert(`Failed to ${transitionName} task.`);
+      // alert(`Failed to ${transitionName} task.`);
+      showMessage('error', 'Error', `Error response : ${err.response.data.title}`)
     }
   };
 
