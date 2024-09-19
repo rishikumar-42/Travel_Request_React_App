@@ -675,7 +675,7 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
         {isDialogOpen && (
           <div className="dialog-overlay">
             <div className="dialog">
-              <h2>{(dialogType === 'ok' || dialogType === 'Approve' ) ? 'Approve Comment' : 'Reject Comment'}</h2>
+              <h2>{(dialogType === 'ok' || dialogType === 'Approve' ) ? 'Approve' : 'Reject'}</h2>
               <textarea
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
