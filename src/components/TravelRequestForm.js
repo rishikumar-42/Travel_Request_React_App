@@ -50,6 +50,7 @@ function TravelRequestForm() {
     const [reasonValue, setReasonValue] = useState([]);
     const [itineraries, setItineraries] = useState([]);
     const [isEmployeeEmailValid, setIsEmployeeEmailValid] = useState(true);
+    const [isTelephoneNumberValid, setIsTelephoneNumberValid] = useState(false);
     const [isManagerEmailValid, setIsManagerEmailValid] = useState(true);
     const [isHODEmailValid, setIsHODEmailValid] = useState(true);
     const [isEmailValidSubmit, setIsEmailValidSubmit] = useState(true);
@@ -99,6 +100,12 @@ function TravelRequestForm() {
                 {rowData.title}
             </a>
         );
+    };
+
+    const validateTelephoneNumber = (input) => {
+        const pattern = /^\d{9,15}$/;
+        console.log("issuer no : ",pattern.test(input))
+        setIsTelephoneNumberValid(pattern.test(input));
     };
 
     const [dropDownSuggestions, setdropDownSuggestions] = useState([]);
@@ -697,8 +704,8 @@ function TravelRequestForm() {
 
     useEffect(() => {
         console.log("status :", (!isManagerEmailValid || !isHODEmailValid))
-        setIsEmailValidSubmit((!isManagerEmailValid || selectedItem === '') || !isHODEmailValid);
-    }, [isHODEmailValid, isManagerEmailValid]);
+        setIsEmailValidSubmit(((!isManagerEmailValid || selectedItem === '') || !isHODEmailValid) || !isTelephoneNumberValid);
+    }, [isHODEmailValid, isManagerEmailValid, isTelephoneNumberValid]);
 
     return (
         <div className="form-container mx-5">
@@ -746,11 +753,17 @@ function TravelRequestForm() {
                         <div className="p-inputgroup flex-1">
                             <FloatLabel>
                                 <InputNumber id="number-input" value={formData.issuerNumber}
-                                    onValueChange={(e) => setFormData({
+                                    onValueChange={(e) => {setFormData({
                                         ...formData,
                                         issuerNumber: e.target.value
-                                    })} />
+                                        
+                                    });
+                                    validateTelephoneNumber(e.target.value)}}
+                                    // onBlur={validateTelephoneNumber} 
+                                    />
                                 <label htmlFor="number-input" className="small">Telephone Number<span className="text-danger px-1">*</span></label>
+                                {!isTelephoneNumberValid && <span htmlFor="number-input" className="small mt-1"><strong style={{ color: 'red' }}>Invalid Number</strong></span>}
+
                             </FloatLabel>
                         </div>
                     </div>

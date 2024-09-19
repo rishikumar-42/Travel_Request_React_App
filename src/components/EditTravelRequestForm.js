@@ -88,6 +88,7 @@ function EditTravelRequestForm() {
     const [itineraries, setItineraries] = useState(Array.isArray(travelInfo) ? travelInfo : []);
     const [attachments, setAttachments] = useState(Array.isArray(attachmentInfo) ? attachmentInfo : []);
     const [isEmployeeEmailValid, setIsEmployeeEmailValid] = useState(true);
+    const [isTelephoneNumberValid, setIsTelephoneNumberValid] = useState(false);
     const [isManagerEmailValid, setIsManagerEmailValid] = useState(true);
     const [isHODEmailValid, setIsHODEmailValid] = useState(true);
     const [newItinerary, setNewItinerary] = useState({
@@ -727,6 +728,12 @@ function EditTravelRequestForm() {
         });
     };
 
+    const validateTelephoneNumber = (input) => {
+        const pattern = /^\d{9,15}$/;
+        console.log("issuer no : ",pattern.test(input))
+        setIsTelephoneNumberValid(pattern.test(input));
+    };
+
     // Function to handle blur event for validation
     const handleBlur = () => {
         if (selectedEmployee === null)
@@ -843,11 +850,13 @@ function EditTravelRequestForm() {
                         <div className="p-inputgroup flex-1">
                             <FloatLabel>
                                 <InputNumber id="number-input" value={formData.issuerNumber}
-                                    onValueChange={(e) => setFormData({
+                                    onValueChange={(e) => {setFormData({
                                         ...formData,
                                         issuerNumber: e.target.value
-                                    })} />
+                                    });
+                                    validateTelephoneNumber(e.target.value)}} />
                                 <label htmlFor="number-input" className="small">Telephone Number<span className="text-danger px-1">*</span></label>
+                                {!isTelephoneNumberValid && <span htmlFor="number-input" className="small mt-1"><strong style={{ color: 'red' }}>Invalid Number</strong></span>}
                             </FloatLabel>
                         </div>
                     </div>
