@@ -12,6 +12,9 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
   const [currentTask, setCurrentTask] = useState(null);
   const [isTaskCompleted, setIsTaskCompleted] = useState(false);
   const [cancelFlag, setCancelFlag] = useState(true);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [dialogType, setDialogType] = useState(''); // 'approve' or 'reject'
+  const [comment, setComment] = useState('');
 
 
   const { auth, login } = useAuth(); // Access auth from context
@@ -150,11 +153,39 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
       // alert(`${transitionName.charAt(0).toUpperCase() + transitionName.slice(1)} action successful.`);
       showMessage('success', 'Success', `${transitionName.charAt(0).toUpperCase() + transitionName.slice(1)} action successful.`);
       setIsTaskCompleted(true);
-      // Optionally refresh the tasks or redirect
+      setComment(''); // Clear comment after successful submission
+      setIsDialogOpen(false); // Close the dialog
     } catch (err) {
       console.error(`Failed to ${transitionName} task:`, err);
       // alert(`Failed to ${transitionName} task.`);
       showMessage('error', 'Error', `Error response : ${err.response.data.title}`)
+    }
+  };
+
+  const openDialog = (type) => {
+    setDialogType(type);
+    setIsDialogOpen(true);
+  };
+
+  const handleDialogSubmit = () => {
+    if (dialogType === 'ok') {
+      handleTransition('ok');
+      item.approver1Comment = comment; 
+      TravelRequestFormServiceLayer.updatePatchFormData(item.id, { approver1Comment: comment });
+    } else if (dialogType === 'reject') {
+      handleTransition('reject');
+      item.approver1Comment = comment; 
+      TravelRequestFormServiceLayer.updatePatchFormData(item.id, { approver1Comment: comment });
+    }
+    else if (dialogType === 'Approve') {
+      handleTransition('Approve');
+      item.approver1Comment = comment; 
+      TravelRequestFormServiceLayer.updatePatchFormData(item.id, { approver2Comment: comment });
+    }
+    else if (dialogType === 'REJECT') {
+      handleTransition('REJECT');
+      item.approver1Comment = comment; 
+      TravelRequestFormServiceLayer.updatePatchFormData(item.id, { approver2Comment: comment });
     }
   };
 
@@ -619,25 +650,41 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
             {(isPendingAtApprover1 && auth.username === item.manager) && !isTaskCompleted && (
               <>
                 <div>
-                  <button className="approve-button" onClick={() => handleTransition('ok')}>Approver1</button>
+                  <button className="approve-button" onClick={() => openDialog('ok')}>Approver1</button>
                 </div>
                 <div className='Rejectbtn'>
-                  <button className="reject-button" onClick={() => handleTransition('reject')}>Reject</button>
+                  <button className="reject-button" onClick={() => openDialog('reject')}>Reject</button>
                 </div>
               </>
             )}
             {(isPendingAtApprover2 && auth.username === item.hod) && !isTaskCompleted && (
               <>
                 <div>
-                  <button className="approve-button" onClick={() => handleTransition('Approve')}>Approver2</button>
+                  <button className="approve-button" onClick={() => openDialog('Approve')}>Approver2</button>
                 </div>
                 <div className='Rejectbtn'>
-                  <button className="reject-button" onClick={() => handleTransition('REJECT')}>Reject</button>
+                  <button className="reject-button" onClick={() => openDialog('REJECT')}>Reject</button>
                 </div>
               </>
             )}
           </div>
         )}
+      {isDialogOpen && (
+        <div className="dialog-overlay">
+          <div className="dialog">
+            <h2>{dialogType === 'ok' || 'Approve' ? 'Approve Comment' : 'Reject Comment'}</h2>
+            <textarea
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+              placeholder="Enter your comment here..."
+            />
+            <div className="dialog-buttons">
+              <button className='cacnel-dialog' onClick={() => setIsDialogOpen(false)}>Cancel</button>
+              <button className='done-dialog' onClick={handleDialogSubmit}>Done</button>
+            </div>
+          </div>
+        </div>
+      )}
       </div>
     </div >
   );
