@@ -32,6 +32,7 @@ import { Toast } from "primereact/toast";
 function EditTravelRequestForm() {
     const location = useLocation();
     const { item, travelInfo, attachmentInfo } = location.state || {};
+    const [isEmailValidSubmit, setIsEmailValidSubmit] = useState(false);
 
     // console.log("Issuer Date",item.issuerDate);
     // console.log("carRental",item.carRentalCategory);
@@ -637,6 +638,11 @@ function EditTravelRequestForm() {
 
     }, [newItinerary, showReturnFields]);
 
+    useEffect(() => {
+        console.log("status :", (!isManagerEmailValid || !isHODEmailValid))
+        setIsEmailValidSubmit(((!isManagerEmailValid) || !isHODEmailValid) || !isTelephoneNumberValid);
+    }, [isHODEmailValid, isManagerEmailValid, isTelephoneNumberValid]);
+
 
     const formatFormData = (data) => {
         return {
@@ -909,6 +915,8 @@ function EditTravelRequestForm() {
                                                 console.log("value : " + JSON.stringify(formData));
                                             }}
                                             itemTemplate={itemTemplate}
+                                            disabled={item.approveStatus?.key !== 'draft'}
+                                            // readOnly={formData.approveStatus?.key !== 'draft'}
                                             required
                                         />
                                         <label htmlFor="employeeEmail" className="small"><strong>Email <span className="text-danger px-1">*</span></strong></label>
@@ -1103,10 +1111,11 @@ function EditTravelRequestForm() {
                                             console.log("value : " + JSON.stringify(e.value.email));
                                         }}
                                         itemTemplate={itemTemplate}
-                                        disabled={selectedEmployee === null}
+                                        disabled={selectedEmployee === null || item.approveStatus?.key !== 'draft'}
+                                        // readOnly={formData.approveStatus?.key !== 'draft'}
                                         required
                                         tooltipOptions={{ showOnDisabled: true, position: 'bottom' }}
-                                        tooltip="Disabled"
+                                        // tooltip="Disabled"
                                     />
                                     <label htmlFor="manager" className="small">Manager<span className="text-danger px-1">*</span></label>
                                     {!isManagerEmailValid && <span htmlFor="manager" className="small"> <strong style={{ color: 'red' }}>Email not in the list</strong></span>}
@@ -1135,9 +1144,10 @@ function EditTravelRequestForm() {
                                             console.log("value : " + JSON.stringify(e.value.email));
                                         }}
                                         itemTemplate={itemTemplate}
-                                        disabled={selectedItem === null}
+                                        disabled={selectedItem === null || item.approveStatus?.key !== 'draft'}
                                         tooltipOptions={{ showOnDisabled: true, position: 'bottom' }}
-                                        tooltip="Disabled"
+                                        // readOnly={formData.approveStatus?.key !== 'draft'}
+                                        // tooltip="Disabled"
                                     />
                                     <label htmlFor="hod" className="small">Head Of Department/GM/VP</label>
 
@@ -1723,7 +1733,7 @@ function EditTravelRequestForm() {
         fontWeight: 'bold',
         marginLeft: '10px'
     }}
-        disabled={!isTelephoneNumberValid}
+        disabled={isEmailValidSubmit}
         type="submit"
         label="Update"
     />
