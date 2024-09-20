@@ -5,7 +5,7 @@ import "../assets/css/Footer.css";
 function Footer() {
     return (
         <footer className="footer">
-            <p>&copy; 2024 Your Company Name. All rights reserved.</p>
+            <p>&copy; 2024 Digitus Business Solutions</p>
         </footer>
     );
 }
