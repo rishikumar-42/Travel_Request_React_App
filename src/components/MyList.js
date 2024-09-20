@@ -226,7 +226,7 @@ const MyList = () => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const response = await fetch('http://localhost:8080/o/c/travelinfos/', {
+        const response = await fetch('http://localhost:8080/o/c/travelinfos?page=1&pageSize=1000', {
           method: 'GET',
           headers: {
             'Accept': 'application/json',
@@ -274,10 +274,12 @@ const MyList = () => {
     })
 
     .filter(item => item.firstName.toLowerCase().includes(searchTerm.toLowerCase()) || item.lastName.toLowerCase().includes(searchTerm.toLowerCase()))
-    .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+    // .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
 
-  const totalPages = Math.ceil(data.items.length / itemsPerPage);
+  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+  const paginatedData = filteredData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage); 
+
 
   return (
     <div className="dashboard">
@@ -372,8 +374,8 @@ const MyList = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredData.length > 0 ? (
-                      filteredData.map(item => (
+                    {paginatedData.length > 0 ? (
+                      paginatedData.map(item => (
                         <tr key={item.id}>
                           <td className="td-mylist">
                             <span
