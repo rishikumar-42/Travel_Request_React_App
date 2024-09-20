@@ -825,7 +825,7 @@ function EditTravelRequestForm() {
                         </div>
                     </div>
                     <div className="d-flex justify-content-between gap-3 px-3 pt-3">
-                        <div className="p-inputgroup flex-1">
+                        <div className="p-inputgroup d-block">
                             <FloatLabel>
                                 <InputText id="issuer" value={formData.issuer}
                                     required
@@ -838,7 +838,7 @@ function EditTravelRequestForm() {
                                 <label htmlFor="issuer" className="small">Issuer<span className="text-danger px-1">*</span></label>
                             </FloatLabel>
                         </div>
-                        <div className="p-inputgroup flex-1">
+                        <div className="p-inputgroup d-block">
                             <FloatLabel>
                                 <Calendar id="issuerDate" dateFormat="dd/mm/yy" value={formData.issuerDate}
                                     onChange={(e) => setFormData({
@@ -848,7 +848,7 @@ function EditTravelRequestForm() {
                                 <label htmlFor="issuerDate" className="small">Issue Date<span className="text-danger px-1">*</span></label>
                             </FloatLabel>
                         </div>
-                        <div className="p-inputgroup flex-1">
+                        <div className="p-inputgroup d-block">
                             <FloatLabel>
                                 <InputNumber id="number-input" value={formData.issuerNumber}
                                     onValueChange={(e) => {setFormData({
@@ -857,8 +857,8 @@ function EditTravelRequestForm() {
                                     });
                                     validateTelephoneNumber(e.target.value)}} />
                                 <label htmlFor="number-input" className="small">Telephone Number<span className="text-danger px-1">*</span></label>
-                                {!isTelephoneNumberValid && <span htmlFor="number-input" className="small mt-1"><strong style={{ color: 'red' }}>Invalid Number</strong></span>}
                             </FloatLabel>
+                            {(!isTelephoneNumberValid && formData.issuerNumber !== null ) && <span htmlFor="number-input" className="small mt-1"><strong style={{ color: 'red' }}>Invalid Number</strong></span>}
                         </div>
                     </div>
                     <div className="px-3 pt-3">
