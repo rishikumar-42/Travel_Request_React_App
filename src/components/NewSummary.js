@@ -130,6 +130,7 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
   };
 
   const handleTransition = async (transitionName) => {
+    console.log("current task",currentTask);
     if (!currentTask) {
       // alert('No task available to perform the action.');
       showMessage('warn', 'Warning', 'No task available to perform the action.');
@@ -166,6 +167,11 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
     setDialogType(type);
     setIsDialogOpen(true);
   };
+
+  const handleDialogCancel = () => {
+    setIsDialogOpen(false);
+    setComment('');
+  }
 
   const handleDialogSubmit = () => {
     if (dialogType === 'ok') {
@@ -682,7 +688,7 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
                 placeholder="Enter your comment here..."
               />
               <div className="dialog-buttons">
-                <button className='cancel-dialog' onClick={() => setIsDialogOpen(false)}>Cancel</button>
+                <button className='cancel-dialog' onClick={handleDialogCancel}>Cancel</button>
                 <button className='done-dialog' onClick={handleDialogSubmit}>Done</button>
               </div>
             </div>
