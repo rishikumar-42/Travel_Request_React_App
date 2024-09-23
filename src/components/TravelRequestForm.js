@@ -66,6 +66,7 @@ function TravelRequestForm() {
         returnTransportNumber: '',
     });
     const [editingItinerary, setEditingItinerary] = useState(null);
+    const submitButtonRef = useRef(null);
 
     const navigate = useNavigate();
 
@@ -86,7 +87,7 @@ function TravelRequestForm() {
     //         }
     //     }));
     // }
-    
+
     const OnwardJourneyLink = (rowData) => {
 
         console.log("url : ", rowData.contentUrl)
@@ -104,7 +105,7 @@ function TravelRequestForm() {
 
     const validateTelephoneNumber = (input) => {
         const pattern = /^\d{9,15}$/;
-        console.log("issuer no : ",pattern.test(input))
+        console.log("issuer no : ", pattern.test(input))
         setIsTelephoneNumberValid(pattern.test(input));
     };
 
@@ -753,17 +754,19 @@ function TravelRequestForm() {
                         <div className="p-inputgroup d-block">
                             <FloatLabel>
                                 <InputNumber id="number-input" value={formData.issuerNumber}
-                                    onValueChange={(e) => {setFormData({
-                                        ...formData,
-                                        issuerNumber: e.target.value
-                                        
-                                    });
-                                    validateTelephoneNumber(e.target.value)}}
-                                    // onBlur={validateTelephoneNumber} 
-                                    />
+                                    onValueChange={(e) => {
+                                        setFormData({
+                                            ...formData,
+                                            issuerNumber: e.target.value
+
+                                        });
+                                        validateTelephoneNumber(e.target.value)
+                                    }}
+                                // onBlur={validateTelephoneNumber} 
+                                />
                                 <label htmlFor="number-input" className="small">Telephone Number<span className="text-danger px-1">*</span></label>
                             </FloatLabel>
-                            {(!isTelephoneNumberValid && formData.issuerNumber !== null )  && <span htmlFor="number-input" className="small mt-1"><strong style={{ color: 'red' }}>Invalid Number</strong></span>}
+                            {(!isTelephoneNumberValid && formData.issuerNumber !== null) && <span htmlFor="number-input" className="small mt-1"><strong style={{ color: 'red' }}>Invalid Number</strong></span>}
 
                         </div>
                     </div>
@@ -1610,6 +1613,13 @@ function TravelRequestForm() {
                         />
                         <Button className="mb-3" type="button" icon="pi pi-angle-double-right" label="Next" rounded onClick={() => setPreviewVisible(true)} />
                         <Button type="button" className="back-button-travel mb-3" icon="pi pi-angle-double-left" label="Back" rounded onClick={handleBack} />
+                        <Button
+                            type="submit"
+                            ref={submitButtonRef} // Set the ref
+                            style={{ display: 'none' }} // Hide the button if desired
+                        >
+                            Submit
+                        </Button>
                         <div>
 
                             <Dialog header="Preview" visible={previewVisible} style={{ width: '80vw' }} onHide={() => { if (!previewVisible) return; setPreviewVisible(false); }}>
@@ -1619,7 +1629,9 @@ function TravelRequestForm() {
                                     <Button icon="pi pi-angle-double-left" label="Back" type="button" rounded onClick={() => setPreviewVisible(false)} />
                                     <Button
                                         disabled={isEmailValidSubmit}
-                                        onClick={handleFormSubmit}
+                                        onClick={() => {setPreviewVisible(false);
+                                            submitButtonRef.current.click();
+                                        }}
                                         type="submit"
                                         label="Submit"
                                     />
