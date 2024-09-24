@@ -62,7 +62,7 @@ function EditTravelRequestForm() {
 
     const carRentalCategorySwitch = item.carRentalCategory !== '';
     const HotelSwitch = item.hotelLocation !== '';
-    const personCarSwitch = item.carDrivingLicense !== '';
+    const personCarSwitch = item.personalCarDrivingLicenseNumber !== '';
     const flightticketSwitch = item.flightTicketType !== undefined;
     const trainTicketSwitch = item.trainTicketType !== undefined;
     console.log("train switch : ", item.trainTicketType !== undefined)
@@ -422,7 +422,11 @@ function EditTravelRequestForm() {
         if (!event.target.checked) {
             setFormData(prevFormData => ({
                 ...prevFormData, // Spread the existing formData
-                hotelNumberOfNights: null
+                hotelNumberOfNights: null,
+                hotelCheckIn: null,
+                hotelCheckOut: null,
+                hotelLocation: '',
+                hotelNote:''
             }))
         }
     };
@@ -439,6 +443,7 @@ function EditTravelRequestForm() {
                 carRentalBirthDate: null,
                 carDrivingLicense: "",
                 carRentalCategory: "",
+                carRentalNote:""
             }))
         }
     };
@@ -449,7 +454,8 @@ function EditTravelRequestForm() {
             setFormData(prevFormData => ({
                 ...prevFormData, // Spread the existing formData
                 personalCarDrivingLicenseNumber: "",
-                personalCarRegistrationNumber: ""
+                personalCarRegistrationNumber: "",
+                personalCarNote:"",
             }))
         }
     };
@@ -545,8 +551,8 @@ function EditTravelRequestForm() {
         trainTicketType: item.trainTicketType,
         hotelLocation: item.hotelLocation || "",
         hotelNumberOfNights: item.hotelNumberOfNights || null,
-        hotelCheckIn: new Date(item.hotelCheckIn) || null,
-        hotelCheckOut: new Date(item.hotelCheckOut) || null,
+        hotelCheckIn: item.hotelCheckIn !== null ? new Date(item.hotelCheckIn) : null,
+        hotelCheckOut:item.hotelCheckOut !== null ? new Date(item.hotelCheckOut) : null,
         hotelNote: item.hotelNote || "",
         manager: item.manager || '',
         hod: item.hod || '',
