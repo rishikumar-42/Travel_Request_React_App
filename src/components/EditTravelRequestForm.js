@@ -201,6 +201,7 @@ function EditTravelRequestForm() {
     const handleEditItinerary = (index) => {
         const itineraryToEdit = { ...itineraries[index] }; // Create a copy to avoid direct mutation
         setNewItinerary(itineraryToEdit);
+        console.log("itineraryToEdit",itineraryToEdit)
         setEditingItinerary(index); // Store the index, not the itinerary itself
         setShowItinerary(true);
     };
@@ -699,6 +700,9 @@ function EditTravelRequestForm() {
                 // setMessage(`Successfully created Id : ${response.data.id}`);
                 showMessage('success', 'Success', `Successfully created Id : ${response.data.travelRequestId}`);
             }
+            setTimeout(() => {
+                handleBack();
+            }, 2000);
             // setOpen(true);
         } catch (error) {
             console.error("Error submitting form", error);
@@ -1607,7 +1611,7 @@ function EditTravelRequestForm() {
                                             <FloatLabel>
                                                 <Dropdown id="onwardPreferredTime" className="onwardPreferredTime"
                                                     value={newItinerary.onwardPreferredTime}
-                                                    onChange={e => handleInputChange('onwardPreferredTime', e)} options={preferredTimeList} optionLabel="name" />
+                                                    onChange={e => handleInputChange('onwardPreferredTime', e)} options={preferredTimeList} optionLabel="name"  />
                                                 <label htmlFor="onwardPreferredTime">Preferred Time</label>
                                             </FloatLabel>
                                         </div>
