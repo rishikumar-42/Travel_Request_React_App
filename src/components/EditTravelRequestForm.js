@@ -1062,6 +1062,7 @@ function EditTravelRequestForm() {
                                     ...formData,
                                     travelCurrency: {
                                         key: e.value.key,
+                                        name: e.value.name,
                                     }
                                 });
                             }} options={currencyList} optionLabel="name"
@@ -1467,6 +1468,7 @@ function EditTravelRequestForm() {
                                                                 ...formData,
                                                                 flightTicketType: {
                                                                     key: e.value.key,
+                                                                    name: e.value.name,
                                                                 }
                                                             });
                                                             console.log("radio : ", formData)
@@ -1488,6 +1490,7 @@ function EditTravelRequestForm() {
                                             ...formData, // Spread the existing formData
                                             flightTicketReason: {
                                                 key: e.value.key,
+                                                name: e.value.name,
                                                 // name: e.value.name // Update only the firstName property
                                             }
                                         });

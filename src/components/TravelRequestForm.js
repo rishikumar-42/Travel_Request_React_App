@@ -427,6 +427,7 @@ function TravelRequestForm() {
             ...prevFormData, // Spread the existing formData
             flightTicketType: {
                 key: firstFlightType.key,
+                name: firstFlightType.name,
                 // name: firstFlightType.name // Update the trainTicketType properties
             }
         }));
@@ -531,6 +532,7 @@ function TravelRequestForm() {
             ...prevFormData, // Spread the existing formData
             trainTicketType: {
                 key: firstTrainType.key,
+                name: firstTrainType.name,
                 // name: firstTrainType.name // Update the trainTicketType properties
             }
         }));
@@ -959,6 +961,7 @@ function TravelRequestForm() {
                                         ...formData,
                                         travelCurrency: {
                                             key: e.value.key,
+                                            name: e.value.name,
                                         }
                                     });
                                 }} options={currencyList} optionLabel="name" required />
@@ -1369,6 +1372,7 @@ function TravelRequestForm() {
                                                                 ...formData,
                                                                 flightTicketType: {
                                                                     key: e.value.key,
+                                                                    name: e.value.name,
                                                                 }
                                                             });
                                                             console.log("radio : ", formData)
@@ -1390,6 +1394,7 @@ function TravelRequestForm() {
                                             ...formData, // Spread the existing formData
                                             flightTicketReason: {
                                                 key: e.value.key,
+                                                name: e.value.name,
                                                 // name: e.value.name // Update only the firstName property
                                             }
                                         });
@@ -1427,6 +1432,7 @@ function TravelRequestForm() {
                                                             ...formData, // Spread the existing formData
                                                             trainTicketType: {
                                                                 key: e.value.key,
+                                                                name: e.value.name,
                                                                 // name: e.value.name // Update only the firstName property
                                                             }
                                                         });

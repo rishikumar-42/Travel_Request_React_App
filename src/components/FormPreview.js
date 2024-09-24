@@ -137,7 +137,7 @@ const FormPreview = ({ item, travelInfo, attachments }) => {
                         </div>
                         <div className="preview-detail-item">
                             <span className="preview-label">Currency:</span>
-                            <span className="preview-value">{item.travelCurrency === null ? 'N/A' : item.travelCurrency.key}</span>
+                            <span className="preview-value">{item.travelCurrency === null ? 'N/A' : item.travelCurrency.name}</span>
                         </div>
                         <div className="preview-detail-item">
                             <span className="preview-label">Budget Amount:</span>
@@ -263,12 +263,12 @@ const FormPreview = ({ item, travelInfo, attachments }) => {
                         <div className="preview-detail-item">
                             <span className="preview-label">Ticket Type:</span>
                             <span className="preview-value">
-                                {item.flightTicketType !== null ? item.flightTicketType.key : 'N/A'}
+                                {item.flightTicketType !== null ? item.flightTicketType.name : 'N/A'}
                             </span>
                         </div>
                         <div className="preview-detail-item">
                             <span className="preview-label">Reason:</span>
-                            <span className="preview-value"> {item.flightTicketReason !== null ? item.flightTicketReason.key : 'N/A'}</span>
+                            <span className="preview-value"> {item.flightTicketReason !== null ? item.flightTicketReason.name : 'N/A'}</span>
                         </div>
                     </div>
                 </div>
@@ -279,7 +279,7 @@ const FormPreview = ({ item, travelInfo, attachments }) => {
                     <div className="preview-details-grid">
                         <div className="preview-detail-item">
                             <span className="preview-label">Ticket Type:</span>
-                            <span className="preview-value"> {item.trainTicketType !== null ? item.trainTicketType.key : 'N/A'}</span>
+                            <span className="preview-value"> {item.trainTicketType !== null ? item.trainTicketType.name : 'N/A'}</span>
                         </div>
                     </div>
                 </div>
