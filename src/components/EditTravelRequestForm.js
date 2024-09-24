@@ -1698,7 +1698,7 @@ function EditTravelRequestForm() {
                     body={(rowData, { rowIndex }) => (
                         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                             <Button icon="pi pi-pencil" style={{ marginRight: '0.5rem' }} type="button" onClick={() => handleEditItinerary(rowIndex)} />
-                            <Button severity="danger" icon="pi pi-trash" onClick={() => handleRemoveItinerary(rowIndex)} />
+                            <Button severity="danger" icon="pi pi-trash" type="button" onClick={() => handleRemoveItinerary(rowIndex)} />
                         </div>
                     )}
                 />
@@ -1715,7 +1715,7 @@ function EditTravelRequestForm() {
                     <Calendar value={newItinerary.returnArrivalDate} onChange={(e) => setNewItinerary({ ...newItinerary, returnArrivalDate: e.value })} placeholder="Arrival Date" />
                     <InputText value={newItinerary.returnPreferredTime} onChange={(e) => handleFieldChange(e, 'returnPreferredTime')} placeholder="Return Preferred Time" />
                     <InputText value={newItinerary.returnTransportNumber} onChange={(e) => handleFieldChange(e, 'returnTransportNumber')} placeholder="Return Transport Number" />
-                    <Button label="Save" onClick={handleSaveItinerary} />
+                    <Button  label="Save" onClick={handleSaveItinerary} />
                     <Button label="Cancel" onClick={() => setShowItinerary(false)} />
                 </div>
             )}
