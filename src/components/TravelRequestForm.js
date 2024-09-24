@@ -102,12 +102,7 @@ function TravelRequestForm() {
             </a>
         );
     };
-
-    const validateTelephoneNumber = (input) => {
-        const pattern = /^\d{9,15}$/;
-        console.log("issuer no : ", pattern.test(input))
-        setIsTelephoneNumberValid(pattern.test(input));
-    };
+    
 
     const [dropDownSuggestions, setdropDownSuggestions] = useState([]);
     const [selectedItem, setSelectedItem] = useState('');
@@ -520,6 +515,13 @@ function TravelRequestForm() {
         approveStatus: {}
     });
 
+    const validateTelephoneNumber = (input) => {
+        const pattern = /^\d{9,15}$/;
+        console.log("issuer no : ", pattern.test(input))
+        setIsTelephoneNumberValid(pattern.test(input));
+    };
+
+
     const initialTrainTicket = () => {
         console.log("trainTypeList data : ", trainTypeList);
         const firstTrainType = trainTypeList[0];
@@ -754,13 +756,15 @@ function TravelRequestForm() {
                         <div className="p-inputgroup d-block">
                             <FloatLabel>
                                 <InputNumber id="number-input" value={formData.issuerNumber}
-                                    onValueChange={(e) => {
+                                    useGrouping={false}
+                                    onChange={(e) => {
+                                        validateTelephoneNumber(e.value)
                                         setFormData({
                                             ...formData,
-                                            issuerNumber: e.target.value
+                                            issuerNumber: e.value
 
-                                        });
-                                        validateTelephoneNumber(e.target.value)
+                                        })
+                                        
                                     }}
                                 // onBlur={validateTelephoneNumber} 
                                 />
@@ -1629,7 +1633,8 @@ function TravelRequestForm() {
                                     <Button icon="pi pi-angle-double-left" label="Back" type="button" rounded onClick={() => setPreviewVisible(false)} />
                                     <Button
                                         disabled={isEmailValidSubmit}
-                                        onClick={() => {setPreviewVisible(false);
+                                        onClick={() => {
+                                            setPreviewVisible(false);
                                             submitButtonRef.current.click();
                                         }}
                                         type="submit"
