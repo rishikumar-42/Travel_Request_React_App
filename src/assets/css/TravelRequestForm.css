@@ -647,3 +647,7 @@ button.p-datepicker-trigger.p-button.p-component.p-button-icon-only {
 .back-button-draft{
     margin-left: 20px;
 }
+.onwardPreferredTime{
+    width: 170px !important;
+    background: #F1F0F6 !important;
+}

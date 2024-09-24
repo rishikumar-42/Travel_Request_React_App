@@ -1599,7 +1599,7 @@ function EditTravelRequestForm() {
                                         </div>
                                         <div className="calendar-item">
                                             <FloatLabel>
-                                                <Dropdown id="onwardPreferredTime" className="onwardDepartureDate"
+                                                <Dropdown id="onwardPreferredTime" className="onwardPreferredTime"
                                                     value={newItinerary.onwardPreferredTime}
                                                     onChange={e => handleInputChange('onwardPreferredTime', e)} options={preferredTimeList} optionLabel="name" />
                                                 <label htmlFor="onwardPreferredTime">Preferred Time</label>
@@ -1643,7 +1643,7 @@ function EditTravelRequestForm() {
                                                 </div>
                                                 <div className="returnpreferredTime">
                                                     <FloatLabel>
-                                                        <Dropdown id="returnpreferredTime" className="onwardDepartureDate"
+                                                        <Dropdown id="returnpreferredTime" className="onwardPreferredTime"
                                                             value={newItinerary.returnPreferredTime}
                                                             onChange={e => handleInputChange('returnPreferredTime', e)} options={preferredTimeList} optionLabel="name" />
                                                         <label htmlFor="returnpreferredTime">Preferred Time</label>
