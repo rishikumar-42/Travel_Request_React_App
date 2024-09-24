@@ -15,7 +15,6 @@ import { AuthProvider } from './contexts/AuthContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-<React.StrictMode>
    <AuthProvider>
   <SnackbarProvider maxSnack={3}>
     <Router>
@@ -31,7 +30,6 @@ root.render(
     </Router>
   </SnackbarProvider>
   </AuthProvider>
-</React.StrictMode>
 );
 
 reportWebVitals();
@@ -51,7 +49,7 @@ reportWebVitals();
 //    }
 //  }
 
-//  const ELEMENT_NAME = 'travel_request_react_app-clx';
+//  const ELEMENT_NAME = 'travel_request_react_app';
 
 //  if (customElements.get(ELEMENT_NAME)) {
 //    // eslint-disable-next-line no-console

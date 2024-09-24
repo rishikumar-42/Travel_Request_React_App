@@ -15,6 +15,7 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [dialogType, setDialogType] = useState(''); // 'approve' or 'reject'
   const [comment, setComment] = useState('');
+  const [loading, setLoading] = useState(true); 
 
 
   const { auth, login } = useAuth(); // Access auth from context
@@ -32,6 +33,7 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
 
   useEffect(() => {
     const fetchWorkflowTasks = async () => {
+      setLoading(true); 
       try {
         const response = await fetch('http://localhost:8080/o/headless-admin-workflow/v1.0/workflow-tasks/assigned-to-me', {
           method: 'GET',
@@ -50,6 +52,9 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
         return task;
       } catch (err) {
         console.error('Failed to fetch workflow tasks:', err);
+      }
+      finally {
+        setLoading(false); // Set loading to false after fetch completes
       }
     };
 
@@ -70,9 +75,9 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
       console.log("data : ", data)
       const task = data.items.find(task => task.objectReviewed.id === item.id);
       console.log("task", task);
-      setCurrentTask(task);
-      setWorkflowTasks(data.items || []);
-      setIsTaskCompleted(!!task && task.completed);
+      // setCurrentTask(task);
+      // setWorkflowTasks(data.items || []);
+      // setIsTaskCompleted(!!task && task.completed);
       return task;
     } catch (err) {
       console.error('Failed to fetch workflow tasks:', err);
@@ -108,6 +113,18 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
     return data.name;
   };
 
+  if (loading) {
+    return (
+      <div className="loading-container">
+        <div className="loading">
+          Loading
+          <span className="dot">.</span>
+          <span className="dot">.</span>
+          <span className="dot">.</span>
+        </div>
+      </div>
+    );
+  }
   const formatDate = (dateString) => {
     if (!dateString) return 'N/A';
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
