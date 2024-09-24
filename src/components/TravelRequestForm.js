@@ -102,7 +102,7 @@ function TravelRequestForm() {
             </a>
         );
     };
-    
+
 
     const [dropDownSuggestions, setdropDownSuggestions] = useState([]);
     const [selectedItem, setSelectedItem] = useState('');
@@ -631,9 +631,9 @@ function TravelRequestForm() {
         }
     };
 
-    const validateEmployeeEmail = () => {
+    const validateEmployeeEmail = (value) => {
         return userList.some(user => {
-            if (user.email.toLowerCase() === (typeof selectedEmployee === 'object' ? selectedEmployee.email.toLowerCase() : selectedEmployee.toLowerCase())) {
+            if (user.email.toLowerCase() === (typeof value === 'object' ? value.email.toLowerCase() : value.toLowerCase())) {
                 setFormData({
                     ...formData, // Spread the existing formData
                     email: user.email,
@@ -651,16 +651,16 @@ function TravelRequestForm() {
     };
 
     // Function to handle blur event for validation
-    const handleBlur = () => {
+    const handleBlur = (value) => {
         if (selectedEmployee === '')
             setIsEmployeeEmailValid(false)
         else
-            setIsEmployeeEmailValid(validateEmployeeEmail());
+            setIsEmployeeEmailValid(validateEmployeeEmail(value));
     };
 
-    const validateManagerEmail = () => {
+    const validateManagerEmail = (value) => {
         return userList.some(user => {
-            if (user.email.toLowerCase() === (typeof selectedItem === 'object' ? selectedItem.email.toLowerCase() : selectedItem.toLowerCase())) {
+            if (user.email.toLowerCase() === (typeof value === 'object' ? value.email.toLowerCase() : value.toLowerCase())) {
                 setFormData({
                     ...formData, // Spread the existing formData
                     // approver1: {
@@ -675,15 +675,15 @@ function TravelRequestForm() {
     };
 
     // Function to handle blur event for validation
-    const handleBlur2 = () => {
+    const handleBlur2 = (value) => {
         if (selectedItem === '')
             setIsManagerEmailValid(false)
         else
-            setIsManagerEmailValid(validateManagerEmail());
+            setIsManagerEmailValid(validateManagerEmail(value));
     };
-    const validateHODEmail = () => {
+    const validateHODEmail = (value) => {
         return userList.some(user => {
-            if (user.email.toLowerCase() === (typeof selectedItem2 === 'object' ? selectedItem2.email.toLowerCase() : selectedItem2.toLowerCase())) {
+            if (user.email.toLowerCase() === (typeof value === 'object' ? value.email.toLowerCase() : value.toLowerCase())) {
                 setFormData({
                     ...formData, // Spread the existing formData
                     // approver2: {
@@ -698,11 +698,11 @@ function TravelRequestForm() {
     };
 
     // Function to handle blur event for validation
-    const handleBlur3 = () => {
+    const handleBlur3 = (value) => {
         if (selectedItem2 === '')
             setIsHODEmailValid(true)
         else
-            setIsHODEmailValid(validateHODEmail());
+            setIsHODEmailValid(validateHODEmail(value));
     };
 
     useEffect(() => {
@@ -764,7 +764,7 @@ function TravelRequestForm() {
                                             issuerNumber: e.value
 
                                         })
-                                        
+
                                     }}
                                 // onBlur={validateTelephoneNumber} 
                                 />
@@ -790,8 +790,7 @@ function TravelRequestForm() {
                                             suggestions={employeeDropDownSuggestions}
                                             completeMethod={searchEmployee}
                                             field="email"
-                                            onBlur={handleBlur}
-
+                                            // onBlur={handleBlur}
                                             onChange={(e) => {
                                                 setSelectedEmployee(e.value);
                                                 setFormData({
@@ -806,6 +805,7 @@ function TravelRequestForm() {
                                                 });
                                                 setSelectedItem('');
                                                 setSelectedItem2('');
+                                                handleBlur(e.value)
                                             }}
                                             onSelect={(e) => {
                                                 setSelectedEmployee(e.value);
@@ -822,6 +822,7 @@ function TravelRequestForm() {
                                                 console.log("value : " + JSON.stringify(formData));
                                             }}
                                             itemTemplate={itemTemplate}
+                                            // forceSelection
                                             required
                                         />
                                         <label htmlFor="employeeEmail" className="small"><strong>Email <span className="text-danger px-1">*</span></strong></label>
@@ -996,7 +997,7 @@ function TravelRequestForm() {
                                         completeMethod={searchItem}
                                         field="email"
                                         className="w-100 d-flex"
-                                        onBlur={handleBlur2}
+                                        // onBlur={handleBlur2}
                                         onChange={(e) => {
                                             setSelectedItem(e.value);
                                             setFormData({
@@ -1005,6 +1006,7 @@ function TravelRequestForm() {
                                                 hod: ''
                                             });
                                             setSelectedItem2('');
+                                            handleBlur2(e.value)
                                         }}
                                         onSelect={(e) => {
                                             setSelectedItem(e.value);
@@ -1036,9 +1038,13 @@ function TravelRequestForm() {
                                         suggestions={dropDownSuggestions2}
                                         completeMethod={searchItem2}
                                         field="email"
-                                        onBlur={handleBlur3}
+                                        // onBlur={handleBlur3}
                                         className="w-100"
-                                        onChange={(e) => setSelectedItem2(e.value)}
+                                        onChange={(e) => {
+                                            setSelectedItem2(e.value)
+                                            handleBlur3(e.value)
+                                        }
+                                        }
                                         onSelect={(e) => {
                                             setSelectedItem2(e.value);
                                             setFormData({
@@ -1577,7 +1583,7 @@ function TravelRequestForm() {
                     )}
                     {itineraries.length > 0 && (
                         <div className="itinerary-table">
-                            <h3>Saved Itineraries</h3>
+                            <h3>Itineraries</h3>
 
                             <DataTable value={itineraries} showGridlines tableStyle={{ minWidth: '50rem' }}>
                                 {/*<Column sortable field="price" header="Price incl. VAT" /> */}

@@ -715,9 +715,9 @@ function EditTravelRequestForm() {
     //     setOpen(false);
     // };
 
-    const validateEmployeeEmail = () => {
+    const validateEmployeeEmail = (value) => {
         return userList.some(user => {
-            if (user.email.toLowerCase() === (typeof selectedEmployee === 'object' ? selectedEmployee.email.toLowerCase() : selectedEmployee.toLowerCase())) {
+            if (user.email.toLowerCase() === (typeof value === 'object' ? value.email.toLowerCase() : value.toLowerCase())) {
                 setFormData({
                     ...formData, // Spread the existing formData
                     email: user.email,
@@ -742,16 +742,16 @@ function EditTravelRequestForm() {
     };
 
     // Function to handle blur event for validation
-    const handleBlur = () => {
+    const handleBlur = (value) => {
         if (selectedEmployee === null)
             setIsEmployeeEmailValid(true)
         else
-            setIsEmployeeEmailValid(validateEmployeeEmail());
+            setIsEmployeeEmailValid(validateEmployeeEmail(value));
     };
 
-    const validateManagerEmail = () => {
+    const validateManagerEmail = (value) => {
         return userList.some(user => {
-            if (user.email.toLowerCase() === (typeof selectedItem === 'object' ? selectedItem.email.toLowerCase() : selectedItem.toLowerCase())) {
+            if (user.email.toLowerCase() === (typeof value === 'object' ? value.email.toLowerCase() : value.toLowerCase())) {
                 setFormData({
                     ...formData, // Spread the existing formData
                     // approver1: {
@@ -766,15 +766,15 @@ function EditTravelRequestForm() {
     };
 
     // Function to handle blur event for validation
-    const handleBlur2 = () => {
+    const handleBlur2 = (value) => {
         if (selectedItem === null)
             setIsManagerEmailValid(true)
         else
-            setIsManagerEmailValid(validateManagerEmail());
+            setIsManagerEmailValid(validateManagerEmail(value));
     };
-    const validateHODEmail = () => {
+    const validateHODEmail = (value) => {
         return userList.some(user => {
-            if (user.email.toLowerCase() === (typeof selectedItem2 === 'object' ? selectedItem2.email.toLowerCase() : selectedItem2.toLowerCase())) {
+            if (user.email.toLowerCase() === (typeof value === 'object' ? value.email.toLowerCase() : value.toLowerCase())) {
                 setFormData({
                     ...formData, // Spread the existing formData
                     // approver2: {
@@ -789,11 +789,11 @@ function EditTravelRequestForm() {
     };
 
     // Function to handle blur event for validation
-    const handleBlur3 = () => {
+    const handleBlur3 = (value) => {
         if (selectedItem === null)
             setIsHODEmailValid(true)
         else
-            setIsHODEmailValid(validateHODEmail());
+            setIsHODEmailValid(validateHODEmail(value));
     };
     // const action = (
     //     <React.Fragment>
@@ -886,7 +886,7 @@ function EditTravelRequestForm() {
                                             suggestions={employeeDropDownSuggestions}
                                             completeMethod={searchEmployee}
                                             field="email"
-                                            onBlur={handleBlur}
+                                            // onBlur={handleBlur}
 
                                             onChange={(e) => {
                                                 setSelectedEmployee(e.value);
@@ -902,6 +902,7 @@ function EditTravelRequestForm() {
                                                 });
                                                 setSelectedItem('');
                                                 setSelectedItem2('');
+                                                handleBlur(e.value);
                                             }}
                                             onSelect={(e) => {
                                                 setSelectedEmployee(e.value);
@@ -1092,7 +1093,7 @@ function EditTravelRequestForm() {
                                         completeMethod={searchItem}
                                         field="email"
                                         className="w-100 d-flex"
-                                        onBlur={handleBlur2}
+                                        // onBlur={handleBlur2}
                                         onChange={(e) => {
                                             setSelectedItem(e.value);
                                             setFormData({
@@ -1101,6 +1102,7 @@ function EditTravelRequestForm() {
                                                 hod: ''
                                             });
                                             setSelectedItem2('');
+                                            handleBlur2(e.value);
                                         }}
                                         onSelect={(e) => {
                                             setSelectedItem(e.value);
@@ -1133,9 +1135,12 @@ function EditTravelRequestForm() {
                                         suggestions={dropDownSuggestions2}
                                         completeMethod={searchItem2}
                                         field="email"
-                                        onBlur={handleBlur3}
+                                        // onBlur={handleBlur3}
                                         className="w-100"
-                                        onChange={(e) => setSelectedItem2(e.value)}
+                                        onChange={(e) => {
+                                            setSelectedItem2(e.value)
+                                            handleBlur3(e.value)
+                                        }}
                                         onSelect={(e) => {
                                             setSelectedItem2(e.value);
                                             setFormData({
