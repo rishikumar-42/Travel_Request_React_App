@@ -30,7 +30,7 @@ input[type="text"]:disabled { cursor: no-drop;}
 input:checked+.slider {
     background-color: #114B7D;
 }
-.col-width{width:15%}
+.col-width{width:17%}
 .col-width2 {
     width: 10%;
 }
