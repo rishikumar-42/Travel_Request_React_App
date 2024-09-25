@@ -401,7 +401,7 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
             </div>
             <div className="detail-item">
               <span className="label">Currency:</span>
-              <span className="value">{item.travelCurrency === null ? 'N/A' : item.travelCurrency?.key || 'N/A'}</span>
+              <span className="value">{item.travelCurrency === null ? 'N/A' : item.travelCurrency?.name || 'N/A'}</span>
             </div>
             <div className="detail-item">
               <span className="label">Budget:</span>

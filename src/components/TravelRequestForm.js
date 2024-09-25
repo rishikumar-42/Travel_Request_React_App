@@ -114,7 +114,7 @@ function TravelRequestForm() {
     const [message, setMessage] = useState(false);
     const [showReturnFields, setShowReturnFields] = useState(false);
     const [saveItineraryFlag, setSaveItineraryFlag] = useState(true);
-    const [file, setFile] = useState(null);
+    // const [file, setFile] = useState(null);
     const [files, setFiles] = useState([]);
 
     const toast = useRef(null);
@@ -131,7 +131,8 @@ function TravelRequestForm() {
                 showMessage('error', 'Error', 'File size exceeds the maximum limit')
                 return;
             }
-            setFile(selectedFile);
+            // setFile(selectedFile);
+            onFileUpload(selectedFile);
         }
     };
     const handleRemovefiles = async (rowIndex) => {
@@ -148,22 +149,22 @@ function TravelRequestForm() {
         }
     };
 
-    const onFileUpload = async () => {
-        if (!file) {
+    const onFileUpload = async (selectedFile) => {
+        if (!selectedFile) {
             // setFileError('No file selected.');
             showMessage('error', 'Error', 'No file selected.')
             return;
         }
 
         try {
-            const fileResponse = await TravelRequestFormService.addDocuments(file);
+            const fileResponse = await TravelRequestFormService.addDocuments(selectedFile);
             const tempFile = {
                 fileId: fileResponse.id,
                 title: fileResponse.title,
                 contentUrl: fileResponse.contentUrl
             };
             setFiles([...files, tempFile]);
-            setFile(null)
+            // setFile(null)
             showMessage('success', 'Success', `Successfully uploaded ${fileResponse.title}`)
         } catch (error) {
             // setFileError(error.title)
@@ -427,6 +428,7 @@ function TravelRequestForm() {
             ...prevFormData, // Spread the existing formData
             flightTicketType: {
                 key: firstFlightType.key,
+                name: firstFlightType.name,
                 // name: firstFlightType.name // Update the trainTicketType properties
             }
         }));
@@ -531,6 +533,7 @@ function TravelRequestForm() {
             ...prevFormData, // Spread the existing formData
             trainTicketType: {
                 key: firstTrainType.key,
+                name: firstTrainType.name,
                 // name: firstTrainType.name // Update the trainTicketType properties
             }
         }));
@@ -959,6 +962,7 @@ function TravelRequestForm() {
                                         ...formData,
                                         travelCurrency: {
                                             key: e.value.key,
+                                            name: e.value.name,
                                         }
                                     });
                                 }} options={currencyList} optionLabel="name" required />
@@ -1369,6 +1373,7 @@ function TravelRequestForm() {
                                                                 ...formData,
                                                                 flightTicketType: {
                                                                     key: e.value.key,
+                                                                    name: e.value.name,
                                                                 }
                                                             });
                                                             console.log("radio : ", formData)
@@ -1390,6 +1395,7 @@ function TravelRequestForm() {
                                             ...formData, // Spread the existing formData
                                             flightTicketReason: {
                                                 key: e.value.key,
+                                                name: e.value.name,
                                                 // name: e.value.name // Update only the firstName property
                                             }
                                         });
@@ -1427,6 +1433,7 @@ function TravelRequestForm() {
                                                             ...formData, // Spread the existing formData
                                                             trainTicketType: {
                                                                 key: e.value.key,
+                                                                name: e.value.name,
                                                                 // name: e.value.name // Update only the firstName property
                                                             }
                                                         });
@@ -1454,7 +1461,7 @@ function TravelRequestForm() {
                                 // accept={accept}
                                 onChange={onFileChange}
                             />
-                            <button className="btn-sm px-2 py-2 bg-gradients border-0" style={{ color: 'white' }} type="button" onClick={onFileUpload}>Upload</button>
+                            {/* <button className="btn-sm px-2 py-2 bg-gradients border-0" style={{ color: 'white' }} type="button" onClick={onFileUpload}>Upload</button> */}
                             {/* {fileError && <p style={{ color: 'red' }}>{fileError}</p>} */}
                         </div>
 
