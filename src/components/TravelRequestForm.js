@@ -467,6 +467,12 @@ function TravelRequestForm() {
         setShowReturnFields(false);
     };
 
+    const setTimeZone = (dateString) => {
+        const date = new Date(dateString);
+        date.setHours(date.getHours() + 6);
+        return date;
+    }
+
     const [formData, setFormData] = useState({
         travelRequestId: "",
         issuer: "",
@@ -752,7 +758,7 @@ function TravelRequestForm() {
                                 <Calendar id="issuerDate" dateFormat="dd/mm/yy" value={formData.issuerDate}
                                     onChange={(e) => setFormData({
                                         ...formData,
-                                        issuerDate: e.value
+                                        issuerDate: setTimeZone(e.value)
                                     })} showIcon />
                                 <label htmlFor="issuerDate" className="small">Issue Date<span className="text-danger px-1">*</span></label>
                             </FloatLabel>
@@ -930,7 +936,7 @@ function TravelRequestForm() {
                                     onChange={(e) => {
                                         setFormData({
                                             ...formData,
-                                            travelDepartureDate: e.value,
+                                            travelDepartureDate: setTimeZone(e.value),
                                             travelEstimatedDuration: null,
                                             travelArrivalDate: null
                                         })
@@ -943,9 +949,9 @@ function TravelRequestForm() {
                                     onChange={(e) => {
                                         setFormData({
                                             ...formData,
-                                            travelArrivalDate: e.value,
+                                            travelArrivalDate: setTimeZone(e.value),
                                         })
-                                        calculateEstimatedDuration(formData.travelDepartureDate, e.value)
+                                        calculateEstimatedDuration(formData.travelDepartureDate, setTimeZone(e.value))
                                     }}
                                     showIcon />
                                 <label htmlFor="returnDate" className="mr-2 small">Return Date<span className="text-danger px-1">*</span></label>
@@ -1211,7 +1217,7 @@ function TravelRequestForm() {
                                             <Calendar id="on" dateFormat="dd/mm/yy" value={formData.carRentalOn}
                                                 onChange={(e) => setFormData({
                                                     ...formData,
-                                                    carRentalOn: e.value,
+                                                    carRentalOn: setTimeZone(e.value),
                                                     carRentalUntil: null
                                                 })} showIcon required />
                                             <label for="on">On:<span className="text-danger px-1">*</span></label>
@@ -1232,7 +1238,7 @@ function TravelRequestForm() {
                                             <Calendar id="until" minDate={formData.carRentalOn} dateFormat="dd/mm/yy" value={formData.carRentalUntil}
                                                 onChange={(e) => setFormData({
                                                     ...formData,
-                                                    carRentalUntil: e.value
+                                                    carRentalUntil: setTimeZone(e.value)
                                                 })} showIcon required />
                                             <label for="until">Until:<span className="text-danger px-1">*</span></label>
                                         </FloatLabel>
@@ -1254,7 +1260,7 @@ function TravelRequestForm() {
                                             <Calendar id="birthDate" dateFormat="dd/mm/yy" value={formData.carRentalBirthDate}
                                                 onChange={(e) => setFormData({
                                                     ...formData,
-                                                    carRentalBirthDate: e.value
+                                                    carRentalBirthDate: setTimeZone(e.value)
                                                 })} showIcon required />
                                             <label for="birthDate">Birth Date<span className="text-danger px-1">*</span></label>
                                         </FloatLabel>
