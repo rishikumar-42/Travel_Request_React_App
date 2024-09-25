@@ -1600,12 +1600,12 @@ function EditTravelRequestForm() {
                         </div>
 
                         {attachments.length > 0 &&
-                            <DataTable value={attachments} showGridlines tableStyle={{ minWidth: '50rem' }}>
-                                <Column sortable field="title" header="Title" headerClassName="custom-header" body={(rowData) => OnwardJourneyLink(rowData)} />
+                            <DataTable  className="attachmentTable" value={attachments} showGridlines tableStyle={{ minWidth: '50rem' }}>
+                                <Column className="attachmentTitle" sortable field="title" header="Title" headerClassName="custom-header" body={(rowData) => OnwardJourneyLink(rowData)} />
                                 <Column header="Actions" headerClassName="custom-header"
                                     body={(rowData, { rowIndex }) => (
                                         <div style={{ display: 'flex', justifyContent: 'left', alignItems: 'left' }}>
-                                            <Button severity="danger" type="button" icon="pi pi-trash"
+                                            <Button severity="danger" type="button" icon="pi pi-times"
                                                 onClick={() => handleRemovefiles(rowIndex)} />
                                         </div>
                                     )}
@@ -1754,7 +1754,7 @@ function EditTravelRequestForm() {
                                         body={(rowData, { rowIndex }) => (
                                             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                                                 <Button icon="pi pi-pencil" style={{ marginRight: '0.5rem' }} type="button" onClick={() => handleEditItinerary(rowIndex)} />
-                                                <Button severity="danger" icon="pi pi-trash" type="button" onClick={() => handleRemoveItinerary(rowIndex)} />
+                                                <Button severity="danger" icon="pi pi-times" type="button" onClick={() => handleRemoveItinerary(rowIndex)} />
                                             </div>
                                         )}
                                     />
