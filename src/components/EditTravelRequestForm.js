@@ -117,7 +117,8 @@ function EditTravelRequestForm() {
     const [selectedEmployee, setSelectedEmployee] = useState(item.email);
     // const [open, setOpen] = useState(false);
     // const [message, setMessage] = useState(false);
-    const [showReturnFields, setShowReturnFields] = useState(false);
+    const [showReturnFields, setShowReturnFields] = useState(newItinerary.returnJourney !== '');
+    console.log("newItinerary.returnJourney",newItinerary.returnJourney );
     const [saveItineraryFlag, setSaveItineraryFlag] = useState(true);
     const [file, setFile] = useState(null);
 
@@ -409,14 +410,47 @@ function EditTravelRequestForm() {
     }
 
 
+    // const handleInputChange = (name, e) => {
+    //     const { value } = e.target;
+    //     console.log(name, " : ", value);
+    //     setNewItinerary({
+    //         ...newItinerary,
+    //         [name]: value
+    //     });
+    // };
+
     const handleInputChange = (name, e) => {
         const { value } = e.target;
         console.log(name, " : ", value);
-        setNewItinerary({
-            ...newItinerary,
-            [name]: value
-        });
+    
+        if (name === 'onwardPreferredTime') {
+            // Find the selected option based on the name
+            const selectedOption = preferredTimeList.find(option => option.name === value);
+            if (selectedOption) {
+                setNewItinerary({
+                    ...newItinerary,
+                    [name]: selectedOption // Set the entire selected object
+                });
+            }
+        } 
+        else if (name === 'returnPreferredTime') {
+            // Find the selected option based on the name
+            const selectedOption = preferredTimeList.find(option => option.name === value);
+            if (selectedOption) {
+                setNewItinerary({
+                    ...newItinerary,
+                    [name]: selectedOption // Set the entire selected object
+                });
+            }
+        } 
+        else {
+            setNewItinerary({
+                ...newItinerary,
+                [name]: value
+            });
+        }
     };
+    
 
     const handleHotelToggleChange = (event) => {
         setShowNights(event.target.checked);
@@ -1610,8 +1644,8 @@ function EditTravelRequestForm() {
                                         <div className="calendar-item">
                                             <FloatLabel>
                                                 <Dropdown id="onwardPreferredTime" className="onwardPreferredTime"
-                                                    value={newItinerary.onwardPreferredTime}
-                                                    onChange={e => handleInputChange('onwardPreferredTime', e)} options={preferredTimeList} optionLabel="name"  />
+                                                    value={newItinerary.onwardPreferredTime.name}
+                                                    onChange={e => handleInputChange('onwardPreferredTime', e)} options={preferredTimeList} optionLabel="name" optionValue="name" />
                                                 <label htmlFor="onwardPreferredTime">Preferred Time</label>
                                             </FloatLabel>
                                         </div>
@@ -1654,8 +1688,8 @@ function EditTravelRequestForm() {
                                                 <div className="returnpreferredTime">
                                                     <FloatLabel>
                                                         <Dropdown id="returnpreferredTime" className="onwardPreferredTime"
-                                                            value={newItinerary.returnPreferredTime}
-                                                            onChange={e => handleInputChange('returnPreferredTime', e)} options={preferredTimeList} optionLabel="name" />
+                                                            value={newItinerary.returnPreferredTime?.name}
+                                                            onChange={e => handleInputChange('returnPreferredTime', e)} options={preferredTimeList} optionLabel="name" optionValue="name"/>
                                                         <label htmlFor="returnpreferredTime">Preferred Time</label>
                                                     </FloatLabel>
                                                 </div>
@@ -1722,7 +1756,7 @@ function EditTravelRequestForm() {
                                     />
                                 </DataTable>
 
-                                {showItinerary && (
+                                {/* {showItinerary && (
                                     <div>
                                         <InputText value={newItinerary.onwardJourney} onChange={(e) => handleFieldChange(e, 'onwardJourney')} placeholder="Onward Journey" />
                                         <Calendar value={newItinerary.onwardDepartureDate} onChange={(e) => setNewItinerary({ ...newItinerary, onwardDepartureDate: e.value })} placeholder="Departure Date" />
@@ -1736,7 +1770,7 @@ function EditTravelRequestForm() {
                                         <Button label="Save" onClick={handleSaveItinerary} />
                                         <Button label="Cancel" onClick={() => setShowItinerary(false)} />
                                     </div>
-                                )}
+                                )} */}
                             </div>
                         </div>
                     )}
