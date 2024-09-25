@@ -117,7 +117,7 @@ function EditTravelRequestForm() {
     const [selectedEmployee, setSelectedEmployee] = useState(item.email);
     // const [open, setOpen] = useState(false);
     // const [message, setMessage] = useState(false);
-    const [showReturnFields, setShowReturnFields] = useState(newItinerary.returnJourney !== '');
+    const [showReturnFields, setShowReturnFields] = useState(false);
     console.log("newItinerary.returnJourney",newItinerary.returnJourney );
     const [saveItineraryFlag, setSaveItineraryFlag] = useState(true);
     // const [file, setFile] = useState(null);
