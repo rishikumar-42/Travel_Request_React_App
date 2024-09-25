@@ -118,7 +118,7 @@ function EditTravelRequestForm() {
     // const [open, setOpen] = useState(false);
     // const [message, setMessage] = useState(false);
     const [showReturnFields, setShowReturnFields] = useState(false);
-    console.log("newItinerary.returnJourney",newItinerary.returnJourney );
+    console.log("newItinerary.returnJourney", newItinerary.returnJourney);
     const [saveItineraryFlag, setSaveItineraryFlag] = useState(true);
     // const [file, setFile] = useState(null);
 
@@ -202,8 +202,12 @@ function EditTravelRequestForm() {
     // const [selectedPhoneCode, setSelectedPhoneCode] = useState(null);
     const handleEditItinerary = (index) => {
         const itineraryToEdit = { ...itineraries[index] }; // Create a copy to avoid direct mutation
-        setNewItinerary(itineraryToEdit);
-        console.log("itineraryToEdit",itineraryToEdit)
+        setNewItinerary({
+            ...itineraryToEdit,
+            onwardDepartureDate: itineraryToEdit.onwardDepartureDate ? new Date(itineraryToEdit.onwardDepartureDate) : null,
+            returnArrivalDate: itineraryToEdit.returnArrivalDate ? new Date(itineraryToEdit.returnArrivalDate) : null,
+        });
+        console.log("itineraryToEdit", itineraryToEdit)
         setEditingItinerary(index); // Store the index, not the itinerary itself
         setShowReturnFields(itineraryToEdit.returnJourney !== '');
         setShowItinerary(true);
@@ -424,7 +428,7 @@ function EditTravelRequestForm() {
     const handleInputChange = (name, e) => {
         const { value } = e.target;
         console.log(name, " : ", value);
-    
+
         if (name === 'onwardPreferredTime') {
             // Find the selected option based on the name
             const selectedOption = preferredTimeList.find(option => option.name === value);
@@ -434,7 +438,7 @@ function EditTravelRequestForm() {
                     [name]: selectedOption // Set the entire selected object
                 });
             }
-        } 
+        }
         else if (name === 'returnPreferredTime') {
             // Find the selected option based on the name
             const selectedOption = preferredTimeList.find(option => option.name === value);
@@ -444,7 +448,7 @@ function EditTravelRequestForm() {
                     [name]: selectedOption // Set the entire selected object
                 });
             }
-        } 
+        }
         else {
             setNewItinerary({
                 ...newItinerary,
@@ -452,7 +456,7 @@ function EditTravelRequestForm() {
             });
         }
     };
-    
+
 
     const handleHotelToggleChange = (event) => {
         setShowNights(event.target.checked);
@@ -463,7 +467,7 @@ function EditTravelRequestForm() {
                 hotelCheckIn: null,
                 hotelCheckOut: null,
                 hotelLocation: '',
-                hotelNote:''
+                hotelNote: ''
             }))
         }
     };
@@ -480,7 +484,7 @@ function EditTravelRequestForm() {
                 carRentalBirthDate: null,
                 carDrivingLicense: "",
                 carRentalCategory: "",
-                carRentalNote:""
+                carRentalNote: ""
             }))
         }
     };
@@ -492,7 +496,7 @@ function EditTravelRequestForm() {
                 ...prevFormData, // Spread the existing formData
                 personalCarDrivingLicenseNumber: "",
                 personalCarRegistrationNumber: "",
-                personalCarNote:"",
+                personalCarNote: "",
             }))
         }
     };
@@ -589,7 +593,7 @@ function EditTravelRequestForm() {
         hotelLocation: item.hotelLocation || "",
         hotelNumberOfNights: item.hotelNumberOfNights || null,
         hotelCheckIn: item.hotelCheckIn !== null ? new Date(item.hotelCheckIn) : null,
-        hotelCheckOut:item.hotelCheckOut !== null ? new Date(item.hotelCheckOut) : null,
+        hotelCheckOut: item.hotelCheckOut !== null ? new Date(item.hotelCheckOut) : null,
         hotelNote: item.hotelNote || "",
         manager: item.manager || '',
         hod: item.hod || '',
@@ -1590,7 +1594,7 @@ function EditTravelRequestForm() {
                         <Button onClick={() => {
                             setShowItinerary(!showItinerary);
                         }}
-                            className="btn-sm px-2 py-2 bg-gradients border-0" type="button" label="Add Itinerary"/>
+                            className="btn-sm px-2 py-2 bg-gradients border-0" type="button" label="Add Itinerary" />
                     </div>
 
                     {showItinerary && (
@@ -1613,7 +1617,7 @@ function EditTravelRequestForm() {
                                         </div>
                                         <div className="calendar-item col-width">
                                             <FloatLabel >
-                                                <Calendar id="onwardDepartureDate" dateFormat="dd/mm/yy" value={new Date(newItinerary.onwardDepartureDate)} onChange={(e) => handleInputChange('onwardDepartureDate', e)} showIcon />
+                                                <Calendar id="onwardDepartureDate" dateFormat="dd/mm/yy" value={newItinerary.onwardDepartureDate} onChange={(e) => handleInputChange('onwardDepartureDate', e)} showIcon />
                                                 <label htmlFor="onwardDepartureDate">Departure Date</label>
                                             </FloatLabel>
                                         </div>
@@ -1657,7 +1661,7 @@ function EditTravelRequestForm() {
                                                 </div>
                                                 <div className="col-width">
                                                     <FloatLabel>
-                                                        <Calendar id="returnArrivalDate" dateFormat="dd/mm/yy" value={new Date(newItinerary.returnArrivalDate)} onChange={(e) => handleInputChange('returnArrivalDate', e)} showIcon />
+                                                        <Calendar id="returnArrivalDate" dateFormat="dd/mm/yy" value={newItinerary.returnArrivalDate} onChange={(e) => handleInputChange('returnArrivalDate', e)} showIcon />
                                                         <label htmlFor="returnArrivalDate">Arrival Date</label>
                                                     </FloatLabel>
                                                 </div>
@@ -1665,7 +1669,7 @@ function EditTravelRequestForm() {
                                                     <FloatLabel>
                                                         <Dropdown id="returnpreferredTime" className="onwardPreferredTime"
                                                             value={newItinerary.returnPreferredTime?.name}
-                                                            onChange={e => handleInputChange('returnPreferredTime', e)} options={preferredTimeList} optionLabel="name" optionValue="name"/>
+                                                            onChange={e => handleInputChange('returnPreferredTime', e)} options={preferredTimeList} optionLabel="name" optionValue="name" />
                                                         <label htmlFor="returnpreferredTime">Preferred Time</label>
                                                     </FloatLabel>
                                                 </div>
@@ -1725,8 +1729,8 @@ function EditTravelRequestForm() {
                                     <Column header="Actions" headerClassName="custom-header"
                                         body={(rowData, { rowIndex }) => (
                                             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                                                <Button icon="pi pi-pencil" style={{ marginRight: '0.5rem', backgroundColor: 'white', color: 'black', border: 'none' }} type="button" onClick={() => handleEditItinerary(rowIndex)}  />
-                                                <Button severity="danger" icon="pi pi-trash" type="button" onClick={() => handleRemoveItinerary(rowIndex)} style={{ backgroundColor: 'white', color: 'black', border: 'none' }}/>
+                                                <Button icon="pi pi-pencil" style={{ marginRight: '0.5rem', backgroundColor: 'white', color: 'black', border: 'none' }} type="button" onClick={() => handleEditItinerary(rowIndex)} />
+                                                <Button severity="danger" icon="pi pi-trash" type="button" onClick={() => handleRemoveItinerary(rowIndex)} style={{ backgroundColor: 'white', color: 'black', border: 'none' }} />
                                             </div>
                                         )}
                                     />
@@ -1752,7 +1756,7 @@ function EditTravelRequestForm() {
                     )}
 
 
-<hr className="separator " />
+                    <hr className="separator " />
                     <div className="px-3 pt-3">
                         <div className="py-1 mb-1">
                             <h6 className="text-left">Attachments</h6>
@@ -1768,13 +1772,13 @@ function EditTravelRequestForm() {
                         </div>
 
                         {attachments.length > 0 &&
-                            <DataTable  className="attachmentTable" value={attachments} showGridlines tableStyle={{ minWidth: '50rem' }}>
+                            <DataTable className="attachmentTable" value={attachments} showGridlines tableStyle={{ minWidth: '50rem' }}>
                                 <Column className="attachmentTitle" sortable field="title" header="Title" headerClassName="custom-header" body={(rowData) => OnwardJourneyLink(rowData)} />
                                 <Column header="Actions" headerClassName="custom-header"
                                     body={(rowData, { rowIndex }) => (
                                         <div style={{ display: 'flex', justifyContent: 'left', alignItems: 'left' }}>
                                             <Button severity="danger" type="button" icon="pi pi-times"
-                                                onClick={() => handleRemovefiles(rowIndex)}  style={{ backgroundColor: 'white', color: 'black', border: 'none' }} />
+                                                onClick={() => handleRemovefiles(rowIndex)} style={{ backgroundColor: 'white', color: 'black', border: 'none' }} />
                                         </div>
                                     )}
                                 />
@@ -1783,7 +1787,7 @@ function EditTravelRequestForm() {
 
                     {/* <button type="submit">Submit</button> */}
                     <div style={{ display: 'flex', justifyContent: 'center' }}>
-                    <Button type="button" className="back-button-draft mb-3" icon="pi pi-angle-double-left" label="Back" rounded onClick={handleBack} />
+                        <Button type="button" className="back-button-draft mb-3" icon="pi pi-angle-double-left" label="Back" rounded onClick={handleBack} />
                         <Button className="mb-3" style={{
                             border: 'none',
                             borderRadius: '4px',
