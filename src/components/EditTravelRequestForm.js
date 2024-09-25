@@ -1585,41 +1585,12 @@ function EditTravelRequestForm() {
                         )}
                     </div>
 
-                    <hr className="separator " />
-                    <div className="px-3 pt-3">
-                        <div className="py-1 mb-1">
-                            <h6 className="text-left">Attachments</h6>
-                        </div>
-                        <div className="d-flex">
-                            <input
-                                type="file"
-                                // accept={accept}
-                                onChange={onFileChange}
-                            />
-                            {/* <button className="btn-sm px-2 py-2 bg-gradients border-0" style={{ color: 'white' }} type="button" onClick={onFileUpload}>Upload</button> */}
-                            {/* {fileError && <p style={{ color: 'red' }}>{fileError}</p>} */}
-                        </div>
-
-                        {attachments.length > 0 &&
-                            <DataTable  className="attachmentTable" value={attachments} showGridlines tableStyle={{ minWidth: '50rem' }}>
-                                <Column className="attachmentTitle" sortable field="title" header="Title" headerClassName="custom-header" body={(rowData) => OnwardJourneyLink(rowData)} />
-                                <Column header="Actions" headerClassName="custom-header"
-                                    body={(rowData, { rowIndex }) => (
-                                        <div style={{ display: 'flex', justifyContent: 'left', alignItems: 'left' }}>
-                                            <Button severity="danger" type="button" icon="pi pi-times"
-                                                onClick={() => handleRemovefiles(rowIndex)} />
-                                        </div>
-                                    )}
-                                />
-                            </DataTable>}
-                    </div>
-
                     <hr className="separator mb-2" />
                     <div className="addbutton mx-2">
                         <Button onClick={() => {
                             setShowItinerary(!showItinerary);
                         }}
-                            className="btn-sm px-2 py-2 bg-gradients border-0" type="button" label="Add Itinerary" badge={itineraries.length} />
+                            className="btn-sm px-2 py-2 bg-gradients border-0" type="button" label="Add Itinerary"/>
                     </div>
 
                     {showItinerary && (
@@ -1754,8 +1725,8 @@ function EditTravelRequestForm() {
                                     <Column header="Actions" headerClassName="custom-header"
                                         body={(rowData, { rowIndex }) => (
                                             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                                                <Button icon="pi pi-pencil" style={{ marginRight: '0.5rem' }} type="button" onClick={() => handleEditItinerary(rowIndex)} />
-                                                <Button severity="danger" icon="pi pi-times" type="button" onClick={() => handleRemoveItinerary(rowIndex)} />
+                                                <Button icon="pi pi-pencil" style={{ marginRight: '0.5rem', backgroundColor: 'white', color: 'black', border: 'none' }} type="button" onClick={() => handleEditItinerary(rowIndex)}  />
+                                                <Button severity="danger" icon="pi pi-times" type="button" onClick={() => handleRemoveItinerary(rowIndex)} style={{ backgroundColor: 'white', color: 'black', border: 'none' }}/>
                                             </div>
                                         )}
                                     />
@@ -1779,8 +1750,40 @@ function EditTravelRequestForm() {
                             </div>
                         </div>
                     )}
+
+
+<hr className="separator " />
+                    <div className="px-3 pt-3">
+                        <div className="py-1 mb-1">
+                            <h6 className="text-left">Attachments</h6>
+                        </div>
+                        <div className="d-flex">
+                            <input
+                                type="file"
+                                // accept={accept}
+                                onChange={onFileChange}
+                            />
+                            {/* <button className="btn-sm px-2 py-2 bg-gradients border-0" style={{ color: 'white' }} type="button" onClick={onFileUpload}>Upload</button> */}
+                            {/* {fileError && <p style={{ color: 'red' }}>{fileError}</p>} */}
+                        </div>
+
+                        {attachments.length > 0 &&
+                            <DataTable  className="attachmentTable" value={attachments} showGridlines tableStyle={{ minWidth: '50rem' }}>
+                                <Column className="attachmentTitle" sortable field="title" header="Title" headerClassName="custom-header" body={(rowData) => OnwardJourneyLink(rowData)} />
+                                <Column header="Actions" headerClassName="custom-header"
+                                    body={(rowData, { rowIndex }) => (
+                                        <div style={{ display: 'flex', justifyContent: 'left', alignItems: 'left' }}>
+                                            <Button severity="danger" type="button" icon="pi pi-times"
+                                                onClick={() => handleRemovefiles(rowIndex)}  style={{ backgroundColor: 'white', color: 'black', border: 'none' }} />
+                                        </div>
+                                    )}
+                                />
+                            </DataTable>}
+                    </div>
+
                     {/* <button type="submit">Submit</button> */}
                     <div style={{ display: 'flex', justifyContent: 'center' }}>
+                    <Button type="button" className="back-button-draft mb-3" icon="pi pi-angle-double-left" label="Back" rounded onClick={handleBack} />
                         <Button className="mb-3" style={{
                             border: 'none',
                             borderRadius: '4px',
@@ -1794,7 +1797,6 @@ function EditTravelRequestForm() {
                             type="submit"
                             label="Update"
                         />
-                        <Button type="button" className="back-button-draft mb-3" icon="pi pi-angle-double-left" label="Back" rounded onClick={handleBack} />
 
                         {/* <Button className="mb-3" style={{
                             border: 'none', // Remove border

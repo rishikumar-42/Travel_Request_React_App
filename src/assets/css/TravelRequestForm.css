@@ -579,6 +579,7 @@ span.close {
     background-color: #51829B !important;
     /* Replace with your desired color */
     color: #ffff;
+    margin-left:970px !important;
 }
 
 
@@ -656,7 +657,7 @@ button.p-datepicker-trigger.p-button.p-component.p-button-icon-only {
     display: none;
   }
   td.attachmentTitle {
-    width: 400px;
+    width: 0px;
   }
   .attachmentTable tbody, td, tfoot, th, thead, tr {
     margin: 0px !important;
