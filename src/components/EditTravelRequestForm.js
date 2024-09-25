@@ -205,6 +205,7 @@ function EditTravelRequestForm() {
         setNewItinerary(itineraryToEdit);
         console.log("itineraryToEdit",itineraryToEdit)
         setEditingItinerary(index); // Store the index, not the itinerary itself
+        setShowReturnFields(itineraryToEdit.returnJourney !== '');
         setShowItinerary(true);
     };
 
