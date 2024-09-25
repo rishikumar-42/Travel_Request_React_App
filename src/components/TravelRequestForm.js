@@ -184,6 +184,7 @@ function TravelRequestForm() {
         const itineraryToEdit = { ...itineraries[index] }; // Create a copy to avoid direct mutation
         setNewItinerary(itineraryToEdit);
         setEditingItinerary(index); // Store the index, not the itinerary itself
+        setShowReturnFields(itineraryToEdit.returnJourney !== '');
         setShowItinerary(true);
     };
 
@@ -1450,34 +1451,6 @@ function TravelRequestForm() {
                         )}
                     </div>
 
-                    <hr className="separator " />
-                    <div className="px-3 pt-3">
-                        <div className="py-1 mb-1">
-                            <h6 className="text-left">Attachments</h6>
-                        </div>
-                        <div className="d-flex">
-                            <input
-                                type="file"
-                                // accept={accept}
-                                onChange={onFileChange}
-                            />
-                            {/* <button className="btn-sm px-2 py-2 bg-gradients border-0" style={{ color: 'white' }} type="button" onClick={onFileUpload}>Upload</button> */}
-                            {/* {fileError && <p style={{ color: 'red' }}>{fileError}</p>} */}
-                        </div>
-
-                        {files.length > 0 &&
-                            <DataTable className="attachmentTable" value={files} showGridlines tableStyle={{ minWidth: '50rem' }}>
-                                <Column className="attachmentTitle" sortable field="title" header="Title" headerClassName="custom-header" body={(rowData) => OnwardJourneyLink(rowData)} />
-                                <Column header="Actions" headerClassName="custom-header"
-                                    body={(rowData, { rowIndex }) => (
-                                        <div style={{ display: 'flex', justifyContent: 'left', alignItems: 'left' }}>
-                                            <Button severity="danger" type="button" icon="pi pi-times"
-                                                onClick={() => handleRemovefiles(rowIndex)} />
-                                        </div>
-                                    )}
-                                />
-                            </DataTable>}
-                    </div>
 
                     <hr className="separator mb-2" />
                     <div className="addbutton mx-2">
@@ -1487,7 +1460,7 @@ function TravelRequestForm() {
                         <Button onClick={() => {
                             setShowItinerary(!showItinerary);
                         }}
-                            className="btn-sm px-2 py-2 bg-gradients border-0" type="button" label="Add Itinerary" badge={itineraries.length} />
+                            className="btn-sm px-2 py-2 bg-gradients border-0" type="button" label="Add Itinerary" />
                     </div>
 
                     {showItinerary && (
@@ -1606,18 +1579,47 @@ function TravelRequestForm() {
                                 <Column header="Actions" headerClassName="custom-header"
                                     body={(rowData, { rowIndex }) => (
                                         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                                            <Button icon="pi pi-pencil" type="button" style={{ marginRight: '0.5rem' }}
+                                            <Button icon="pi pi-pencil" type="button" style={{ marginRight: '0.5rem', backgroundColor: 'white', color: 'black', border: 'none' }}
                                                 onClick={() => handleEditItinerary(rowIndex)} />
-                                            <Button severity="danger" type="button" icon="pi pi-times"
-                                                onClick={() => handleRemoveItinerary(rowIndex)} />
+                                            <Button severity="danger" type="button" icon="pi pi-trash"
+                                                onClick={() => handleRemoveItinerary(rowIndex)} style={{ backgroundColor: 'white', color: 'black', border: 'none' }}/>
                                         </div>
                                     )}
                                 />
                             </DataTable>
                         </div>
                     )}
+
+                    <div className="px-3 pt-3">
+                        <div className="py-1 mb-1">
+                            <h6 className="text-left">Attachments</h6>
+                        </div>
+                        <div className="d-flex">
+                            <input
+                                type="file"
+                                // accept={accept}
+                                onChange={onFileChange}
+                            />
+                            {/* <button className="btn-sm px-2 py-2 bg-gradients border-0" style={{ color: 'white' }} type="button" onClick={onFileUpload}>Upload</button> */}
+                            {/* {fileError && <p style={{ color: 'red' }}>{fileError}</p>} */}
+                        </div>
+
+                        {files.length > 0 &&
+                            <DataTable className="attachmentTable" value={files} showGridlines tableStyle={{ minWidth: '50rem' }}>
+                                <Column className="attachmentTitle" sortable field="title" header="Title" headerClassName="custom-header" body={(rowData) => OnwardJourneyLink(rowData)} />
+                                <Column header="Actions" headerClassName="custom-header"
+                                    body={(rowData, { rowIndex }) => (
+                                        <div style={{ display: 'flex', justifyContent: 'left', alignItems: 'left' }}>
+                                            <Button severity="danger" type="button" icon="pi pi-times"
+                                                onClick={() => handleRemovefiles(rowIndex)} style={{ backgroundColor: 'white', color: 'black', border: 'none' }} />
+                                        </div>
+                                    )}
+                                />
+                            </DataTable>}
+                    </div>
                     {/* <button type="submit">Submit</button> */}
                     <div className="gap-5" style={{ display: 'flex', justifyContent: 'center' }}>
+                    <Button type="button" className="back-button-travel mb-3" icon="pi pi-angle-double-left" label="Back" rounded onClick={handleBack} />
                         <Button className="mb-3"
                             onClick={() => setFormData(prevFormData => ({
                                 ...prevFormData, // Spread the existing formData
@@ -1629,7 +1631,6 @@ function TravelRequestForm() {
                             disabled={isEmailValidSubmit}
                         />
                         <Button className="mb-3" type="button" icon="pi pi-angle-double-right" label="Next" rounded onClick={() => setPreviewVisible(true)} />
-                        <Button type="button" className="back-button-travel mb-3" icon="pi pi-angle-double-left" label="Back" rounded onClick={handleBack} />
                         <Button
                             type="submit"
                             ref={submitButtonRef} // Set the ref

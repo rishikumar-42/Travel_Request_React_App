@@ -1726,7 +1726,7 @@ function EditTravelRequestForm() {
                                         body={(rowData, { rowIndex }) => (
                                             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                                                 <Button icon="pi pi-pencil" style={{ marginRight: '0.5rem', backgroundColor: 'white', color: 'black', border: 'none' }} type="button" onClick={() => handleEditItinerary(rowIndex)}  />
-                                                <Button severity="danger" icon="pi pi-times" type="button" onClick={() => handleRemoveItinerary(rowIndex)} style={{ backgroundColor: 'white', color: 'black', border: 'none' }}/>
+                                                <Button severity="danger" icon="pi pi-trash" type="button" onClick={() => handleRemoveItinerary(rowIndex)} style={{ backgroundColor: 'white', color: 'black', border: 'none' }}/>
                                             </div>
                                         )}
                                     />

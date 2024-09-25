@@ -658,6 +658,7 @@ button.p-datepicker-trigger.p-button.p-component.p-button-icon-only {
   }
   td.attachmentTitle {
     width: 0px;
+    text-wrap: nowrap;
   }
   .attachmentTable tbody, td, tfoot, th, thead, tr {
     margin: 0px !important;
