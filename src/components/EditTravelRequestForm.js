@@ -33,6 +33,7 @@ function EditTravelRequestForm() {
     const location = useLocation();
     const { item, travelInfo, attachmentInfo } = location.state || {};
     const [isEmailValidSubmit, setIsEmailValidSubmit] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     // console.log("Issuer Date",item.issuerDate);
     // console.log("carRental",item.carRentalCategory);
@@ -729,6 +730,7 @@ function EditTravelRequestForm() {
         console.log('Submitting formData:', formData);
         const formattedData = formatFormData(formData);
         e.preventDefault();
+        setLoading(true); 
         console.log("Form submission started");
         const uniqId = await createUniqueId();
         console.log("unique Id : ", uniqId);
@@ -748,13 +750,16 @@ function EditTravelRequestForm() {
             }
             setTimeout(() => {
                 handleBack();
-            }, 2000);
+            }, 1000);
             // setOpen(true);
         } catch (error) {
             console.error("Error submitting form", error);
             // setMessage(`Error response : ${error.response.data.title}`);
             showMessage('error', 'Error', `Error response : ${error.response.data.title}`)
             // setOpen(true);
+        }
+        finally {
+            setLoading(false);  
         }
     };
 
@@ -1803,9 +1808,12 @@ function EditTravelRequestForm() {
                             fontWeight: 'bold',
                             marginLeft: '10px'
                         }}
-                            disabled={isEmailValidSubmit}
+                            // disabled={isEmailValidSubmit}
+                            // type="submit"
+                            // label="Update"
+                            disabled={loading || isEmailValidSubmit}
                             type="submit"
-                            label="Update"
+                            label={loading ? "Loading..." : "Update"}
                         />
 
                         {/* <Button className="mb-3" style={{
