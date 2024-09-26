@@ -1628,7 +1628,7 @@ function EditTravelRequestForm() {
                                         </div>
                                         <div className="calendar-item col-width">
                                             <FloatLabel >
-                                                <Calendar id="onwardDepartureDate" dateFormat="dd/mm/yy" value={newItinerary.onwardDepartureDate} onChange={(e) => handleInputChange('onwardDepartureDate', e)} showIcon />
+                                                <Calendar id="onwardDepartureDate" dateFormat="dd/mm/yy" value={newItinerary.onwardDepartureDate} onChange={(e) => handleInputChange('onwardDepartureDate', e)} showIcon appendTo="self"  />
                                                 <label htmlFor="onwardDepartureDate">Departure Date</label>
                                             </FloatLabel>
                                         </div>
@@ -1672,7 +1672,7 @@ function EditTravelRequestForm() {
                                                 </div>
                                                 <div className="col-width">
                                                     <FloatLabel>
-                                                        <Calendar id="returnArrivalDate" dateFormat="dd/mm/yy" value={newItinerary.returnArrivalDate} onChange={(e) => handleInputChange('returnArrivalDate', e)} showIcon />
+                                                        <Calendar  id="returnArrivalDate" dateFormat="dd/mm/yy" value={newItinerary.returnArrivalDate} onChange={(e) => handleInputChange('returnArrivalDate', e)} showIcon appendTo="self" />
                                                         <label htmlFor="returnArrivalDate">Arrival Date</label>
                                                     </FloatLabel>
                                                 </div>
