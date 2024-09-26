@@ -67,6 +67,7 @@ function TravelRequestForm() {
     });
     const [editingItinerary, setEditingItinerary] = useState(null);
     const submitButtonRef = useRef(null);
+    const [loading, setLoading] = useState(false);
 
     const navigate = useNavigate();
 
@@ -607,8 +608,9 @@ function TravelRequestForm() {
     // Handle form submission
     const handleFormSubmit = async (e) => {
         e.preventDefault();
-        setPreviewVisible(false)
+        setPreviewVisible(true)
         console.log("Form submission started");
+        setLoading(true); 
         const uniqId = await createUniqueId();
         console.log("unique Id : ", uniqId);
         setFormData({
@@ -632,6 +634,9 @@ function TravelRequestForm() {
             // setMessage(`Error response : ${error.response.data.title}`);
             showMessage('error', 'Error', `Error response : ${error.response.data.title}`)
             // setOpen(true);
+        }
+        finally {
+            setLoading(false);  
         }
     };
 
@@ -1652,13 +1657,16 @@ function TravelRequestForm() {
                                 <div className="gap-5 mt-3" style={{ display: 'flex', justifyContent: 'center' }} >
                                     <Button icon="pi pi-angle-double-left" label="Back" type="button" rounded onClick={() => setPreviewVisible(false)} />
                                     <Button
-                                        disabled={isEmailValidSubmit}
+                                        // disabled={isEmailValidSubmit}
                                         onClick={() => {
-                                            setPreviewVisible(false);
+                                            setPreviewVisible(true);
                                             submitButtonRef.current.click();
                                         }}
+                                        // type="submit"
+                                        // label="Submit"
+                                        disabled={loading || isEmailValidSubmit}
                                         type="submit"
-                                        label="Submit"
+                                        label={loading ? "Loading..." : "Submit"}
                                     />
                                 </div>
 
