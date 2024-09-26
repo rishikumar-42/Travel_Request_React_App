@@ -68,6 +68,7 @@ function TravelRequestForm() {
     const [editingItinerary, setEditingItinerary] = useState(null);
     const submitButtonRef = useRef(null);
     const [loading, setLoading] = useState(false);
+    const fileInputRef = useRef(null);
 
     const navigate = useNavigate();
 
@@ -167,9 +168,15 @@ function TravelRequestForm() {
             setFiles([...files, tempFile]);
             // setFile(null)
             showMessage('success', 'Success', `Successfully uploaded ${fileResponse.title}`)
+            if (fileInputRef.current) {
+                fileInputRef.current.value = null;
+            }
         } catch (error) {
             // setFileError(error.title)
             showMessage('error', 'Error', `Error response : ${error.response.data.title}`)
+            if (fileInputRef.current) {
+                fileInputRef.current.value = null;
+            }
 
         }
     };
@@ -1621,6 +1628,7 @@ function TravelRequestForm() {
                         <div className="d-flex">
                             <input
                                 type="file"
+                                ref={fileInputRef}
                                 // accept={accept}
                                 onChange={onFileChange}
                             />

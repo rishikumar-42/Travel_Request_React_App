@@ -34,6 +34,7 @@ function EditTravelRequestForm() {
     const { item, travelInfo, attachmentInfo } = location.state || {};
     const [isEmailValidSubmit, setIsEmailValidSubmit] = useState(false);
     const [loading, setLoading] = useState(false);
+    const fileInputRef = useRef(null);
 
     // console.log("Issuer Date",item.issuerDate);
     // console.log("carRental",item.carRentalCategory);
@@ -172,10 +173,15 @@ function EditTravelRequestForm() {
             };
             setAttachments([...attachments, tempFile]);
             showMessage('success', 'Success', `Successfully uploaded ${fileResponse.title}`)
+            if (fileInputRef.current) {
+                fileInputRef.current.value = null;
+            }
         } catch (error) {
             // setFileError(error.title)
             showMessage('error', 'Error', `Error response : ${error.response.data.title}`)
-
+            if (fileInputRef.current) {
+                fileInputRef.current.value = null;
+            }
         }
     };
 
@@ -1782,6 +1788,7 @@ function EditTravelRequestForm() {
                         <div className="d-flex">
                             <input
                                 type="file"
+                                ref={fileInputRef}
                                 // accept={accept}
                                 onChange={onFileChange}
                             />
