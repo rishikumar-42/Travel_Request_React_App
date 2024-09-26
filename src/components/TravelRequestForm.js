@@ -368,15 +368,16 @@ function TravelRequestForm() {
     const handleInputChange = (name, e) => {
         const { value } = e.target;
         console.log(name, " : ", value);
-        setNewItinerary({
-            ...newItinerary,
-            [name]: value,
-        });
-
-        if(name === 'onwardDepartureDate'){
+        if (name === 'onwardDepartureDate') {
             setNewItinerary({
                 ...newItinerary,
                 returnArrivalDate: null,
+                [name]: value,
+            });
+        } else {
+            setNewItinerary({
+                ...newItinerary,
+                [name]: value,
             });
         }
     };
@@ -617,7 +618,7 @@ function TravelRequestForm() {
         e.preventDefault();
         setPreviewVisible(true)
         console.log("Form submission started");
-        setLoading(true); 
+        setLoading(true);
         const uniqId = await createUniqueId();
         console.log("unique Id : ", uniqId);
         setFormData({
@@ -631,7 +632,7 @@ function TravelRequestForm() {
                 travelRequestId: uniqId,
                 itineraryRelation: formData.itineraryRelation.map(itinerary => ({
                     ...itinerary,
-                    onwardDepartureDate: itinerary.onwardDepartureDate ? setTimeZone(new Date(itinerary.onwardDepartureDate).toISOString() ): null,
+                    onwardDepartureDate: itinerary.onwardDepartureDate ? setTimeZone(new Date(itinerary.onwardDepartureDate).toISOString()) : null,
                     returnArrivalDate: itinerary.returnArrivalDate ? setTimeZone(new Date(itinerary.returnArrivalDate).toISOString()) : null,
                 }))
             });
@@ -648,7 +649,7 @@ function TravelRequestForm() {
             // setOpen(true);
         }
         finally {
-            setLoading(false);  
+            setLoading(false);
         }
     };
 
@@ -1605,7 +1606,7 @@ function TravelRequestForm() {
                                             <Button icon="pi pi-pencil" type="button" style={{ marginRight: '0.5rem', backgroundColor: 'white', color: 'black', border: 'none' }}
                                                 onClick={() => handleEditItinerary(rowIndex)} />
                                             <Button severity="danger" type="button" icon="pi pi-trash"
-                                                onClick={() => handleRemoveItinerary(rowIndex)} style={{ backgroundColor: 'white', color: 'black', border: 'none' }}/>
+                                                onClick={() => handleRemoveItinerary(rowIndex)} style={{ backgroundColor: 'white', color: 'black', border: 'none' }} />
                                         </div>
                                     )}
                                 />
@@ -1642,7 +1643,7 @@ function TravelRequestForm() {
                     </div>
                     {/* <button type="submit">Submit</button> */}
                     <div className="gap-5" style={{ display: 'flex', justifyContent: 'center' }}>
-                    <Button type="button" className="back-button-travel mb-3" icon="pi pi-angle-double-left" label="Back" rounded onClick={handleBack} />
+                        <Button type="button" className="back-button-travel mb-3" icon="pi pi-angle-double-left" label="Back" rounded onClick={handleBack} />
                         <Button className="mb-3"
                             onClick={() => setFormData(prevFormData => ({
                                 ...prevFormData, // Spread the existing formData
