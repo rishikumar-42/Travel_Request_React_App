@@ -430,7 +430,14 @@ function EditTravelRequestForm() {
         const { value } = e.target;
         console.log(name, " : ", value);
 
-        if (name === 'onwardPreferredTime') {
+        if(name === 'onwardDepartureDate'){
+            setNewItinerary({
+                ...newItinerary,
+                [name]: value,
+                returnArrivalDate: null,
+            });
+        }
+        else if (name === 'onwardPreferredTime') {
             // Find the selected option based on the name
             const selectedOption = preferredTimeList.find(option => option.name === value);
             if (selectedOption) {
@@ -1672,7 +1679,7 @@ function EditTravelRequestForm() {
                                                 </div>
                                                 <div className="col-width">
                                                     <FloatLabel>
-                                                        <Calendar  id="returnArrivalDate" dateFormat="dd/mm/yy" value={newItinerary.returnArrivalDate} onChange={(e) => handleInputChange('returnArrivalDate', e)} showIcon appendTo="self" />
+                                                        <Calendar  id="returnArrivalDate" minDate={newItinerary.onwardDepartureDate} dateFormat="dd/mm/yy" value={newItinerary.returnArrivalDate} onChange={(e) => handleInputChange('returnArrivalDate', e)} showIcon appendTo="self" />
                                                         <label htmlFor="returnArrivalDate">Arrival Date</label>
                                                     </FloatLabel>
                                                 </div>

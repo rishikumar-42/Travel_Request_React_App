@@ -370,8 +370,15 @@ function TravelRequestForm() {
         console.log(name, " : ", value);
         setNewItinerary({
             ...newItinerary,
-            [name]: value
+            [name]: value,
         });
+
+        if(name === 'onwardDepartureDate'){
+            setNewItinerary({
+                ...newItinerary,
+                returnArrivalDate: null,
+            });
+        }
     };
 
     const handleHotelToggleChange = (event) => {
@@ -621,7 +628,12 @@ function TravelRequestForm() {
         try {
             const response = await TravelRequestFormService.submitFormData({
                 ...formData,
-                travelRequestId: uniqId
+                travelRequestId: uniqId,
+                itineraryRelation: formData.itineraryRelation.map(itinerary => ({
+                    ...itinerary,
+                    onwardDepartureDate: itinerary.onwardDepartureDate ? setTimeZone(new Date(itinerary.onwardDepartureDate).toISOString() ): null,
+                    returnArrivalDate: itinerary.returnArrivalDate ? setTimeZone(new Date(itinerary.returnArrivalDate).toISOString()) : null,
+                }))
             });
             // setMessage(`Successfully created Id : ${response.data.travelRequestId}`);
             showMessage('success', 'Success', `Successfully created Id : ${response.data.travelRequestId}`)
@@ -1540,7 +1552,7 @@ function TravelRequestForm() {
                                                 </div>
                                                 <div className="col-width">
                                                     <FloatLabel>
-                                                        <Calendar id="returnArrivalDate" dateFormat="dd/mm/yy" value={newItinerary.returnArrivalDate} onChange={(e) => handleInputChange('returnArrivalDate', e)} showIcon appendTo="self" />
+                                                        <Calendar id="returnArrivalDate" minDate={newItinerary.onwardDepartureDate} dateFormat="dd/mm/yy" value={newItinerary.returnArrivalDate} onChange={(e) => handleInputChange('returnArrivalDate', e)} showIcon appendTo="self" />
                                                         <label htmlFor="returnArrivalDate">Arrival Date</label>
                                                     </FloatLabel>
                                                 </div>
