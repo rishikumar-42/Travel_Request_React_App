@@ -162,7 +162,9 @@ const Dashboard = () => {
       return item.approveStatus?.key === activeTab;
     })
     .filter(item => item.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                    item.lastName.toLowerCase().includes(searchTerm.toLowerCase()))
+                    item.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    item.travelRequestId.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    item.approveStatus?.name.toLowerCase().includes(searchTerm.toLowerCase()))
     // .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);

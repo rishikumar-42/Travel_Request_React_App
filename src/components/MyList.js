@@ -273,7 +273,9 @@ const MyList = () => {
       }
     })
 
-    .filter(item => item.firstName.toLowerCase().includes(searchTerm.toLowerCase()) || item.lastName.toLowerCase().includes(searchTerm.toLowerCase()))
+    .filter(item => item.firstName.toLowerCase().includes(searchTerm.toLowerCase()) || item.lastName.toLowerCase().includes(searchTerm.toLowerCase())
+  || item.travelRequestId.toLowerCase().includes(searchTerm.toLowerCase())
+  || item.approveStatus?.name.toLowerCase().includes(searchTerm.toLowerCase()))
     // .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
 
