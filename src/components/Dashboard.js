@@ -14,7 +14,7 @@ const Dashboard = () => {
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [currentUseremail, setCurrentUserId] = useState(null);
-
+  const [selectedItemAttachmentsInfo, setSelectedItemAttachmentsInfo] = useState([]);
   const { auth, login } = useAuth(); // Access auth from context
   const { username, password } = auth;
   const authHeader = 'Basic ' + btoa(username + ':' + password);
@@ -71,13 +71,28 @@ const Dashboard = () => {
         },
       });
 
+      const attachmentResponse = await fetch(`http://localhost:8080/o/c/travelattachments?filter=r_attachmentRelation_c_travelInfoId eq \'${item.id}\'`, {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': authHeader,
+        },
+      });
+
+      const attachmentInfo = await attachmentResponse.json();
+
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      if (!attachmentResponse.ok) {
+        throw new Error(`HTTP error! Status: ${attachmentResponse.status}`);
       }
 
       const travelInfo = await response.json();
       console.log('Travel Information Response:', travelInfo);
       setSelectedItemTravelInfo(travelInfo.items || []);
+      setSelectedItemAttachmentsInfo(attachmentInfo.items || []);
     } catch (error) {
       console.error('Error fetching travel information:', error);
       setSelectedItemTravelInfo([]);
@@ -176,6 +191,7 @@ const Dashboard = () => {
         <NewSummary
           item={selectedItem}
           travelInfo={selectedItemTravelInfo}
+          attachmentInfo={selectedItemAttachmentsInfo}
           onBack={handleBack}
           isDashboardNavigate={true}
         />
