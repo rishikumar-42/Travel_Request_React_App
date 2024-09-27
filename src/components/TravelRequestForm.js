@@ -125,21 +125,45 @@ function TravelRequestForm() {
         toast.current.show({ severity, summary, detail, life: 10000 });
     }
 
+    const changeFileName = (selectedFile) => {
+        const fileName = selectedFile.name;
+        const fileExtension = fileName.split('.').pop(); // Get the extension
+        const baseName = fileName.slice(0, fileName.lastIndexOf('.')); // Get the base name without extension
+
+        // Define your suffix
+        // const suffix = '_suffix';
+        const suffix = `_${Math.floor(Date.now() / 1000)}`;
+
+        // Construct the new file name
+        const newFileName = `${baseName}${suffix}.${fileExtension}`;
+
+        console.log(`Original file name: ${fileName}`);
+        console.log(`New file name: ${newFileName}`);
+
+        // If you need to create a new File object (optional)
+        const newFile = new File([selectedFile], newFileName, { type: selectedFile.type });
+
+        console.log(newFile.name);
+        return newFile
+    }
     const onFileChange = (e) => {
         const selectedFile = e.target.files[0];
+        console.log("File details : " + selectedFile.name )
         if (selectedFile) {
             if (selectedFile.size > 100000) {
                 // setFileError('File size exceeds the maximum limit.');
                 showMessage('error', 'Error', 'File size exceeds the maximum limit')
                 return;
             }
+
+            const changedFile = changeFileName(selectedFile);
             // setFile(selectedFile);
-            onFileUpload(selectedFile);
+            onFileUpload(changedFile, selectedFile.name);
         }
     };
     const handleRemovefiles = async (rowIndex) => {
         const selectedFile = files[rowIndex];
-        console.log("selected file : ", selectedFile)
+        console.log("selected file : ", selectedFile.name)
         try {
             await TravelRequestFormService.deleteDocuments(selectedFile.fileId)
             showMessage('success', 'Success', `Successfully removed ${selectedFile.title}`)
@@ -151,7 +175,7 @@ function TravelRequestForm() {
         }
     };
 
-    const onFileUpload = async (selectedFile) => {
+    const onFileUpload = async (selectedFile, originalFileName) => {
         if (!selectedFile) {
             // setFileError('No file selected.');
             showMessage('error', 'Error', 'No file selected.')

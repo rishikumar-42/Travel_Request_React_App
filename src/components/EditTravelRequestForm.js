@@ -130,6 +130,28 @@ function EditTravelRequestForm() {
         toast.current.show({ severity, summary, detail, life: 5000 });
     }
 
+    const changeFileName = (selectedFile) => {
+        const fileName = selectedFile.name;
+        const fileExtension = fileName.split('.').pop(); // Get the extension
+        const baseName = fileName.slice(0, fileName.lastIndexOf('.')); // Get the base name without extension
+
+        // Define your suffix
+        // const suffix = '_suffix';
+        const suffix = `_${Math.floor(Date.now() / 1000)}`;
+
+        // Construct the new file name
+        const newFileName = `${baseName}${suffix}.${fileExtension}`;
+
+        console.log(`Original file name: ${fileName}`);
+        console.log(`New file name: ${newFileName}`);
+
+        // If you need to create a new File object (optional)
+        const newFile = new File([selectedFile], newFileName, { type: selectedFile.type });
+
+        console.log(newFile.name);
+        return newFile
+    }
+
     const onFileChange = (e) => {
         const selectedFile = e.target.files[0];
         if (selectedFile) {
@@ -139,7 +161,8 @@ function EditTravelRequestForm() {
                 return;
             }
             // setFile(selectedFile);
-            onFileUpload(selectedFile);
+            const changedFile = changeFileName(selectedFile);
+            onFileUpload(changedFile, selectedFile.name);
         }
     };
 
@@ -157,7 +180,7 @@ function EditTravelRequestForm() {
         }
     };
 
-    const onFileUpload = async (selectedFile) => {
+    const onFileUpload = async (selectedFile, originalFileName) => {
         if (!selectedFile) {
             // setFileError('No file selected.');
             showMessage('error', 'Error', 'No file selected.')
