@@ -840,8 +840,8 @@ function EditTravelRequestForm() {
 
     // Function to handle blur event for validation
     const handleBlur = (value) => {
-        if (selectedEmployee === null)
-            setIsEmployeeEmailValid(true)
+        if (value === '')
+            setIsEmployeeEmailValid(false)
         else
             setIsEmployeeEmailValid(validateEmployeeEmail(value));
     };
@@ -864,8 +864,8 @@ function EditTravelRequestForm() {
 
     // Function to handle blur event for validation
     const handleBlur2 = (value) => {
-        if (selectedItem === null)
-            setIsManagerEmailValid(true)
+        if (value === '')
+            setIsManagerEmailValid(false)
         else
             setIsManagerEmailValid(validateManagerEmail(value));
     };
@@ -887,7 +887,7 @@ function EditTravelRequestForm() {
 
     // Function to handle blur event for validation
     const handleBlur3 = (value) => {
-        if (selectedItem === null)
+        if (selectedItem === '')
             setIsHODEmailValid(true)
         else
             setIsHODEmailValid(validateHODEmail(value));
@@ -995,7 +995,9 @@ function EditTravelRequestForm() {
                                                     employeeNumber: '',
                                                     costCenter: '',
                                                     entity: '',
-                                                    positionTitle: ''
+                                                    positionTitle: '',
+                                                    manager:'',
+                                                    hod: ''
                                                 });
                                                 setSelectedItem('');
                                                 setSelectedItem2('');
@@ -1200,6 +1202,7 @@ function EditTravelRequestForm() {
                                                 hod: ''
                                             });
                                             setSelectedItem2('');
+                                            setIsHODEmailValid(true);
                                             handleBlur2(e.value);
                                         }}
                                         onSelect={(e) => {

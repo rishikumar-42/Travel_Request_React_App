@@ -717,7 +717,7 @@ function TravelRequestForm() {
 
     // Function to handle blur event for validation
     const handleBlur = (value) => {
-        if (selectedEmployee === '')
+        if (value === '')
             setIsEmployeeEmailValid(false)
         else
             setIsEmployeeEmailValid(validateEmployeeEmail(value));
@@ -741,7 +741,7 @@ function TravelRequestForm() {
 
     // Function to handle blur event for validation
     const handleBlur2 = (value) => {
-        if (selectedItem === '')
+        if (value === '')
             setIsManagerEmailValid(false)
         else
             setIsManagerEmailValid(validateManagerEmail(value));
@@ -764,7 +764,7 @@ function TravelRequestForm() {
 
     // Function to handle blur event for validation
     const handleBlur3 = (value) => {
-        if (selectedItem2 === '')
+        if (value === '')
             setIsHODEmailValid(true)
         else
             setIsHODEmailValid(validateHODEmail(value));
@@ -866,7 +866,9 @@ function TravelRequestForm() {
                                                     employeeNumber: '',
                                                     costCenter: '',
                                                     entity: '',
-                                                    positionTitle: ''
+                                                    positionTitle: '',
+                                                    manager:'',
+                                                    hod: ''
                                                 });
                                                 setSelectedItem('');
                                                 setSelectedItem2('');
@@ -1072,6 +1074,7 @@ function TravelRequestForm() {
                                                 hod: ''
                                             });
                                             setSelectedItem2('');
+                                            setIsHODEmailValid(true)
                                             handleBlur2(e.value)
                                         }}
                                         onSelect={(e) => {
@@ -1121,6 +1124,7 @@ function TravelRequestForm() {
                                         }}
                                         itemTemplate={itemTemplate}
                                         disabled={selectedItem === null}
+                                        // forceSelection
                                         // tooltipOptions={{ showOnDisabled: true, position: 'bottom' }}
                                         // tooltip="Disabled"
                                     />
