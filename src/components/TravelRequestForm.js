@@ -150,7 +150,7 @@ function TravelRequestForm() {
         const selectedFile = e.target.files[0];
         console.log("File details : " + selectedFile.name )
         if (selectedFile) {
-            if (selectedFile.size > 100000) {
+            if (selectedFile.size > 5 * 1024 * 1024) {
                 // setFileError('File size exceeds the maximum limit.');
                 showMessage('error', 'Error', 'File size exceeds the maximum limit')
                 return;
