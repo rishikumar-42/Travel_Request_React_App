@@ -263,18 +263,24 @@ function TravelRequestForm() {
 
     const searchItem = (event) => {
         const query = event.query.toLowerCase();
-        console.log("query 2 : ", query)
-        const email = (typeof selectedEmployee === 'object' ? selectedEmployee.email.toLowerCase() : selectedEmployee.toLowerCase());
+        // console.log("query 2 : ", query)
+        // const email = (typeof selectedEmployee === 'object' ? selectedEmployee.email.toLowerCase() : selectedEmployee.toLowerCase());
+        // setdropDownSuggestions(
+        //     userList.filter(item => item.email.toLowerCase().includes(query) && (item.email.toLowerCase() !== email))
+        // );
         setdropDownSuggestions(
-            userList.filter(item => item.email.toLowerCase().includes(query) && (item.email.toLowerCase() !== email))
+            userList.filter(item => item.email.toLowerCase().includes(query) && (item.email.toLowerCase() !== formData.email))
         );
     };
     const searchItem2 = (event) => {
         const query = event.query.toLowerCase();
-        const employeeEmail = (typeof selectedEmployee === 'object' ? selectedEmployee.email.toLowerCase() : selectedEmployee.toLowerCase());
-        const managerEmail = (typeof selectedItem === 'object' ? selectedItem.email.toLowerCase() : selectedItem.toLowerCase())
+        // const employeeEmail = (typeof selectedEmployee === 'object' ? selectedEmployee.email.toLowerCase() : selectedEmployee.toLowerCase());
+        // const managerEmail = (typeof selectedItem === 'object' ? selectedItem.email.toLowerCase() : selectedItem.toLowerCase())
+        // setdropDownSuggestions2(
+        //     userList.filter(item => item.email.toLowerCase().includes(query) && (item.email.toLowerCase() !== managerEmail) && (item.email.toLowerCase() !== employeeEmail))
+        // );
         setdropDownSuggestions2(
-            userList.filter(item => item.email.toLowerCase().includes(query) && (item.email.toLowerCase() !== managerEmail) && (item.email.toLowerCase() !== employeeEmail))
+            userList.filter(item => item.email.toLowerCase().includes(query) && (item.email.toLowerCase() !== formData.manager) && (item.email.toLowerCase() !== formData.email))
         );
     };
 
@@ -1082,8 +1088,8 @@ function TravelRequestForm() {
                                         itemTemplate={itemTemplate}
                                         disabled={selectedEmployee === null}
                                         required
-                                        tooltipOptions={{ showOnDisabled: true, position: 'bottom' }}
-                                        tooltip="Disabled"
+                                        // tooltipOptions={{ showOnDisabled: true, position: 'bottom' }}
+                                        // tooltip="Disabled"
                                     />
                                     <label htmlFor="manager" className="small">Manager<span className="text-danger px-1">*</span></label>
                                     {!isManagerEmailValid && <span htmlFor="manager" className="small"> <strong style={{ color: 'red' }}>Invalid Email</strong></span>}
@@ -1109,16 +1115,14 @@ function TravelRequestForm() {
                                             setSelectedItem2(e.value);
                                             setFormData({
                                                 ...formData, // Spread the existing formData
-                                                approver2: {
-                                                    key: e.value.firstName,
-                                                }
+                                                hod: e.value.email
                                             });
                                             console.log("value : " + JSON.stringify(e.value.email));
                                         }}
                                         itemTemplate={itemTemplate}
                                         disabled={selectedItem === null}
-                                        tooltipOptions={{ showOnDisabled: true, position: 'bottom' }}
-                                        tooltip="Disabled"
+                                        // tooltipOptions={{ showOnDisabled: true, position: 'bottom' }}
+                                        // tooltip="Disabled"
                                     />
                                     <label htmlFor="hod" className="small">Head Of Department/GM/VP</label>
 

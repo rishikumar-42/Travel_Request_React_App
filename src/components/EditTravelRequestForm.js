@@ -315,13 +315,13 @@ function EditTravelRequestForm() {
     const searchItem = (event) => {
         const query = event.query.toLowerCase();
         setdropDownSuggestions(
-            userList.filter(item => item.email.toLowerCase().includes(query) && (item.email.toLowerCase() !== selectedEmployee.email.toLowerCase()))
+            userList.filter(item => item.email.toLowerCase().includes(query) && (item.email.toLowerCase() !== formData.email.toLowerCase()))
         );
     };
     const searchItem2 = (event) => {
         const query = event.query.toLowerCase();
         setdropDownSuggestions2(
-            userList.filter(item => item.email.toLowerCase().includes(query) && (item.email.toLowerCase() !== selectedItem.email.toLowerCase()) && (item.email.toLowerCase() !== selectedEmployee.email.toLowerCase()))
+            userList.filter(item => item.email.toLowerCase().includes(query) && (item.email.toLowerCase() !== formData.manager.toLowerCase()) && (item.email.toLowerCase() !== formData.email.toLowerCase()))
         );
     };
 
@@ -1217,7 +1217,7 @@ function EditTravelRequestForm() {
                                         disabled={selectedEmployee === null || item.approveStatus?.key !== 'draft'}
                                         // readOnly={formData.approveStatus?.key !== 'draft'}
                                         required
-                                        tooltipOptions={{ showOnDisabled: true, position: 'bottom' }}
+                                        // tooltipOptions={{ showOnDisabled: true, position: 'bottom' }}
                                     // tooltip="Disabled"
                                     />
                                     <label htmlFor="manager" className="small">Manager<span className="text-danger px-1">*</span></label>
@@ -1243,15 +1243,13 @@ function EditTravelRequestForm() {
                                             setSelectedItem2(e.value);
                                             setFormData({
                                                 ...formData, // Spread the existing formData
-                                                approver2: {
-                                                    key: e.value.firstName,
-                                                }
+                                                hod: e.value.email
                                             });
                                             console.log("value : " + JSON.stringify(e.value.email));
                                         }}
                                         itemTemplate={itemTemplate}
                                         disabled={selectedItem === null || item.approveStatus?.key !== 'draft'}
-                                        tooltipOptions={{ showOnDisabled: true, position: 'bottom' }}
+                                        // tooltipOptions={{ showOnDisabled: true, position: 'bottom' }}
                                     // readOnly={formData.approveStatus?.key !== 'draft'}
                                     // tooltip="Disabled"
                                     />
