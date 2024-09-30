@@ -71,6 +71,7 @@
     font-weight: 500;
     font-size: 14px;
     height: 35px;
+    border-bottom: 1px solid white;
   }
   
   .th {
