@@ -312,5 +312,10 @@
       opacity: 0; /* Invisible again */
     }
   }
+
+  .train-type{
+    border-left: 2px solid #003D71;
+    padding-left: 100px;
+  }
   
   

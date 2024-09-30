@@ -38,7 +38,7 @@ const FormPreview = ({ item, travelInfo, attachments }) => {
             minute: '2-digit',
             // second: '2-digit',
             hour12: false, // You can set this to true if you want 12-hour time format
-            timeZone: 'Asia/Kolkata' 
+            timeZone: 'Asia/Kolkata'
         };
         return new Intl.DateTimeFormat('en-GB', options).format(new Date(date));
     };
@@ -256,23 +256,28 @@ const FormPreview = ({ item, travelInfo, attachments }) => {
                 </div>
 
                 <div className="preview-toolbar">
-                    <span className="preview-title">Flight Ticket</span>
+                    <span className="preview-title">Travel Itinerary</span>
                 </div>
                 <div className="preview-summary-details">
                     <div className="preview-details-grid">
                         <div className="preview-detail-item">
-                            <span className="preview-label">Ticket Type:</span>
+                            <span className="preview-label">Flight Ticket Type:</span>
                             <span className="preview-value">
                                 {item.flightTicketType !== null ? item.flightTicketType.name : 'N/A'}
                             </span>
                         </div>
-                        <div className="preview-detail-item">
+                        <div className="detail-item preview-train-type" >
+                            <span className="label">Train Ticket Type:</span>
+                            <span className="value"> {item.trainTicketType && item.trainTicketType.name ? item.trainTicketType.name :
+                                'N/A'}</span>
+                        </div>
+                        {/* <div className="preview-detail-item">
                             <span className="preview-label">Reason:</span>
                             <span className="preview-value"> {item.flightTicketReason !== null ? item.flightTicketReason.name : 'N/A'}</span>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
-                <div className="preview-toolbar">
+                {/* <div className="preview-toolbar">
                     <span className="preview-title">Train Ticket</span>
                 </div>
                 <div className="preview-summary-details">
@@ -282,13 +287,16 @@ const FormPreview = ({ item, travelInfo, attachments }) => {
                             <span className="preview-value"> {item.trainTicketType !== null ? item.trainTicketType.name : 'N/A'}</span>
                         </div>
                     </div>
-                </div>
+                </div> */}
 
-                <div className="preview-toolbar">
+                {/* <div className="preview-toolbar">
                     <span className="preview-title">Attachments</span>
-                </div>
+                </div> */}
+                <hr className="separator mb-2 mt-2" />
+
                 <div className="preview-summary-details">
-                {attachments.length > 0 ?  <ol>
+                    <span className="label">Attachments:</span>
+                    {attachments.length > 0 ? <ol>
                         {attachments.map(task => (
                             <li key={task.id}>
                                 {/* {task.title} */}
@@ -298,25 +306,38 @@ const FormPreview = ({ item, travelInfo, attachments }) => {
                             </li>
                         ))}
                     </ol> : (
-              <p>No available attachments</p>
-            )}
+                        <p>No available attachments</p>
+                    )}
                 </div>
-                <div className="preview-toolbar">
+                {/* <div className="preview-toolbar">
                     <span className="preview-title">Itineraries</span>
-                </div>
+                </div> */}
+                <hr className="separator mb-2 mt-2" />
+
+
                 <div className="preview-summary-details">
                     <DataTable value={travelInfo} showGridlines tableStyle={{ minWidth: '50rem' }}>
                         <Column sortable field="onwardJourney" header="Onward Journey (From - To)" headerClassName="preview-custom-header" />
                         <Column sortable field="onwardDepartureDate" header="Departure Date" body={(rowData) => formatDate(rowData.onwardDepartureDate)} headerClassName="preview-custom-header" />
                         <Column sortable field="onwardPreferredTime" header="Onward Preferred Time" body={(rowData) => formatPickList(rowData.onwardPreferredTime)} headerClassName="preview-custom-header" />
-                        <Column sortable field="onwardTransportNumber" header="Onward Transport Number" headerClassName="preview-custom-header" />
+                        <Column sortable field="onwardTransportNumber" header="Onward Flight/Train No" headerClassName="preview-custom-header" />
                         <Column sortable field="returnJourney" header="Return Journey" headerClassName="preview-custom-header" />
                         <Column sortable field="returnArrivalDate" header="Arrival Date" body={(rowData) => formatDate(rowData.returnArrivalDate)} headerClassName="preview-custom-header" />
                         <Column sortable field="returnPreferredTime" header="Return Preferred Time" body={(rowData) => formatPickList(rowData.returnPreferredTime)} headerClassName="preview-custom-header" />
-                        <Column sortable field="returnTransportNumber" header="Return Transport Number" headerClassName="preview-custom-header" />
+                        <Column sortable field="returnTransportNumber" header="Return Flight/Train No" headerClassName="preview-custom-header" />
                         <Column sortable field="onwardJourneyNote" header="Remarks" headerClassName="preview-custom-header" />
                     </DataTable>
                 </div>
+                <hr className="separator mb-2 mt-2" />
+
+                <div className="summary-details">
+                    <div className="detail-item">
+                        <span className="label">Reason:</span>
+                        <span className="value"> {item.flightTicketReason && item.flightTicketReason.name ? item.flightTicketReason.name :
+                            'N/A'}</span>
+                    </div>
+                </div>
+
             </div>
         </div>
     );
