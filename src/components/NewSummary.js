@@ -35,7 +35,7 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
     const fetchWorkflowTasks = async () => {
       setLoading(true); 
       try {
-        const response = await fetch('http://localhost:8080/o/headless-admin-workflow/v1.0/workflow-tasks/assigned-to-me', {
+        const response = await fetch('http://localhost:8080/o/headless-admin-workflow/v1.0/workflow-tasks/assigned-to-me?page=1&pageSize=1000', {
           method: 'GET',
           headers: {
             'Accept': 'application/json',
