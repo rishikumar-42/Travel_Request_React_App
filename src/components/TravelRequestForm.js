@@ -27,6 +27,9 @@ import { Dialog } from 'primereact/dialog';
 import "../assets/css/Style.css";
 import FormPreview from "./FormPreview.js";
 import { useNavigate } from 'react-router-dom';
+import { Divider } from "@mui/material";
+import { SpaceBar } from "@mui/icons-material";
+import { color } from "@mui/system";
 
 function TravelRequestForm() {
     const primary = "#fff"; // #f44336
@@ -490,9 +493,15 @@ function TravelRequestForm() {
             setFormData(prevFormData => ({
                 ...prevFormData, // Spread the existing formData
                 flightTicketType: {},
-                flightTicketReason: {}
+                flightTicketReason: {},
+                trainTicketType: {},
+                itineraryRelation: [],
+                attachmentRelation: [],
             }));
             setReasonValue([]);
+            setTrainTypeValue([]);
+            setItineraries([]);
+            setFiles([]);
         }
     };
 
@@ -576,21 +585,6 @@ function TravelRequestForm() {
         setIsTelephoneNumberValid(pattern.test(input));
     };
 
-
-    const initialTrainTicket = () => {
-        console.log("trainTypeList data : ", trainTypeList);
-        const firstTrainType = trainTypeList[0];
-        console.log("firstTrainType data : ", firstTrainType);
-        setTrainTypeValue(firstTrainType);
-        setFormData(prevFormData => ({
-            ...prevFormData, // Spread the existing formData
-            trainTicketType: {
-                key: firstTrainType.key,
-                name: firstTrainType.name,
-                // name: firstTrainType.name // Update the trainTicketType properties
-            }
-        }));
-    };
     const createUniqueId = async () => {
         const count = (await TravelRequestFormService.fetchCount()).data.totalCount;
         const now = new Date();
@@ -605,14 +599,10 @@ function TravelRequestForm() {
     const handleTrainToggleChange = async (event) => {
         const isChecked = event.target.checked;
         setTrainDetails(isChecked);
-        if (isChecked) {
-            initialTrainTicket();
-        } else {
             setFormData(prevFormData => ({
                 ...prevFormData, // Spread the existing formData
                 trainTicketType: {}
             }));
-        }
     };
 
     useEffect(() => {
@@ -942,6 +932,7 @@ function TravelRequestForm() {
                             <h6 className="text-left">Travel Details</h6>
                             <hr className="separator mt-2" />
                         </div>
+                        <p className="mx-2">Note: All International flights have to be approved by Head of Department/GM/VP.</p>
                         <div className="travel-type mb-3">
                             <label htmlFor="travelType" className="mr-2">Travel Type<span className="text-danger px-1">*</span></label>
                             <div className="radio-group">
@@ -1410,7 +1401,7 @@ function TravelRequestForm() {
                     <div className="flightticket-container">
                         <hr className="separator mb-2" />
                         <div className="form-row-toggle mx-2">
-                            <label className="toggle-label" htmlFor="flightToggle">Flight Ticket</label>
+                            <label className="toggle-label" htmlFor="flightToggle">Travel Itinerary</label>
                             <label className="switch">
                                 <input
                                     type="checkbox"
@@ -1426,7 +1417,7 @@ function TravelRequestForm() {
                             <div>
                                 <div className="d-flex flight-ticket-container mb-3">
                                     <div className="d-flex gap-3 mt-3 mx-2">
-                                        <label htmlFor="travelType" className="mr-2">Ticket Type<span className="text-danger px-1">*</span></label>
+                                        <label htmlFor="travelType" className="mr-2">Flight Ticket Type:<span className="text-danger px-1">*</span></label>
                                         {flightTypeList.map((category) => {
                                             return (
                                                 <div key={category.key} className="d-flex align-items-center">
@@ -1449,43 +1440,9 @@ function TravelRequestForm() {
                                             );
                                         })}
                                     </div>
-                                </div>
-                                <p className="mx-2">Note: Kindly attach the 3 quotes/routes provided by Travel Agent for comparison. If the least cost-saving route is not taken, kindly provide the reason below.</p>
-                                <div className="form-dropdown-container d-flex gap-3 mx-2 reason-dropdown align-items-center mt-4">
-                                    <label htmlFor="reason">Reason<span className="text-danger px-1 mt-2">*</span></label>
-                                    <Dropdown inputId="dd-city" value={reasonValue} onChange={(e) => {
-                                        setReasonValue(e.value);
-                                        setFormData({
-                                            ...formData, // Spread the existing formData
-                                            flightTicketReason: {
-                                                key: e.value.key,
-                                                name: e.value.name,
-                                                // name: e.value.name // Update only the firstName property
-                                            }
-                                        });
-                                    }} options={reasonList} optionLabel="name" className="w-full" required />
-                                </div>
-                            </div>
-                        )}
-                    </div>
-                    <div className="trainticket-container">
-                        <hr className="separator mb-2" />
-                        <div className="form-row-toggle mx-2">
-                            <label className="toggle-label" htmlFor="trainToggle">Train Ticket</label>
-                            <label className="switch">
-                                <input
-                                    type="checkbox"
-                                    id="trainToggle"
-                                    name="trainToggle"
-                                    onChange={handleTrainToggleChange}
-                                />
-                                <span className="slider round"></span>
-                            </label>
-                        </div>
-                        {showTrainDetails && (
-                            <div className="flex justify-content mx-2 mb-2">
-                                <div className="d-flex gap-3">
-                                    <label htmlFor="travelType" className="mr-2">Ticket Type<span className="text-danger px-1">*</span></label>
+                                   
+                                    <div className="d-flex gap-3 mt-3 mx-2 train">
+                                    <label htmlFor="travelType" className="mr-2 train">Train Ticket Type:</label>
                                     {trainTypeList.map((category) => {
                                         return (
                                             <div key={category.key} className="d-flex align-items-center">
@@ -1510,13 +1467,12 @@ function TravelRequestForm() {
                                         );
                                     })}
                                 </div>
-                            </div>
-                        )}
-                    </div>
+                                </div>
+                                <div className="flex justify-content mx-2 mb-2">
+                                
 
-
-                    <hr className="separator mb-2" />
-                    <div className="addbutton mx-2">
+                                <br></br>
+                                <div className="addbutton mx-2">
                         {/* <button type="button" onClick={handleAddItineraryClick}>
                             {showItinerary ? "Hide Itinerary" : "Add Itinerary"}
                         </button> */}
@@ -1524,9 +1480,10 @@ function TravelRequestForm() {
                             setShowItinerary(!showItinerary);
                         }}
                             className="btn-sm px-2 py-2 bg-gradients border-0" type="button" label="Add Itinerary" />
-                    </div>
+                                </div>
 
-                    {showItinerary && (
+
+                                {showItinerary && (
                         <div className="modal small">
                             <div className="modal-content">
                                 <div className="savebn text-right d-flex justify-content-between align-items-center mt-2 d-flex gap-2">
@@ -1563,7 +1520,7 @@ function TravelRequestForm() {
                                         <div className="calendar-item">
                                             <FloatLabel>
                                                 <InputText id="onwardTransportNumber" maxLength={250} value={newItinerary.onwardTransportNumber} onChange={e => handleInputChange('onwardTransportNumber', e)} />
-                                                <label htmlFor="onwardTransportNumber"> Flight/Train Number</label>
+                                                <label htmlFor="onwardTransportNumber">Onward Flight/Train No</label>
                                             </FloatLabel>
                                         </div>
                                         <div className="calendar-item flex-grow-1">
@@ -1608,7 +1565,7 @@ function TravelRequestForm() {
                                                 <div >
                                                     <FloatLabel>
                                                         <InputText id="returnTransportNumber" maxLength={250} value={newItinerary.returnTransportNumber} onChange={e => handleInputChange('returnTransportNumber', e)} />
-                                                        <label htmlFor="returnTransportNumber"> Flight/Train Number</label>
+                                                        <label htmlFor="returnTransportNumber">Return Flight/Train No</label>
                                                     </FloatLabel>
                                                 </div>
                                             </div>
@@ -1626,18 +1583,17 @@ function TravelRequestForm() {
                     )}
                     {itineraries.length > 0 && (
                         <div className="itinerary-table">
-                            <h3>Itineraries</h3>
 
                             <DataTable value={itineraries} showGridlines tableStyle={{ minWidth: '50rem' }}>
                                 {/*<Column sortable field="price" header="Price incl. VAT" /> */}
                                 <Column sortable field="onwardJourney" header="Onward Journey (From - To)" headerClassName="custom-header" />
                                 <Column sortable field="onwardDepartureDate" header="Departure Date" body={(rowData) => formatDate(rowData.onwardDepartureDate)} headerClassName="custom-header" />
                                 <Column sortable field="onwardPreferredTime" header="Onward Preferred Time" body={(rowData) => formatPickList(rowData.onwardPreferredTime)} headerClassName="custom-header" />
-                                <Column sortable field="onwardTransportNumber" header="Onward Transport Number" headerClassName="custom-header" />
+                                <Column sortable field="onwardTransportNumber" header="Onward Flight/Train No" headerClassName="custom-header" />
                                 <Column sortable field="returnJourney" header="Return Journey (From - To)" headerClassName="custom-header" />
                                 <Column sortable field="returnArrivalDate" header="Arrival Date" body={(rowData) => formatDate(rowData.returnArrivalDate)} headerClassName="custom-header" />
                                 <Column sortable field="returnPreferredTime" header="Return Preferred Time" body={(rowData) => formatPickList(rowData.returnPreferredTime)} headerClassName="custom-header" />
-                                <Column sortable field="returnTransportNumber" header="Return Transport Number" headerClassName="custom-header" />
+                                <Column sortable field="returnTransportNumber" header="Return Flight/Train No" headerClassName="custom-header" />
                                 <Column sortable field="onwardJourneyNote" header="Remarks" headerClassName="custom-header" />
                                 <Column header="Actions" headerClassName="custom-header"
                                     body={(rowData, { rowIndex }) => (
@@ -1653,7 +1609,11 @@ function TravelRequestForm() {
                         </div>
                     )}
 
-                    <div className="px-3 pt-3">
+                                <br></br><br></br>
+                                <hr className="separator mb-2" />
+                                <p className="mx-2">Note: Kindly attach the 3 quotes/routes provided by Travel Agent for comparison. If the least cost-saving route is not taken, kindly provide the reason below.</p>
+
+                                <div className="px-3 pt-3">
                         <div className="py-1 mb-1">
                             <h6 className="text-left">Attachments</h6>
                         </div>
@@ -1680,7 +1640,31 @@ function TravelRequestForm() {
                                     )}
                                 />
                             </DataTable>}
+                            </div>
+
+                                <div className="form-dropdown-container d-flex gap-3 mx-2 reason-dropdown align-items-center mt-4">
+                                    <label htmlFor="reason">Reason<span className="text-danger px-1 mt-2">*</span></label>
+                                    <Dropdown inputId="dd-city" value={reasonValue} onChange={(e) => {
+                                        setReasonValue(e.value);
+                                        setFormData({
+                                            ...formData, // Spread the existing formData
+                                            flightTicketReason: {
+                                                key: e.value.key,
+                                                name: e.value.name,
+                                                // name: e.value.name // Update only the firstName property
+                                            }
+                                        });
+                                    }} options={reasonList} optionLabel="name" className="w-full" required />
+                                </div>
+                            </div>
+
+
+
+                            </div>
+                        )}
                     </div>
+
+
                     {/* <button type="submit">Submit</button> */}
                     <div className="gap-5" style={{ display: 'flex', justifyContent: 'center' }}>
                         <Button type="button" className="back-button-travel mb-3" icon="pi pi-angle-double-left" label="Back" rounded onClick={handleBack} />

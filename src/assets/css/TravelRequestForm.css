@@ -579,7 +579,7 @@ span.close {
     background-color: #51829B !important;
     /* Replace with your desired color */
     color: #ffff;
-    margin-left:970px !important;
+    /* margin-left:970px !important; */
 }
 
 
@@ -664,3 +664,13 @@ button.p-datepicker-trigger.p-button.p-component.p-button-icon-only {
     margin: 0px !important;
     padding: 6px;
   }
+
+.d-flex.gap-3.mt-3.mx-2.train {
+    border: 2px solid #E0E0E0;
+    border-bottom: none;
+    border-right: none;
+    border-top: none;
+}
+label.mr-2.train {
+    margin-left: 2rem;
+}

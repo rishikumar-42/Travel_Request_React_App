@@ -58,4 +58,4 @@ input:checked+.slider {
     color: #495057;
 }
 .p-tooltip-target-wrapper{display: block;}
-.reason-dropdown .p-dropdown{ width: 200px !important;}
+.reason-dropdown .p-dropdown{ width: 350px !important;}
