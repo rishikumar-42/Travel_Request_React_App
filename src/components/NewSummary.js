@@ -6,6 +6,7 @@ import TravelRequestFormServiceLayer from '../service/TravelRequestFormService';
 import { Toast } from 'primereact/toast';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
+import { border, borderLeft } from '@mui/system';
 
 const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, isDashboardNavigate = false }) => {
   const [workflowTasks, setWorkflowTasks] = useState([]);
@@ -15,7 +16,7 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [dialogType, setDialogType] = useState(''); // 'approve' or 'reject'
   const [comment, setComment] = useState('');
-  const [loading, setLoading] = useState(true); 
+  const [loading, setLoading] = useState(true);
 
 
   const { auth, login } = useAuth(); // Access auth from context
@@ -33,7 +34,7 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
 
   useEffect(() => {
     const fetchWorkflowTasks = async () => {
-      setLoading(true); 
+      setLoading(true);
       try {
         const response = await fetch('http://localhost:8080/o/headless-admin-workflow/v1.0/workflow-tasks/assigned-to-me', {
           method: 'GET',
@@ -142,13 +143,13 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
       minute: '2-digit',
       // second: '2-digit',
       hour12: false, // You can set this to true if you want 12-hour time format
-      timeZone: 'Asia/Kolkata' 
+      timeZone: 'Asia/Kolkata'
     };
     return new Intl.DateTimeFormat('en-GB', options).format(new Date(date));
   };
 
   const handleTransition = async (transitionName) => {
-    console.log("current task",currentTask);
+    console.log("current task", currentTask);
     if (!currentTask) {
       // alert('No task available to perform the action.');
       showMessage('warn', 'Warning', 'No task available to perform the action.');
@@ -434,31 +435,6 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
           </div>
         </div>
 
-        {/* <div className="toolbar-summary">
-          <span className="title">Travel Details</span>
-        </div>
-        <div className="summary-details">
-          <div className="details-grid">
-            <div className="detail-item">
-              <span className="label">Flight Ticket:</span>
-              <span className="value">
-                {item.flightTicketType && item.flightTicketType.name ? item.flightTicketType.name : 'N/A'}
-              </span>
-            </div>
-            <div className="detail-item">
-              <span className="label">Reason:</span>
-              <span className="value"> {item.flightTicketReason && item.flightTicketReason.name ? item.flightTicketReason.name : 'N/A'}</span>
-            </div>
-            <div className="detail-item">
-              <span className="label">Hotel (Number of Nights):</span>
-              <span className="value">{item.hotelNumberOfNights || 'N/A'}</span>
-            </div>
-            <div className="detail-item">
-              <span className="label">Train Ticket:</span>
-              <span className="value"> {item.trainTicketType && item.trainTicketType.name ? item.trainTicketType.name : 'N/A'}</span>
-            </div>
-          </div>
-        </div> */}
         <div className="toolbar-summary">
           <span className="title">Hotel</span>
         </div>
@@ -550,29 +526,34 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
         </div>
 
         <div className="toolbar-summary">
-          <span className="title">Flight Ticket</span>
+          <span className="title">Travel Itinerary</span>
         </div>
         <div className="summary-details">
           <div className="details-grid">
             <div className="detail-item">
-              <span className="label">Ticket Type:</span>
+              <span className="label">Flight Ticket Type:</span>
               <span className="value">
                 {item.flightTicketType && item.flightTicketType.name ? item.flightTicketType.name : 'N/A'}
               </span>
             </div>
-            <div className="detail-item">
+            <div className="detail-item train-type">
+              <span className="label">Train Ticket Type:</span>
+              <span className="value"> {item.trainTicketType && item.trainTicketType.name ? item.trainTicketType.name :
+                'N/A'}</span>
+            </div>
+            {/* <div className="detail-item">
               <span className="label">Reason:</span>
               <span className="value"> {item.flightTicketReason && item.flightTicketReason.name ? item.flightTicketReason.name :
                 'N/A'}</span>
-            </div>
+            </div> */}
           </div>
         </div>
 
 
-        <div className="toolbar-summary">
+        {/* <div className="toolbar-summary">
           <span className="title">Train Ticket</span>
-        </div>
-        <div className="summary-details">
+        </div> */}
+        {/* <div className="summary-details">
           <div className="details-grid">
             <div className="detail-item">
               <span className="label">Ticket Type:</span>
@@ -580,20 +561,15 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
                 'N/A'}</span>
             </div>
           </div>
-        </div>
+        </div> */}
 
-        <div className="toolbar-summary">
+        {/* <div className="toolbar-summary">
           <span className="title">Attachments</span>
-        </div>
+        </div> */}
+        <hr className="separator mb-2 mt-2" />
+
         <div className="summary-details">
-          {/* <ol> */}
-          {/* {attachmentInfo.map(task => (
-              <li key={task.id}>
-                <a href={OnwardJourneyLink(task)} target="_blank" rel="noopener noreferrer">
-                  {task.title}
-                </a>
-              </li>
-            ))} */}
+          <span className="label">Attachments:</span>
           {attachmentInfo.length > 0 ? <ol>
             {attachmentInfo.map(task => (
               <li key={task.id}>
@@ -605,60 +581,35 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
           </ol> : (
             <p>No available attachments</p>
           )}
-          {/* </ol> */}
         </div>
 
-        <div className="toolbar-summary">
+        <hr className="separator mb-2 mt-2" />
+
+        {/* <div className="toolbar-summary">
           <span className="title">Itineraries</span>
-        </div>
+        </div> */}
         <div className="summary-details">
-          {/* <table className="table-summary">
-            <thead className='thead'>
-              <tr>
-                <th className='table-header'>Onward Journey</th>
-                <th className='table-header'>Departure Date</th>
-                <th className='table-header'>Preferred Time</th>
-                <th className='table-header'>Flight No/Train No</th>
-                <th className='table-header'>Return Journey</th>
-                <th className='table-header'>Return Arrival Date</th>
-                <th className='table-header'>Return Preferred Time</th>
-                <th className='table-header'>Return Flight No/Train No</th>
-              </tr>
-            </thead>
-            {Array.isArray(travelInfo) && travelInfo.length > 0 ? (
-              <tbody>
-                {travelInfo.map((info, index) => (
-                  <tr key={index}>
-                    <td className='table-row'>{info.onwardJourney || 'N/A'}</td>
-                    <td className='table-row'>{formatDate(info.onwardDepartureDate) || 'N/A'}</td>
-                    <td className="table-row">{info.onwardPreferredTime && info.onwardPreferredTime.name ? info.onwardPreferredTime.name : 'N/A'}</td>
-                    <td className='table-row'>{info.onwardTransportNumber || 'N/A'}</td>
-                    <td className='table-row'>{info.returnJourney || 'N/A'}</td>
-                    <td className='table-row'>{formatDate(info.returnArrivalDate) || 'N/A'}</td>
-                    <td className="table-row">{info.returnPreferredTime && info.returnPreferredTime.name ? info.returnPreferredTime.name : 'N/A'}</td>
-                    <td className='table-row'>{info.returnTransportNumber || 'N/A'}</td>
-                  </tr>
-                ))}
-              </tbody>
-            ) : (
-              <tbody>
-                <tr>
-                  <td colSpan="8">No travel information available.</td>
-                </tr>
-              </tbody>
-            )}
-          </table> */}
           <DataTable value={travelInfo} showGridlines tableStyle={{ minWidth: '50rem' }}>
             <Column sortable field="onwardJourney" header="Onward Journey (From - To)" headerClassName="preview-custom-header" />
             <Column sortable field="onwardDepartureDate" header="Departure Date" body={(rowData) => formatDate(rowData.onwardDepartureDate)} headerClassName="preview-custom-header" />
             <Column sortable field="onwardPreferredTime" header="Onward Preferred Time" body={(rowData) => formatPickList(rowData.onwardPreferredTime)} headerClassName="preview-custom-header" />
-            <Column sortable field="onwardTransportNumber" header="Onward Transport Number" headerClassName="preview-custom-header" />
+            <Column sortable field="onwardTransportNumber" header="Onward Flight/Train No" headerClassName="preview-custom-header" />
             <Column sortable field="returnJourney" header="Return Journey (From - To)" headerClassName="preview-custom-header" />
             <Column sortable field="returnArrivalDate" header="Arrival Date" body={(rowData) => formatDate(rowData.returnArrivalDate)} headerClassName="preview-custom-header" />
             <Column sortable field="returnPreferredTime" header="Return Preferred Time" body={(rowData) => formatPickList(rowData.returnPreferredTime)} headerClassName="preview-custom-header" />
-            <Column sortable field="returnTransportNumber" header="Return Transport Number" headerClassName="preview-custom-header" />
+            <Column sortable field="returnTransportNumber" header="Return Flight/Train No" headerClassName="preview-custom-header" />
             <Column sortable field="onwardJourneyNote" header="Remarks" headerClassName="preview-custom-header" />
           </DataTable>
+        </div>
+
+        <hr className="separator mb-2 mt-2" />
+
+        <div className="summary-details">
+          <div className="detail-item">
+            <span className="label">Reason:</span>
+            <span className="value"> {item.flightTicketReason && item.flightTicketReason.name ? item.flightTicketReason.name :
+              'N/A'}</span>
+          </div>
         </div>
 
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -699,7 +650,7 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
         {isDialogOpen && (
           <div className="dialog-overlay">
             <div className="dialog">
-              <h2>{(dialogType === 'ok' || dialogType === 'Approve' ) ? 'Approve' : 'Reject'}</h2>
+              <h2>{(dialogType === 'ok' || dialogType === 'Approve') ? 'Approve' : 'Reject'}</h2>
               <textarea
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
