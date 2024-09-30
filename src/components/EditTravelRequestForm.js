@@ -245,7 +245,7 @@ function EditTravelRequestForm() {
 
     const formatDate = (date) => {
         if (!date) return '';
-        const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
+        const options = { day: '2-digit', month: 'short', year: 'numeric' };
         return new Intl.DateTimeFormat('en-GB', options).format(new Date(date));
     };
 
@@ -949,7 +949,7 @@ function EditTravelRequestForm() {
                         </div>
                         <div className="p-inputgroup d-block">
                             <FloatLabel>
-                                <Calendar id="issuerDate" dateFormat="dd/mm/yy" value={formData.issuerDate}
+                                <Calendar id="issuerDate" dateFormat="dd-M-yy" value={formData.issuerDate}
                                     onChange={(e) => setFormData({
                                         ...formData,
                                         issuerDate: setTimeZone(e.value)
@@ -1126,7 +1126,7 @@ function EditTravelRequestForm() {
                                 <label htmlFor="destination" className="small">Destination<span className="text-danger px-1">*</span></label>
                             </FloatLabel>
                             <FloatLabel className="w-25 ">
-                                <Calendar id="departureDate" dateFormat="dd/mm/yy" className="w-100" value={formData.travelDepartureDate}
+                                <Calendar id="departureDate" dateFormat="dd-M-yy" className="w-100" value={formData.travelDepartureDate}
                                     onChange={(e) => {
                                         setFormData({
                                             ...formData,
@@ -1139,7 +1139,7 @@ function EditTravelRequestForm() {
                                 <label htmlFor="departureDate" className="mr-2 small">Departure Date<span className="text-danger px-1">*</span></label>
                             </FloatLabel>
                             <FloatLabel className="w-25">
-                                <Calendar id="returnDate" minDate={formData.travelDepartureDate} dateFormat="dd/mm/yy" className="w-100" value={formData.travelArrivalDate}
+                                <Calendar id="returnDate" minDate={formData.travelDepartureDate} dateFormat="dd-M-yy" className="w-100" value={formData.travelArrivalDate}
                                     onChange={(e) => {
                                         setFormData({
                                             ...formData,
@@ -1303,7 +1303,7 @@ function EditTravelRequestForm() {
                                 </div>
                                 <div className="calendar-item col-width">
                                     <FloatLabel>
-                                        <Calendar id="checkIn" dateFormat="dd/mm/yy" value={formData.hotelCheckIn}
+                                        <Calendar id="checkIn" dateFormat="dd-M-yy" value={formData.hotelCheckIn}
                                             onChange={(e) => {
                                                 setFormData({
                                                     ...formData,
@@ -1318,7 +1318,7 @@ function EditTravelRequestForm() {
                                 </div>
                                 <div className="calendar-item col-width">
                                     <FloatLabel>
-                                        <Calendar id="checkOut" minDate={formData.hotelCheckIn} dateFormat="dd/mm/yy" value={formData.hotelCheckOut}
+                                        <Calendar id="checkOut" minDate={formData.hotelCheckIn} dateFormat="dd-M-yy" value={formData.hotelCheckOut}
                                             onChange={(e) => {
                                                 setFormData({
                                                     ...formData,
@@ -1411,7 +1411,7 @@ function EditTravelRequestForm() {
                                     </div>
                                     <div className="calendar-item">
                                         <FloatLabel>
-                                            <Calendar id="on" dateFormat="dd/mm/yy" value={formData.carRentalOn}
+                                            <Calendar id="on" dateFormat="dd-M-yy" value={formData.carRentalOn}
                                                 onChange={(e) => setFormData({
                                                     ...formData,
                                                     carRentalOn: setTimeZone(e.value),
@@ -1432,7 +1432,7 @@ function EditTravelRequestForm() {
                                             />
                                         </FloatLabel> */}
                                         <FloatLabel>
-                                            <Calendar id="until" minDate={formData.carRentalOn} dateFormat="dd/mm/yy" value={formData.carRentalUntil}
+                                            <Calendar id="until" minDate={formData.carRentalOn} dateFormat="dd-M-yy" value={formData.carRentalUntil}
                                                 onChange={(e) => setFormData({
                                                     ...formData,
                                                     carRentalUntil: setTimeZone(e.value)
@@ -1444,7 +1444,7 @@ function EditTravelRequestForm() {
                                 <div className="calendar-container d-flex align-items-stretch gap-3 my-4 mx-2">
                                     <div className="calendar-item">
                                         <FloatLabel>
-                                            <Calendar id="birthDate" dateFormat="dd/mm/yy" value={formData.carRentalBirthDate}
+                                            <Calendar id="birthDate" dateFormat="dd-M-yy" value={formData.carRentalBirthDate}
                                                 onChange={(e) => setFormData({
                                                     ...formData,
                                                     carRentalBirthDate: setTimeZone(e.value)
@@ -1600,7 +1600,7 @@ function EditTravelRequestForm() {
                                                         console.log("radio : ", formData)
                                                     }
                                                     }
-                                                    checked={trainTypeValue.key === category.key} />
+                                                    checked={trainTypeValue ? trainTypeValue.key === category.key : null} />
                                                 <label htmlFor={category.key} className="ml-2 px-2">{category.name}</label>
                                             </div>
                                         );
@@ -1638,7 +1638,7 @@ function EditTravelRequestForm() {
                                         </div>
                                         <div className="calendar-item col-width">
                                             <FloatLabel >
-                                                <Calendar id="onwardDepartureDate" dateFormat="dd/mm/yy" value={newItinerary.onwardDepartureDate} onChange={(e) => handleInputChange('onwardDepartureDate', e)} showIcon appendTo="self"  />
+                                                <Calendar id="onwardDepartureDate" dateFormat="dd-M-yy" value={newItinerary.onwardDepartureDate} onChange={(e) => handleInputChange('onwardDepartureDate', e)} showIcon appendTo="self"  />
                                                 <label htmlFor="onwardDepartureDate">Departure Date</label>
                                             </FloatLabel>
                                         </div>
@@ -1682,7 +1682,7 @@ function EditTravelRequestForm() {
                                                 </div>
                                                 <div className="col-width">
                                                     <FloatLabel>
-                                                        <Calendar  id="returnArrivalDate" minDate={newItinerary.onwardDepartureDate} dateFormat="dd/mm/yy" value={newItinerary.returnArrivalDate} onChange={(e) => handleInputChange('returnArrivalDate', e)} showIcon appendTo="self" />
+                                                        <Calendar  id="returnArrivalDate" minDate={newItinerary.onwardDepartureDate} dateFormat="dd-M-yy" value={newItinerary.returnArrivalDate} onChange={(e) => handleInputChange('returnArrivalDate', e)} showIcon appendTo="self" />
                                                         <label htmlFor="returnArrivalDate">Arrival Date</label>
                                                     </FloatLabel>
                                                 </div>

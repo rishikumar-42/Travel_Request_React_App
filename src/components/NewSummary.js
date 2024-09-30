@@ -128,7 +128,7 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
   }
   const formatDate = (dateString) => {
     if (!dateString) return 'N/A';
-    const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+    const options = { year: 'numeric', month: 'short', day: '2-digit' };
     const date = new Date(dateString);
     return date.toLocaleDateString(undefined, options);
   };
@@ -137,7 +137,7 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
     if (!date) return '';
     const options = {
       day: '2-digit',
-      month: '2-digit',
+      month: 'short',
       year: 'numeric',
       hour: '2-digit',
       minute: '2-digit',
