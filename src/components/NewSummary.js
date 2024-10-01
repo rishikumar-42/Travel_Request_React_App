@@ -7,6 +7,7 @@ import { Toast } from 'primereact/toast';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
 import { border, borderLeft } from '@mui/system';
+import CancelDialog from './CancelDialog';
 
 const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, isDashboardNavigate = false }) => {
   const [workflowTasks, setWorkflowTasks] = useState([]);
@@ -17,6 +18,7 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
   const [dialogType, setDialogType] = useState(''); // 'approve' or 'reject'
   const [comment, setComment] = useState('');
   const [loading, setLoading] = useState(true);
+  const [dialogOpen, setDialogOpen] = useState(false);
 
 
   const { auth, login } = useAuth(); // Access auth from context
@@ -212,6 +214,11 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
       item.approver1Comment = comment;
       TravelRequestFormServiceLayer.updatePatchFormData(item.id, { approver2Comment: comment });
     }
+  };
+
+  const handleConfirm = () => {
+    setDialogOpen(false);
+    handleCancel();
   };
 
   const handleCancel = async () => {
@@ -616,8 +623,14 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
           <div className="gap-5" style={{ display: 'flex' }}>
             <button className="back-button" onClick={handleRefresh}>Back</button>
             {(item.approveStatus?.key === 'draft' || item.approveStatus?.key === 'pendingAtApprover1') && cancelFlag && !isDashboardNavigate &&
-              <button className="back-button" onClick={handleCancel}>Cancel</button>
+              // <button className="back-button" onClick={handleCancel}>Cancel</button>
+              <button className="back-button" onClick={() => setDialogOpen(true)}>Cancel</button>
             }
+            <CancelDialog 
+                open={dialogOpen} 
+                onClose={() => setDialogOpen(false)} 
+                onConfirm={handleConfirm} 
+              />
           </div>
           {/* </div> */}
 
