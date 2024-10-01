@@ -477,11 +477,6 @@ const MyList = () => {
         style={{ cursor: 'pointer' }}
       />
 
-      <ConfirmationDialog
-        open={isDialogOpen}
-        onClose={handleDialogClose}
-        onConfirm={handleConfirmDelete}
-      />
                               </>
                             )}
                           </td>
@@ -493,6 +488,11 @@ const MyList = () => {
                       </tr>
                     )}
                   </tbody>
+                  <ConfirmationDialog
+        open={isDialogOpen}
+        onClose={handleDialogClose}
+        onConfirm={handleConfirmDelete}
+      />
                 </table>
                 <div
                   className=
