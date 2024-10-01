@@ -37,6 +37,8 @@ function EditTravelRequestForm() {
     const [loading, setLoading] = useState(false);
     const [dialogOpen, setDialogOpen] = useState(false);
     const [itineraryIndexToDelete, setItineraryIndexToDelete] = useState(null);
+    const [openDialog, setOpenDialog] = useState(false);
+    const [selectedRowIndex, setSelectedRowIndex] = useState(null);
     const fileInputRef = useRef(null);
 
     // console.log("Issuer Date",item.issuerDate);
@@ -173,7 +175,7 @@ function EditTravelRequestForm() {
         const selectedFile = attachments[rowIndex];
         console.log("selected file : ", selectedFile)
         try {
-            await TravelRequestFormService.deleteDocuments(selectedFile.fileId)
+            // await TravelRequestFormService.deleteDocuments(selectedFile.fileId)
             showMessage('success', 'Success', `Successfully removed ${selectedFile.title}`)
             setAttachments(attachments.filter((_, i) => i !== rowIndex));
         } catch (error) {
@@ -181,6 +183,23 @@ function EditTravelRequestForm() {
             showMessage('error', 'Error', `Error response : ${error.response.data.title}`)
             // setFileError(error)
         }
+    };
+
+    const handleRemoveClick = (rowIndex) => {
+        setSelectedRowIndex(rowIndex);
+        setOpenDialog(true);
+    };
+
+    const handleCloseDialog = () => {
+        setOpenDialog(false);
+        setSelectedRowIndex(null);
+    };
+
+    const handleConfirmDeletion = async () => {
+        if (selectedRowIndex !== null) {
+            await handleRemovefiles(selectedRowIndex);
+        }
+        handleCloseDialog();
     };
 
     const onFileUpload = async (selectedFile, originalFileName) => {
@@ -290,7 +309,7 @@ function EditTravelRequestForm() {
 
         try {
             // Delete itinerary from server
-            await deleteItineraryFromServer(itineraryToRemove.id);
+            // await deleteItineraryFromServer(itineraryToRemove.id);
 
             // Remove itinerary from state
             setItineraries(itineraries.filter((_, i) => i !== index));
@@ -1827,8 +1846,15 @@ function EditTravelRequestForm() {
                                 <Column header="Actions" headerClassName="custom-header"
                                     body={(rowData, { rowIndex }) => (
                                         <div style={{ display: 'flex', justifyContent: 'left', alignItems: 'left' }}>
-                                            <Button severity="danger" type="button" icon="pi pi-times"
-                                                onClick={() => handleRemovefiles(rowIndex)} style={{ backgroundColor: 'white', color: 'black', border: 'none' }} />
+                                            {/* <Button severity="danger" type="button" icon="pi pi-times"
+                                                onClick={() => handleRemovefiles(rowIndex)} style={{ backgroundColor: 'white', color: 'black', border: 'none' }} /> */}
+                                                 <Button severity="danger" type="button" icon="pi pi-times"
+                                                onClick={() => handleRemoveClick(rowIndex)} style={{ backgroundColor: 'white', color: 'black', border: 'none' }} />
+                                                <ConfirmationDialog
+                open={openDialog}
+                onClose={handleCloseDialog}
+                onConfirm={handleConfirmDeletion}
+            />
                                         </div>
                                     )}
                                 />
