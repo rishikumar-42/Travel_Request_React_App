@@ -30,6 +30,7 @@ import { useNavigate } from 'react-router-dom';
 import { Divider } from "@mui/material";
 import { SpaceBar } from "@mui/icons-material";
 import { color } from "@mui/system";
+import ConfirmationDialog from './ConfirmationDialog';
 
 function TravelRequestForm() {
     const primary = "#fff"; // #f44336
@@ -71,6 +72,10 @@ function TravelRequestForm() {
     const [editingItinerary, setEditingItinerary] = useState(null);
     const submitButtonRef = useRef(null);
     const [loading, setLoading] = useState(false);
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [dialogOpen, setDialogOpen] = useState(false);
+    const [itemToRemoveIndex, setItemToRemoveIndex] = useState(null);
+    const [selectedRowIndex, setSelectedRowIndex] = useState(null);
     const fileInputRef = useRef(null);
 
     const navigate = useNavigate();
@@ -176,6 +181,19 @@ function TravelRequestForm() {
             showMessage('error', 'Error', `Error response : ${error.response.data.title}`)
             // setFileError(error)
         }
+    };
+
+    const handleDeleteFileClick = (rowIndex) => {
+        setSelectedRowIndex(rowIndex);
+        setDialogOpen(true);
+    };
+
+    const handleConfirmFileDelete = () => {
+        if (selectedRowIndex !== null) {
+            handleRemovefiles(selectedRowIndex);
+        }
+        setDialogOpen(false);
+        setSelectedRowIndex(null); // Reset selected index
     };
 
     const onFileUpload = async (selectedFile, originalFileName) => {
@@ -294,6 +312,23 @@ function TravelRequestForm() {
             </div>
         );
     };
+
+    const handleRemoveClick = (index) => {
+        setItemToRemoveIndex(index);
+        setIsDialogOpen(true);
+      };
+    
+      const handleDialogClose = () => {
+        setIsDialogOpen(false);
+        setItemToRemoveIndex(null);
+      };
+    
+      const handleConfirmRemove = () => {
+        if (itemToRemoveIndex !== null) {
+          setItineraries(itineraries.filter((_, i) => i !== itemToRemoveIndex));
+          handleDialogClose();
+        }
+      };
 
     useEffect(() => {
         const getAllUsers = async () => {
@@ -1600,8 +1635,22 @@ function TravelRequestForm() {
                                         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                                             <Button icon="pi pi-pencil" type="button" style={{ marginRight: '0.5rem', backgroundColor: 'white', color: 'black', border: 'none' }}
                                                 onClick={() => handleEditItinerary(rowIndex)} />
-                                            <Button severity="danger" type="button" icon="pi pi-trash"
-                                                onClick={() => handleRemoveItinerary(rowIndex)} style={{ backgroundColor: 'white', color: 'black', border: 'none' }} />
+                                            {/* <Button severity="danger" type="button" icon="pi pi-trash"
+                                                onClick={() => handleRemoveItinerary(rowIndex)} style={{ backgroundColor: 'white', color: 'black', border: 'none' }} /> */}
+                                                <Button 
+        severity="danger" 
+        type="button" 
+        icon="pi pi-trash"
+        onClick={() => handleRemoveClick(rowIndex)} // Ensure rowIndex is defined
+        style={{ backgroundColor: 'white', color: 'black', border: 'none' }}
+      />
+
+      {/* Confirmation Dialog */}
+      <ConfirmationDialog
+        open={isDialogOpen}
+        onClose={handleDialogClose}
+        onConfirm={handleConfirmRemove}
+      />
                                         </div>
                                     )}
                                 />
@@ -1634,8 +1683,15 @@ function TravelRequestForm() {
                                 <Column header="Actions" headerClassName="custom-header"
                                     body={(rowData, { rowIndex }) => (
                                         <div style={{ display: 'flex', justifyContent: 'left', alignItems: 'left' }}>
-                                            <Button severity="danger" type="button" icon="pi pi-times"
-                                                onClick={() => handleRemovefiles(rowIndex)} style={{ backgroundColor: 'white', color: 'black', border: 'none' }} />
+                                            {/* <Button severity="danger" type="button" icon="pi pi-times"
+                                                onClick={() => handleRemovefiles(rowIndex)} style={{ backgroundColor: 'white', color: 'black', border: 'none' }} /> */}
+                                                <Button severity="danger" type="button" icon="pi pi-times"
+                                                onClick={() => handleDeleteFileClick(rowIndex)} style={{ backgroundColor: 'white', color: 'black', border: 'none' }} />
+                                                 <ConfirmationDialog
+                open={dialogOpen}
+                onClose={() => setDialogOpen(false)}
+                onConfirm={handleConfirmFileDelete}
+            />
                                         </div>
                                     )}
                                 />

@@ -214,7 +214,7 @@ const Dashboard = () => {
               className={`tab-button ${activeTab === 'rejected' ? 'active' : ''}`}
               onClick={() => handleTabClick('rejected')}
             >
-              Denied By Me
+              Rejected By Me
             </button>
           </div>
 
@@ -233,7 +233,7 @@ const Dashboard = () => {
               <span>
               {activeTab === 'pending' && 'Waiting for My Approval'}
               {activeTab === 'approved' && 'Approved By Me'}
-              {activeTab === 'rejected' && 'Denied By Me'}
+              {activeTab === 'rejected' && 'Rejected By Me'}
               </span>
             </div>
           </div>

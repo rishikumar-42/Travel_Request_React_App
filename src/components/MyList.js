@@ -7,6 +7,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { useNavigate } from 'react-router-dom';
 import { Toast } from "primereact/toast";
+import ConfirmationDialog from './ConfirmationDialog';
 
 const MyList = () => {
   const [activeTab, setActiveTab] = useState('pendingAtApprover1 || pendingAtApprover2');
@@ -20,6 +21,8 @@ const MyList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [currentUserId, setCurrentUserId] = useState(null);
   const [currentEmailAddress, setEmailAddress] = useState(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState(null);
   const navigate = useNavigate();
 
   const toast = useRef(null);
@@ -220,6 +223,23 @@ const MyList = () => {
     }
   };
 
+  const handleDeleteClick = (id) => {
+    setItemToDelete(id);
+    setIsDialogOpen(true);
+  };
+
+  const handleDialogClose = () => {
+    setIsDialogOpen(false);
+    setItemToDelete(null);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (itemToDelete) {
+      await handleDelete(itemToDelete);
+      handleDialogClose();
+    }
+  };
+
 
 
   useEffect(() => {
@@ -324,7 +344,7 @@ const MyList = () => {
               className={`tab-button ${activeTab === 'rejected' ? 'active' : ''}`}
               onClick={() => handleTabClick('rejected')}
             >
-              Denied Requests
+              Rejected Requests
             </button>
             <button
               className={`tab-button ${activeTab === 'all' ? 'active' : ''}`}
@@ -351,7 +371,7 @@ const MyList = () => {
                 {activeTab === 'draft' && 'My Draft Requests'}
                 {activeTab === 'approved' && 'My Approved Requests'}
                 {activeTab === 'cancelled' && 'My Cancelled Requests'}
-                {activeTab === 'rejected' && 'My Denied Requests'}
+                {activeTab === 'rejected' && 'My Rejected Requests'}
                 {activeTab === 'all' && 'All Requests'}
               </span>
             </div>
@@ -419,10 +439,20 @@ const MyList = () => {
                                   onClick={() => handleEditClick(item)}
                                   style={{ cursor: 'pointer', marginRight: '10px' }}
                                 />
-                                <DeleteIcon
+                                {/* <DeleteIcon
                                   onClick={() => handleDelete(item.id)}
                                   style={{ cursor: 'pointer' }}
-                                />
+                                /> */}
+                                <DeleteIcon
+        onClick={() => handleDeleteClick(item.id)}
+        style={{ cursor: 'pointer' }}
+      />
+
+      <ConfirmationDialog
+        open={isDialogOpen}
+        onClose={handleDialogClose}
+        onConfirm={handleConfirmDelete}
+      />
                               </>
                             )}
                             {activeTab === 'all' && item.approveStatus?.key === 'pendingAtApprover1' && (
@@ -437,10 +467,20 @@ const MyList = () => {
                                   onClick={() => handleEditClick(item)}
                                   style={{ cursor: 'pointer', marginRight: '10px' }}
                                 />
-                                <DeleteIcon
+                                {/* <DeleteIcon
                                   onClick={() => handleDelete(item.id)}
                                   style={{ cursor: 'pointer' }}
-                                />
+                                /> */}
+                                <DeleteIcon
+        onClick={() => handleDeleteClick(item.id)}
+        style={{ cursor: 'pointer' }}
+      />
+
+      <ConfirmationDialog
+        open={isDialogOpen}
+        onClose={handleDialogClose}
+        onConfirm={handleConfirmDelete}
+      />
                               </>
                             )}
                           </td>
