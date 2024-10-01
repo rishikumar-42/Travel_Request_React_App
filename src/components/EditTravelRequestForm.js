@@ -1277,11 +1277,12 @@ function EditTravelRequestForm() {
                                         }}
                                         itemTemplate={itemTemplate}
                                         disabled={selectedItem === null || item.approveStatus?.key !== 'draft'}
+                                        required={formData.travelType === 'international'}
                                         // tooltipOptions={{ showOnDisabled: true, position: 'bottom' }}
                                     // readOnly={formData.approveStatus?.key !== 'draft'}
                                     // tooltip="Disabled"
                                     />
-                                    <label htmlFor="hod" className="small">Head Of Department/GM/VP</label>
+                                    <label htmlFor="hod" className="small">Head Of Department/GM/VP{formData.travelType === 'international' && <span className="text-danger px-1">*</span>}</label>
 
                                     {!isHODEmailValid && <span htmlFor="hod" className="small"> <strong style={{ color: 'red' }}>Email not in the list</strong></span>}
                                 </FloatLabel>

@@ -1150,11 +1150,12 @@ function TravelRequestForm() {
                                         }}
                                         itemTemplate={itemTemplate}
                                         disabled={selectedItem === null}
+                                        required={formData.travelType === 'international'}
                                         // forceSelection
                                         // tooltipOptions={{ showOnDisabled: true, position: 'bottom' }}
                                         // tooltip="Disabled"
                                     />
-                                    <label htmlFor="hod" className="small">Head Of Department/GM/VP</label>
+                                    <label htmlFor="hod" className="small">Head Of Department/GM/VP{formData.travelType === 'international' && <span className="text-danger px-1">*</span>}</label>
 
                                     {!isHODEmailValid && <span htmlFor="hod" className="small"> <strong style={{ color: 'red' }}>Invalid Email</strong></span>}
                                 </FloatLabel>
