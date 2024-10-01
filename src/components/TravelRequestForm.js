@@ -678,7 +678,7 @@ function TravelRequestForm() {
     // Handle form submission
     const handleFormSubmit = async (e) => {
         e.preventDefault();
-        setPreviewVisible(true)
+        setPreviewVisible(false)
         console.log("Form submission started");
         setLoading(true);
         const uniqId = await createUniqueId();
@@ -1733,7 +1733,7 @@ function TravelRequestForm() {
                             }))}
                             type="submit"
                             label="Save As Draft"
-                            disabled={isEmailValidSubmit}
+                            disabled={loading || isEmailValidSubmit}
                         />
                         <Button className="mb-3" type="button" icon="pi pi-angle-double-right" label="Next" rounded onClick={() => setPreviewVisible(true)} />
                         <Button
@@ -1753,14 +1753,14 @@ function TravelRequestForm() {
                                     <Button
                                         // disabled={isEmailValidSubmit}
                                         onClick={() => {
-                                            setPreviewVisible(true);
+                                            setPreviewVisible(false);
                                             submitButtonRef.current.click();
                                         }}
                                         // type="submit"
                                         // label="Submit"
                                         disabled={loading || isEmailValidSubmit}
                                         type="submit"
-                                        label={loading ? "Loading..." : "Submit"}
+                                        label={"Submit"}
                                     />
                                 </div>
 
@@ -1768,6 +1768,11 @@ function TravelRequestForm() {
 
 
                         </div>
+                        {loading && (
+                                <div className="loader-container">
+                                    <div className="loader"></div>
+                                </div>
+                            )}
                     </div>
 
                 </form>

@@ -1901,9 +1901,13 @@ function EditTravelRequestForm() {
                             // label="Update"
                             disabled={loading || isEmailValidSubmit}
                             type="submit"
-                            label={loading ? "Loading..." : "Update"}
+                            label={ "Update"}
                         />
-
+                            {loading && (
+                                <div className="loader-container">
+                                    <div className="loader"></div>
+                                </div>
+                            )}
                         {/* <Button className="mb-3" style={{
                             border: 'none', // Remove border
                             borderRadius: '4px', // Set a small border radius (adjust as needed)
