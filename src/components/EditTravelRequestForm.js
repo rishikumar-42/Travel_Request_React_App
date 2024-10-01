@@ -28,12 +28,15 @@ import { useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { Toast } from "primereact/toast";
+import ConfirmationDialog from './ConfirmationDialog';
 
 function EditTravelRequestForm() {
     const location = useLocation();
     const { item, travelInfo, attachmentInfo } = location.state || {};
     const [isEmailValidSubmit, setIsEmailValidSubmit] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [dialogOpen, setDialogOpen] = useState(false);
+    const [itineraryIndexToDelete, setItineraryIndexToDelete] = useState(null);
     const fileInputRef = useRef(null);
 
     // console.log("Issuer Date",item.issuerDate);
@@ -296,6 +299,19 @@ function EditTravelRequestForm() {
             // Optionally, show an error message to the user
         }
     };
+
+    const openConfirmationDialog = (index) => {
+        setItineraryIndexToDelete(index);
+        setDialogOpen(true);
+      };
+    
+      const handleConfirmDelete = () => {
+        if (itineraryIndexToDelete !== null) {
+          handleRemoveItinerary(itineraryIndexToDelete);
+          setItineraryIndexToDelete(null); // Reset the index
+        }
+        setDialogOpen(false);
+      };
 
 
     const deleteItineraryFromServer = async (id) => {
@@ -1751,7 +1767,13 @@ function EditTravelRequestForm() {
                                         body={(rowData, { rowIndex }) => (
                                             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                                                 <Button icon="pi pi-pencil" style={{ marginRight: '0.5rem', backgroundColor: 'white', color: 'black', border: 'none' }} type="button" onClick={() => handleEditItinerary(rowIndex)} />
-                                                <Button severity="danger" icon="pi pi-trash" type="button" onClick={() => handleRemoveItinerary(rowIndex)} style={{ backgroundColor: 'white', color: 'black', border: 'none' }} />
+                                                {/* <Button severity="danger" icon="pi pi-trash" type="button" onClick={() => handleRemoveItinerary(rowIndex)} style={{ backgroundColor: 'white', color: 'black', border: 'none' }} /> */}
+                                                <Button severity="danger" icon="pi pi-trash" type="button" onClick={() => openConfirmationDialog(rowIndex)} style={{ backgroundColor: 'white', color: 'black', border: 'none' }} />
+                                                <ConfirmationDialog
+        open={dialogOpen}
+        onClose={() => setDialogOpen(false)}
+        onConfirm={handleConfirmDelete}
+      />
                                             </div>
                                         )}
                                     />
