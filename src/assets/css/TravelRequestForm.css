@@ -700,3 +700,35 @@ label.mr-2.train {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
+
+/* 01-10-2024 */
+
+lable.startdate {
+    margin-top: -20px;
+    font-weight: 500;
+    font-size: .875em;
+    margin-bottom: 4px;
+    color: black;
+}
+lable.endate {
+    margin-top: -20px;
+    font-weight: 500;
+    color: black;
+    margin-bottom: 4px;
+    font-size: .875em;
+}
+
+.rs-picker-input-group.rs-input-group.rs-input-group-inside {
+    background: #F1F0F6;
+}
+input#checkIn {
+    background: #F1F0F6;
+}
+input#checkOut {
+    background: #F1F0F6;
+}
+
+.calendar-item.col-width {
+    width: 18%;
+}

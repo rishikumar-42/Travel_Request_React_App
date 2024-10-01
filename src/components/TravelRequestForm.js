@@ -31,6 +31,8 @@ import { Divider } from "@mui/material";
 import { SpaceBar } from "@mui/icons-material";
 import { color } from "@mui/system";
 import ConfirmationDialog from './ConfirmationDialog';
+import { DatePicker, Stack } from 'rsuite';
+import 'rsuite/dist/rsuite.min.css'
 
 function TravelRequestForm() {
     const primary = "#fff"; // #f44336
@@ -156,7 +158,7 @@ function TravelRequestForm() {
     }
     const onFileChange = (e) => {
         const selectedFile = e.target.files[0];
-        console.log("File details : " + selectedFile.name )
+        console.log("File details : " + selectedFile.name)
         if (selectedFile) {
             if (selectedFile.size > 5 * 1024 * 1024) {
                 // setFileError('File size exceeds the maximum limit.');
@@ -316,19 +318,19 @@ function TravelRequestForm() {
     const handleRemoveClick = (index) => {
         setItemToRemoveIndex(index);
         setIsDialogOpen(true);
-      };
-    
-      const handleDialogClose = () => {
+    };
+
+    const handleDialogClose = () => {
         setIsDialogOpen(false);
         setItemToRemoveIndex(null);
-      };
-    
-      const handleConfirmRemove = () => {
+    };
+
+    const handleConfirmRemove = () => {
         if (itemToRemoveIndex !== null) {
-          setItineraries(itineraries.filter((_, i) => i !== itemToRemoveIndex));
-          handleDialogClose();
+            setItineraries(itineraries.filter((_, i) => i !== itemToRemoveIndex));
+            handleDialogClose();
         }
-      };
+    };
 
     useEffect(() => {
         const getAllUsers = async () => {
@@ -634,10 +636,10 @@ function TravelRequestForm() {
     const handleTrainToggleChange = async (event) => {
         const isChecked = event.target.checked;
         setTrainDetails(isChecked);
-            setFormData(prevFormData => ({
-                ...prevFormData, // Spread the existing formData
-                trainTicketType: {}
-            }));
+        setFormData(prevFormData => ({
+            ...prevFormData, // Spread the existing formData
+            trainTicketType: {}
+        }));
     };
 
     useEffect(() => {
@@ -892,7 +894,7 @@ function TravelRequestForm() {
                                                     costCenter: '',
                                                     entity: '',
                                                     positionTitle: '',
-                                                    manager:'',
+                                                    manager: '',
                                                     hod: ''
                                                 });
                                                 setSelectedItem('');
@@ -1117,8 +1119,8 @@ function TravelRequestForm() {
                                         itemTemplate={itemTemplate}
                                         disabled={selectedEmployee === null}
                                         required
-                                        // tooltipOptions={{ showOnDisabled: true, position: 'bottom' }}
-                                        // tooltip="Disabled"
+                                    // tooltipOptions={{ showOnDisabled: true, position: 'bottom' }}
+                                    // tooltip="Disabled"
                                     />
                                     <label htmlFor="manager" className="small">Manager<span className="text-danger px-1">*</span></label>
                                     {!isManagerEmailValid && <span htmlFor="manager" className="small"> <strong style={{ color: 'red' }}>Invalid Email</strong></span>}
@@ -1151,9 +1153,9 @@ function TravelRequestForm() {
                                         itemTemplate={itemTemplate}
                                         disabled={selectedItem === null}
                                         required={formData.travelType === 'international'}
-                                        // forceSelection
-                                        // tooltipOptions={{ showOnDisabled: true, position: 'bottom' }}
-                                        // tooltip="Disabled"
+                                    // forceSelection
+                                    // tooltipOptions={{ showOnDisabled: true, position: 'bottom' }}
+                                    // tooltip="Disabled"
                                     />
                                     <label htmlFor="hod" className="small">Head Of Department/GM/VP{formData.travelType === 'international' && <span className="text-danger px-1">*</span>}</label>
 
@@ -1191,32 +1193,60 @@ function TravelRequestForm() {
                                     </FloatLabel>
                                 </div>
                                 <div className="calendar-item col-width">
-                                    <FloatLabel>
-                                        <Calendar id="checkIn" dateFormat="dd-M-yy" value={formData.hotelCheckIn}
+                                    {/* <FloatLabel> */}
+                                    <lable className="startdate">Check In<span className="text-danger px-1">*</span></lable>
+                                        <DatePicker format="dd/MMM/yyyy hh:mm aa" showMeridian id="checkIn" value={formData.hotelCheckIn}
                                             onChange={(e) => {
+                                                console.log("date : ", e)
                                                 setFormData({
                                                     ...formData,
-                                                    hotelCheckIn: e.value,
+                                                    hotelCheckIn: e,
                                                     hotelCheckOut: null,
                                                     hotelNumberOfNights: null
                                                 });
                                                 // calculateEstimatedNights(e.value, formData.hotelCheckOut);
-                                            }} showTime hourFormat="24" showIcon required />
-                                        <label htmlFor="checkIn" className="mr-2">Check In<span className="text-danger px-1">*</span></label>
-                                    </FloatLabel>
+                                            }} 
+                                            placeholder="CheckIn"
+                                            hideMinutes={(e) => e % 10 !== 0}
+                                            required />
+                                        {/* <label htmlFor="checkIn" className="mr-2">Check In<span className="text-danger px-1">*</span></label> */}
+                                    {/* </FloatLabel> */}
                                 </div>
                                 <div className="calendar-item col-width">
-                                    <FloatLabel>
-                                        <Calendar id="checkOut" minDate={formData.hotelCheckIn} dateFormat="dd-M-yy" value={formData.hotelCheckOut}
+                                <lable className="endate">Check Out<span className="text-danger px-1">*</span></lable>                                    
+                                    {/* <FloatLabel> */}
+                                        {/* <DatePicker format="dd/MM/yyyy hh:mm aa" showMeridian  id="checkOut"  value={formData.hotelCheckOut}
                                             onChange={(e) => {
                                                 setFormData({
                                                     ...formData,
-                                                    hotelCheckOut: e.value
+                                                    hotelCheckOut: e
                                                 });
-                                                calculateEstimatedNights(formData.hotelCheckIn, e.value);
-                                            }} showTime hourFormat="24" showIcon required />
-                                        <label htmlFor="checkOut" className="mr-2">Check Out<span className="text-danger px-1">*</span></label>
-                                    </FloatLabel>
+                                                calculateEstimatedNights(formData.hotelCheckIn, e);
+                                            }} 
+                                            minDate={formData.hotelCheckIn} required /> */}
+                                        <DatePicker
+                                            format="dd/MMM/yyyy hh:mm aa"
+                                            showMeridian
+                                            id="checkOut"
+                                            value={formData.hotelCheckOut}
+                                            placeholder="CheckOut"
+                                            hideMinutes={(e) => e % 10 !== 0}
+                                            onChange={(e) => {
+                                                setFormData({
+                                                    ...formData,
+                                                    hotelCheckOut: e,
+                                                });
+                                                calculateEstimatedNights(formData.hotelCheckIn, e);
+                                            }}
+                                            shouldDisableDate={(date) => {
+                                                const checkInDate = formData.hotelCheckIn ? new Date(formData.hotelCheckIn) : null;
+                                                return checkInDate && date < checkInDate; // Disable dates before check-in
+                                            }}
+                                            required
+                                        />
+
+                                        {/* <label htmlFor="checkOut" className="mr-2">Check Out<span className="text-danger px-1">*</span></label> */}
+                                    {/* </FloatLabel> */}
                                 </div>
                                 <div className="calendar-item">
                                     <FloatLabel>
@@ -1476,244 +1506,244 @@ function TravelRequestForm() {
                                             );
                                         })}
                                     </div>
-                                   
+
                                     <div className="d-flex gap-3 mt-3 mx-2 train">
-                                    <label htmlFor="travelType" className="mr-2 train">Train Ticket Type:</label>
-                                    {trainTypeList.map((category) => {
-                                        return (
-                                            <div key={category.key} className="d-flex align-items-center">
-                                                <RadioButton inputId={category.key} name="category" value={category}
-                                                    // onChange={(e) => set(e.value)} 
-                                                    onChange={(e) => {
-                                                        setTrainTypeValue(e.value)
-                                                        setFormData({
-                                                            ...formData, // Spread the existing formData
-                                                            trainTicketType: {
-                                                                key: e.value.key,
-                                                                name: e.value.name,
-                                                                // name: e.value.name // Update only the firstName property
-                                                            }
-                                                        });
-                                                        console.log("radio : ", formData)
-                                                    }
-                                                    }
-                                                    checked={trainTypeValue.key === category.key} />
-                                                <label htmlFor={category.key} className="ml-2 px-2">{category.name}</label>
-                                            </div>
-                                        );
-                                    })}
-                                </div>
+                                        <label htmlFor="travelType" className="mr-2 train">Train Ticket Type:</label>
+                                        {trainTypeList.map((category) => {
+                                            return (
+                                                <div key={category.key} className="d-flex align-items-center">
+                                                    <RadioButton inputId={category.key} name="category" value={category}
+                                                        // onChange={(e) => set(e.value)} 
+                                                        onChange={(e) => {
+                                                            setTrainTypeValue(e.value)
+                                                            setFormData({
+                                                                ...formData, // Spread the existing formData
+                                                                trainTicketType: {
+                                                                    key: e.value.key,
+                                                                    name: e.value.name,
+                                                                    // name: e.value.name // Update only the firstName property
+                                                                }
+                                                            });
+                                                            console.log("radio : ", formData)
+                                                        }
+                                                        }
+                                                        checked={trainTypeValue.key === category.key} />
+                                                    <label htmlFor={category.key} className="ml-2 px-2">{category.name}</label>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
                                 </div>
                                 <div className="flex justify-content mx-2 mb-2">
-                                
 
-                                <br></br>
-                                <div className="addbutton mx-2">
-                        {/* <button type="button" onClick={handleAddItineraryClick}>
+
+                                    <br></br>
+                                    <div className="addbutton mx-2">
+                                        {/* <button type="button" onClick={handleAddItineraryClick}>
                             {showItinerary ? "Hide Itinerary" : "Add Itinerary"}
                         </button> */}
-                        <Button onClick={() => {
-                            setShowItinerary(!showItinerary);
-                        }}
-                            className="btn-sm px-2 py-2 bg-gradients border-0" type="button" label="Add Itinerary" />
-                                </div>
-
-
-                                {showItinerary && (
-                        <div className="modal small">
-                            <div className="modal-content">
-                                <div className="savebn text-right d-flex justify-content-between align-items-center mt-2 d-flex gap-2">
-                                    <span className="text-left justify-content-start">
-                                        <label className="toggle-label h4" htmlFor="flightToggle">Add Itinerary</label>
-                                    </span>
-                                    <span className="close text-right justify-content-end " onClick={handleCloseItineraryClick}>&times;</span>
-                                </div>
-                                <hr class="my-1" />
-
-                                <div className="itinerary-form">
-                                    <div className="form-row d-flex align-content-stretch gap-3">
-                                        <div className="calendar-item">
-                                            <FloatLabel>
-                                                <InputText id="onwardJourney" maxLength={250} value={newItinerary.onwardJourney} onChange={e => handleInputChange('onwardJourney', e)} />
-                                                <label htmlFor="onwardJourney">Onward Journey (From - To)</label>
-                                            </FloatLabel>
-                                        </div>
-                                        <div className="calendar-item col-width">
-                                            <FloatLabel >
-                                                <Calendar id="onwardDepartureDate" dateFormat="dd-M-yy" value={newItinerary.onwardDepartureDate} onChange={(e) => handleInputChange('onwardDepartureDate', e)} showIcon appendTo="self" />
-                                                <label htmlFor="onwardDepartureDate">Departure Date</label>
-                                            </FloatLabel>
-                                        </div>
-                                        <div className="calendar-item">
-                                            <FloatLabel>
-                                                <Dropdown id="onwardPreferredTime" className="onwardPreferredTime"
-                                                    value={newItinerary.onwardPreferredTime}
-                                                    style={{ width: '9vw' }}
-                                                    onChange={e => handleInputChange('onwardPreferredTime', e)} options={preferredTimeList} optionLabel="name" />
-                                                <label htmlFor="onwardPreferredTime">Preferred Time</label>
-                                            </FloatLabel>
-                                        </div>
-                                        <div className="calendar-item">
-                                            <FloatLabel>
-                                                <InputText id="onwardTransportNumber" maxLength={250} value={newItinerary.onwardTransportNumber} onChange={e => handleInputChange('onwardTransportNumber', e)} />
-                                                <label htmlFor="onwardTransportNumber">Onward Flight/Train No</label>
-                                            </FloatLabel>
-                                        </div>
-                                        <div className="calendar-item flex-grow-1">
-                                            <FloatLabel className="w-100 car-note">
-                                                <InputText id="onwardJourneyNote" maxLength={250} className="w-100" value={newItinerary.onwardJourneyNote} onChange={e => handleInputChange('onwardJourneyNote', e)} />
-                                                <label htmlFor="onwardJourneyNote">Remarks</label>
-                                            </FloatLabel>
-                                        </div>
-
-                                    </div>
-                                    <div className="form-row">
-                                        <div className="form-group SRT d-flex">
-                                            <label htmlFor="showReturnFields mr-2">Show Return Trip</label>
-                                            <InputSwitch checked={showReturnFields} className="mx-2" onChange={(e) => setShowReturnFields(e.value)} />
-                                        </div>
+                                        <Button onClick={() => {
+                                            setShowItinerary(!showItinerary);
+                                        }}
+                                            className="btn-sm px-2 py-2 bg-gradients border-0" type="button" label="Add Itinerary" />
                                     </div>
 
-                                    {showReturnFields && (
-                                        <>
-                                            <div className="form-row2 gap-3">
-                                                <div >
-                                                    <FloatLabel>
-                                                        <InputText id="returnJourney" maxLength={250} value={newItinerary.returnJourney} onChange={e => handleInputChange('returnJourney', e)} />
-                                                        <label htmlFor="returnJourney">Return Journey (From - To)</label>
-                                                    </FloatLabel>
+
+                                    {showItinerary && (
+                                        <div className="modal small">
+                                            <div className="modal-content">
+                                                <div className="savebn text-right d-flex justify-content-between align-items-center mt-2 d-flex gap-2">
+                                                    <span className="text-left justify-content-start">
+                                                        <label className="toggle-label h4" htmlFor="flightToggle">Add Itinerary</label>
+                                                    </span>
+                                                    <span className="close text-right justify-content-end " onClick={handleCloseItineraryClick}>&times;</span>
                                                 </div>
-                                                <div className="col-width">
-                                                    <FloatLabel>
-                                                        <Calendar id="returnArrivalDate" minDate={newItinerary.onwardDepartureDate} dateFormat="dd-M-yy" value={newItinerary.returnArrivalDate} onChange={(e) => handleInputChange('returnArrivalDate', e)} showIcon appendTo="self" />
-                                                        <label htmlFor="returnArrivalDate">Arrival Date</label>
-                                                    </FloatLabel>
-                                                </div>
-                                                <div className="returnpreferredTime">
-                                                    <FloatLabel>
-                                                        <Dropdown id="returnpreferredTime" className="onwardPreferredTime"
-                                                            style={{ width: '9vw' }}
-                                                            value={newItinerary.returnPreferredTime}
-                                                            onChange={e => handleInputChange('returnPreferredTime', e)} options={preferredTimeList} optionLabel="name" />
-                                                        <label htmlFor="returnpreferredTime">Preferred Time</label>
-                                                    </FloatLabel>
-                                                </div>
-                                                <div >
-                                                    <FloatLabel>
-                                                        <InputText id="returnTransportNumber" maxLength={250} value={newItinerary.returnTransportNumber} onChange={e => handleInputChange('returnTransportNumber', e)} />
-                                                        <label htmlFor="returnTransportNumber">Return Flight/Train No</label>
-                                                    </FloatLabel>
+                                                <hr class="my-1" />
+
+                                                <div className="itinerary-form">
+                                                    <div className="form-row d-flex align-content-stretch gap-3">
+                                                        <div className="calendar-item">
+                                                            <FloatLabel>
+                                                                <InputText id="onwardJourney" maxLength={250} value={newItinerary.onwardJourney} onChange={e => handleInputChange('onwardJourney', e)} />
+                                                                <label htmlFor="onwardJourney">Onward Journey (From - To)</label>
+                                                            </FloatLabel>
+                                                        </div>
+                                                        <div className="calendar-item col-width">
+                                                            <FloatLabel >
+                                                                <Calendar id="onwardDepartureDate" dateFormat="dd-M-yy" value={newItinerary.onwardDepartureDate} onChange={(e) => handleInputChange('onwardDepartureDate', e)} showIcon appendTo="self" />
+                                                                <label htmlFor="onwardDepartureDate">Departure Date</label>
+                                                            </FloatLabel>
+                                                        </div>
+                                                        <div className="calendar-item">
+                                                            <FloatLabel>
+                                                                <Dropdown id="onwardPreferredTime" className="onwardPreferredTime"
+                                                                    value={newItinerary.onwardPreferredTime}
+                                                                    style={{ width: '9vw' }}
+                                                                    onChange={e => handleInputChange('onwardPreferredTime', e)} options={preferredTimeList} optionLabel="name" />
+                                                                <label htmlFor="onwardPreferredTime">Preferred Time</label>
+                                                            </FloatLabel>
+                                                        </div>
+                                                        <div className="calendar-item">
+                                                            <FloatLabel>
+                                                                <InputText id="onwardTransportNumber" maxLength={250} value={newItinerary.onwardTransportNumber} onChange={e => handleInputChange('onwardTransportNumber', e)} />
+                                                                <label htmlFor="onwardTransportNumber">Onward Flight/Train No</label>
+                                                            </FloatLabel>
+                                                        </div>
+                                                        <div className="calendar-item flex-grow-1">
+                                                            <FloatLabel className="w-100 car-note">
+                                                                <InputText id="onwardJourneyNote" maxLength={250} className="w-100" value={newItinerary.onwardJourneyNote} onChange={e => handleInputChange('onwardJourneyNote', e)} />
+                                                                <label htmlFor="onwardJourneyNote">Remarks</label>
+                                                            </FloatLabel>
+                                                        </div>
+
+                                                    </div>
+                                                    <div className="form-row">
+                                                        <div className="form-group SRT d-flex">
+                                                            <label htmlFor="showReturnFields mr-2">Show Return Trip</label>
+                                                            <InputSwitch checked={showReturnFields} className="mx-2" onChange={(e) => setShowReturnFields(e.value)} />
+                                                        </div>
+                                                    </div>
+
+                                                    {showReturnFields && (
+                                                        <>
+                                                            <div className="form-row2 gap-3">
+                                                                <div >
+                                                                    <FloatLabel>
+                                                                        <InputText id="returnJourney" maxLength={250} value={newItinerary.returnJourney} onChange={e => handleInputChange('returnJourney', e)} />
+                                                                        <label htmlFor="returnJourney">Return Journey (From - To)</label>
+                                                                    </FloatLabel>
+                                                                </div>
+                                                                <div className="col-width">
+                                                                    <FloatLabel>
+                                                                        <Calendar id="returnArrivalDate" minDate={newItinerary.onwardDepartureDate} dateFormat="dd-M-yy" value={newItinerary.returnArrivalDate} onChange={(e) => handleInputChange('returnArrivalDate', e)} showIcon appendTo="self" />
+                                                                        <label htmlFor="returnArrivalDate">Arrival Date</label>
+                                                                    </FloatLabel>
+                                                                </div>
+                                                                <div className="returnpreferredTime">
+                                                                    <FloatLabel>
+                                                                        <Dropdown id="returnpreferredTime" className="onwardPreferredTime"
+                                                                            style={{ width: '9vw' }}
+                                                                            value={newItinerary.returnPreferredTime}
+                                                                            onChange={e => handleInputChange('returnPreferredTime', e)} options={preferredTimeList} optionLabel="name" />
+                                                                        <label htmlFor="returnpreferredTime">Preferred Time</label>
+                                                                    </FloatLabel>
+                                                                </div>
+                                                                <div >
+                                                                    <FloatLabel>
+                                                                        <InputText id="returnTransportNumber" maxLength={250} value={newItinerary.returnTransportNumber} onChange={e => handleInputChange('returnTransportNumber', e)} />
+                                                                        <label htmlFor="returnTransportNumber">Return Flight/Train No</label>
+                                                                    </FloatLabel>
+                                                                </div>
+                                                            </div>
+                                                        </>
+                                                    )}
+
+                                                    <div className="savebn text-right d-flex mt-2 d-flex justify-content-end gap-2">
+                                                        <Button onClick={handleCloseItineraryClick} className="bg-danger border-0" label="Cancel" />
+                                                        <Button onClick={handleSaveItinerary} className="border-0" label="Save" disabled={saveItineraryFlag} />
+                                                    </div>
+
                                                 </div>
                                             </div>
-                                        </>
+                                        </div>
+                                    )}
+                                    {itineraries.length > 0 && (
+                                        <div className="itinerary-table">
+
+                                            <DataTable value={itineraries} showGridlines tableStyle={{ minWidth: '50rem' }}>
+                                                {/*<Column sortable field="price" header="Price incl. VAT" /> */}
+                                                <Column sortable field="onwardJourney" header="Onward Journey (From - To)" headerClassName="custom-header" />
+                                                <Column sortable field="onwardDepartureDate" header="Departure Date" body={(rowData) => formatDate(rowData.onwardDepartureDate)} headerClassName="custom-header" />
+                                                <Column sortable field="onwardPreferredTime" header="Onward Preferred Time" body={(rowData) => formatPickList(rowData.onwardPreferredTime)} headerClassName="custom-header" />
+                                                <Column sortable field="onwardTransportNumber" header="Onward Flight/Train No" headerClassName="custom-header" />
+                                                <Column sortable field="returnJourney" header="Return Journey (From - To)" headerClassName="custom-header" />
+                                                <Column sortable field="returnArrivalDate" header="Arrival Date" body={(rowData) => formatDate(rowData.returnArrivalDate)} headerClassName="custom-header" />
+                                                <Column sortable field="returnPreferredTime" header="Return Preferred Time" body={(rowData) => formatPickList(rowData.returnPreferredTime)} headerClassName="custom-header" />
+                                                <Column sortable field="returnTransportNumber" header="Return Flight/Train No" headerClassName="custom-header" />
+                                                <Column sortable field="onwardJourneyNote" header="Remarks" headerClassName="custom-header" />
+                                                <Column header="Actions" headerClassName="custom-header"
+                                                    body={(rowData, { rowIndex }) => (
+                                                        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                                            <Button icon="pi pi-pencil" type="button" style={{ marginRight: '0.5rem', backgroundColor: 'white', color: 'black', border: 'none' }}
+                                                                onClick={() => handleEditItinerary(rowIndex)} />
+                                                            {/* <Button severity="danger" type="button" icon="pi pi-trash"
+                                                onClick={() => handleRemoveItinerary(rowIndex)} style={{ backgroundColor: 'white', color: 'black', border: 'none' }} /> */}
+                                                            <Button
+                                                                severity="danger"
+                                                                type="button"
+                                                                icon="pi pi-trash"
+                                                                onClick={() => handleRemoveClick(rowIndex)} // Ensure rowIndex is defined
+                                                                style={{ backgroundColor: 'white', color: 'black', border: 'none' }}
+                                                            />
+
+                                                            {/* Confirmation Dialog */}
+                                                            <ConfirmationDialog
+                                                                open={isDialogOpen}
+                                                                onClose={handleDialogClose}
+                                                                onConfirm={handleConfirmRemove}
+                                                            />
+                                                        </div>
+                                                    )}
+                                                />
+                                            </DataTable>
+                                        </div>
                                     )}
 
-                                    <div className="savebn text-right d-flex mt-2 d-flex justify-content-end gap-2">
-                                        <Button onClick={handleCloseItineraryClick} className="bg-danger border-0" label="Cancel" />
-                                        <Button onClick={handleSaveItinerary} className="border-0" label="Save" disabled={saveItineraryFlag} />
+                                    <br></br><br></br>
+                                    <hr className="separator mb-2" />
+                                    <p className="mx-2">Note: Kindly attach the 3 quotes/routes provided by Travel Agent for comparison. If the least cost-saving route is not taken, kindly provide the reason below.</p>
+
+                                    <div className="px-3 pt-3">
+                                        <div className="py-1 mb-1">
+                                            <h6 className="text-left">Attachments</h6>
+                                        </div>
+                                        <div className="d-flex">
+                                            <input
+                                                type="file"
+                                                ref={fileInputRef}
+                                                // accept={accept}
+                                                onChange={onFileChange}
+                                            />
+                                            {/* <button className="btn-sm px-2 py-2 bg-gradients border-0" style={{ color: 'white' }} type="button" onClick={onFileUpload}>Upload</button> */}
+                                            {/* {fileError && <p style={{ color: 'red' }}>{fileError}</p>} */}
+                                        </div>
+
+                                        {files.length > 0 &&
+                                            <DataTable className="attachmentTable" value={files} showGridlines tableStyle={{ minWidth: '50rem' }}>
+                                                <Column className="attachmentTitle" sortable field="title" header="Title" headerClassName="custom-header" body={(rowData) => OnwardJourneyLink(rowData)} />
+                                                <Column header="Actions" headerClassName="custom-header"
+                                                    body={(rowData, { rowIndex }) => (
+                                                        <div style={{ display: 'flex', justifyContent: 'left', alignItems: 'left' }}>
+                                                            {/* <Button severity="danger" type="button" icon="pi pi-times"
+                                                onClick={() => handleRemovefiles(rowIndex)} style={{ backgroundColor: 'white', color: 'black', border: 'none' }} /> */}
+                                                            <Button severity="danger" type="button" icon="pi pi-times"
+                                                                onClick={() => handleDeleteFileClick(rowIndex)} style={{ backgroundColor: 'white', color: 'black', border: 'none' }} />
+                                                            <ConfirmationDialog
+                                                                open={dialogOpen}
+                                                                onClose={() => setDialogOpen(false)}
+                                                                onConfirm={handleConfirmFileDelete}
+                                                            />
+                                                        </div>
+                                                    )}
+                                                />
+                                            </DataTable>}
                                     </div>
 
+                                    <div className="form-dropdown-container d-flex gap-3 mx-2 reason-dropdown align-items-center mt-4">
+                                        <label htmlFor="reason">Reason<span className="text-danger px-1 mt-2">*</span></label>
+                                        <Dropdown inputId="dd-city" value={reasonValue} onChange={(e) => {
+                                            setReasonValue(e.value);
+                                            setFormData({
+                                                ...formData, // Spread the existing formData
+                                                flightTicketReason: {
+                                                    key: e.value.key,
+                                                    name: e.value.name,
+                                                    // name: e.value.name // Update only the firstName property
+                                                }
+                                            });
+                                        }} options={reasonList} optionLabel="name" className="w-full" required />
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                    )}
-                    {itineraries.length > 0 && (
-                        <div className="itinerary-table">
-
-                            <DataTable value={itineraries} showGridlines tableStyle={{ minWidth: '50rem' }}>
-                                {/*<Column sortable field="price" header="Price incl. VAT" /> */}
-                                <Column sortable field="onwardJourney" header="Onward Journey (From - To)" headerClassName="custom-header" />
-                                <Column sortable field="onwardDepartureDate" header="Departure Date" body={(rowData) => formatDate(rowData.onwardDepartureDate)} headerClassName="custom-header" />
-                                <Column sortable field="onwardPreferredTime" header="Onward Preferred Time" body={(rowData) => formatPickList(rowData.onwardPreferredTime)} headerClassName="custom-header" />
-                                <Column sortable field="onwardTransportNumber" header="Onward Flight/Train No" headerClassName="custom-header" />
-                                <Column sortable field="returnJourney" header="Return Journey (From - To)" headerClassName="custom-header" />
-                                <Column sortable field="returnArrivalDate" header="Arrival Date" body={(rowData) => formatDate(rowData.returnArrivalDate)} headerClassName="custom-header" />
-                                <Column sortable field="returnPreferredTime" header="Return Preferred Time" body={(rowData) => formatPickList(rowData.returnPreferredTime)} headerClassName="custom-header" />
-                                <Column sortable field="returnTransportNumber" header="Return Flight/Train No" headerClassName="custom-header" />
-                                <Column sortable field="onwardJourneyNote" header="Remarks" headerClassName="custom-header" />
-                                <Column header="Actions" headerClassName="custom-header"
-                                    body={(rowData, { rowIndex }) => (
-                                        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                                            <Button icon="pi pi-pencil" type="button" style={{ marginRight: '0.5rem', backgroundColor: 'white', color: 'black', border: 'none' }}
-                                                onClick={() => handleEditItinerary(rowIndex)} />
-                                            {/* <Button severity="danger" type="button" icon="pi pi-trash"
-                                                onClick={() => handleRemoveItinerary(rowIndex)} style={{ backgroundColor: 'white', color: 'black', border: 'none' }} /> */}
-                                                <Button 
-        severity="danger" 
-        type="button" 
-        icon="pi pi-trash"
-        onClick={() => handleRemoveClick(rowIndex)} // Ensure rowIndex is defined
-        style={{ backgroundColor: 'white', color: 'black', border: 'none' }}
-      />
-
-      {/* Confirmation Dialog */}
-      <ConfirmationDialog
-        open={isDialogOpen}
-        onClose={handleDialogClose}
-        onConfirm={handleConfirmRemove}
-      />
-                                        </div>
-                                    )}
-                                />
-                            </DataTable>
-                        </div>
-                    )}
-
-                                <br></br><br></br>
-                                <hr className="separator mb-2" />
-                                <p className="mx-2">Note: Kindly attach the 3 quotes/routes provided by Travel Agent for comparison. If the least cost-saving route is not taken, kindly provide the reason below.</p>
-
-                                <div className="px-3 pt-3">
-                        <div className="py-1 mb-1">
-                            <h6 className="text-left">Attachments</h6>
-                        </div>
-                        <div className="d-flex">
-                            <input
-                                type="file"
-                                ref={fileInputRef}
-                                // accept={accept}
-                                onChange={onFileChange}
-                            />
-                            {/* <button className="btn-sm px-2 py-2 bg-gradients border-0" style={{ color: 'white' }} type="button" onClick={onFileUpload}>Upload</button> */}
-                            {/* {fileError && <p style={{ color: 'red' }}>{fileError}</p>} */}
-                        </div>
-
-                        {files.length > 0 &&
-                            <DataTable className="attachmentTable" value={files} showGridlines tableStyle={{ minWidth: '50rem' }}>
-                                <Column className="attachmentTitle" sortable field="title" header="Title" headerClassName="custom-header" body={(rowData) => OnwardJourneyLink(rowData)} />
-                                <Column header="Actions" headerClassName="custom-header"
-                                    body={(rowData, { rowIndex }) => (
-                                        <div style={{ display: 'flex', justifyContent: 'left', alignItems: 'left' }}>
-                                            {/* <Button severity="danger" type="button" icon="pi pi-times"
-                                                onClick={() => handleRemovefiles(rowIndex)} style={{ backgroundColor: 'white', color: 'black', border: 'none' }} /> */}
-                                                <Button severity="danger" type="button" icon="pi pi-times"
-                                                onClick={() => handleDeleteFileClick(rowIndex)} style={{ backgroundColor: 'white', color: 'black', border: 'none' }} />
-                                                 <ConfirmationDialog
-                open={dialogOpen}
-                onClose={() => setDialogOpen(false)}
-                onConfirm={handleConfirmFileDelete}
-            />
-                                        </div>
-                                    )}
-                                />
-                            </DataTable>}
-                            </div>
-
-                                <div className="form-dropdown-container d-flex gap-3 mx-2 reason-dropdown align-items-center mt-4">
-                                    <label htmlFor="reason">Reason<span className="text-danger px-1 mt-2">*</span></label>
-                                    <Dropdown inputId="dd-city" value={reasonValue} onChange={(e) => {
-                                        setReasonValue(e.value);
-                                        setFormData({
-                                            ...formData, // Spread the existing formData
-                                            flightTicketReason: {
-                                                key: e.value.key,
-                                                name: e.value.name,
-                                                // name: e.value.name // Update only the firstName property
-                                            }
-                                        });
-                                    }} options={reasonList} optionLabel="name" className="w-full" required />
-                                </div>
-                            </div>
 
 
 
@@ -1769,10 +1799,10 @@ function TravelRequestForm() {
 
                         </div>
                         {loading && (
-                                <div className="loader-container">
-                                    <div className="loader"></div>
-                                </div>
-                            )}
+                            <div className="loader-container">
+                                <div className="loader"></div>
+                            </div>
+                        )}
                     </div>
 
                 </form>

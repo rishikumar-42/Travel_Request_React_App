@@ -29,6 +29,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { Toast } from "primereact/toast";
 import ConfirmationDialog from './ConfirmationDialog';
+import { DatePicker } from "rsuite";
 
 function EditTravelRequestForm() {
     const location = useLocation();
@@ -1338,32 +1339,45 @@ function EditTravelRequestForm() {
                                     </FloatLabel>
                                 </div>
                                 <div className="calendar-item col-width">
-                                    <FloatLabel>
-                                        <Calendar id="checkIn" dateFormat="dd-M-yy" value={formData.hotelCheckIn}
+                                    {/* <FloatLabel> */}
+                                    <lable className="startdate">Check In<span className="text-danger px-1">*</span></lable>
+                                        <DatePicker format="dd/MMM/yyyy hh:mm aa" showMeridian  id="checkIn" value={formData.hotelCheckIn}
                                             onChange={(e) => {
                                                 setFormData({
                                                     ...formData,
-                                                    hotelCheckIn: e.value,
+                                                    hotelCheckIn: e,
                                                     hotelCheckOut: null,
                                                     hotelNumberOfNights: null
                                                 });
                                                 // calculateEstimatedNights(e.value, formData.hotelCheckOut);
-                                            }} showTime hourFormat="24" showIcon required />
-                                        <label htmlFor="checkIn" className="mr-2">Check In<span className="text-danger px-1">*</span></label>
-                                    </FloatLabel>
+                                               
+                                            }} 
+                                            placeholder="CheckIn"
+                                            hideMinutes={(e) => e % 10 !== 0}
+                                             required />
+                                        {/* <label htmlFor="checkIn" className="mr-2">Check In<span className="text-danger px-1">*</span></label>
+                                    </FloatLabel> */}
                                 </div>
                                 <div className="calendar-item col-width">
-                                    <FloatLabel>
-                                        <Calendar id="checkOut" minDate={formData.hotelCheckIn} dateFormat="dd-M-yy" value={formData.hotelCheckOut}
+                                    {/* <FloatLabel> */}
+                                    <lable className="endate">Check Out<span className="text-danger px-1">*</span></lable>
+                                        <DatePicker format="dd/MMM/yyyy hh:mm aa" showMeridian  id="checkOut" minDate={formData.hotelCheckIn} value={formData.hotelCheckOut}
                                             onChange={(e) => {
                                                 setFormData({
                                                     ...formData,
-                                                    hotelCheckOut: e.value
+                                                    hotelCheckOut: e
                                                 });
-                                                calculateEstimatedNights(formData.hotelCheckIn, e.value);
-                                            }} showTime hourFormat="24" showIcon required />
-                                        <label htmlFor="checkOut" className="mr-2">Check Out<span className="text-danger px-1">*</span></label>
-                                    </FloatLabel>
+                                                calculateEstimatedNights(formData.hotelCheckIn, e);
+                                            }} 
+                                            placeholder="CheckOut"
+                                            hideMinutes={(e) => e % 10 !== 0}
+                                            shouldDisableDate={(date) => {
+                                                const checkInDate = formData.hotelCheckIn ? new Date(formData.hotelCheckIn) : null;
+                                                return checkInDate && date < checkInDate; // Disable dates before check-in
+                                            }}
+                                             required />
+                                        {/* <label htmlFor="checkOut" className="mr-2">Check Out<span className="text-danger px-1">*</span></label>
+                                    </FloatLabel> */}
                                 </div>
                                 <div className="calendar-item">
                                     <FloatLabel>
