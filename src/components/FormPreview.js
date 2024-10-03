@@ -7,6 +7,7 @@ import { Column } from 'primereact/column';
 
 const FormPreview = ({ item, travelInfo, attachments }) => {
 
+    console.log("item : ", item)
     const OnwardJourneyLink = (rowData) => {
 
         console.log("url : ", rowData.contentUrl)
@@ -123,14 +124,14 @@ const FormPreview = ({ item, travelInfo, attachments }) => {
                             <span className="preview-label">Travel Destination:</span>
                             <span className="preview-value">{item.destination || 'N/A'}</span>
                         </div>
-                        <div className="preview-detail-item">
+                        {/* <div className="preview-detail-item">
                             <span className="preview-label">Departure Date:</span>
                             <span className="preview-value">{formatDate(item.travelDepartureDate) || 'N/A'}</span>
                         </div>
                         <div className="preview-detail-item">
                             <span className="preview-label">Return Date:</span>
                             <span className="preview-value">{formatDate(item.travelArrivalDate) || 'N/A'}</span>
-                        </div>
+                        </div> */}
                         <div className="preview-detail-item">
                             <span className="preview-label">Estimated Duration:</span>
                             <span className="preview-value">{item.travelEstimatedDuration || 'N/A'}</span>
@@ -178,11 +179,11 @@ const FormPreview = ({ item, travelInfo, attachments }) => {
                         </div>
                         <div className="preview-detail-item">
                             <span className="preview-label">Check In:</span>
-                            <span className="preview-value">{formatDateTime(item.hotelCheckIn) || 'N/A'}</span>
+                            <span className="preview-value">{item.hotelCheckIn !== null ? formatDateTime(item.hotelCheckIn) : 'N/A'}</span>
                         </div>
                         <div className="preview-detail-item">
                             <span className="preview-label">Check Out:</span>
-                            <span className="preview-value">{formatDateTime(item.hotelCheckOut) || 'N/A'}</span>
+                            <span className="preview-value">{item.hotelCheckOut !== null ? formatDateTime(item.hotelCheckOut) : 'N/A'}</span>
                         </div>
                         <div className="preview-detail-item">
                             <span className="preview-label">Number of Nights:</span>
@@ -214,15 +215,15 @@ const FormPreview = ({ item, travelInfo, attachments }) => {
                         </div>
                         <div className="preview-detail-item">
                             <span className="preview-label">On:</span>
-                            <span className="preview-value">{formatDate(item.carRentalOn) || 'N/A'}</span>
+                            <span className="preview-value">{item.carRentalOn instanceof Date && !isNaN(item.carRentalOn) ? formatDate(item.carRentalOn) : 'N/A'}</span>
                         </div>
                         <div className="preview-detail-item">
                             <span className="preview-label">Until:</span>
-                            <span className="preview-value">{formatDate(item.carRentalUntil) || 'N/A'}</span>
+                            <span className="preview-value">{item.carRentalUntil instanceof Date && !isNaN(item.carRentalUntil) ? formatDate(item.carRentalUntil) : 'N/A'}</span>
                         </div>
                         <div className="preview-detail-item">
                             <span className="preview-label">BirthDate:</span>
-                            <span className="preview-value">{formatDate(item.carRentalBirthDate) || 'N/A'}</span>
+                            <span className="preview-value">{item.carRentalBirthDate instanceof Date && !isNaN(item.carRentalBirthDate) ? formatDate(item.carRentalBirthDate) : 'N/A'}</span>
                         </div>
                         <div className="preview-detail-item">
                             <span className="preview-label">Driving License:</span>
@@ -263,13 +264,12 @@ const FormPreview = ({ item, travelInfo, attachments }) => {
                         <div className="preview-detail-item">
                             <span className="preview-label">Flight Ticket Type:</span>
                             <span className="preview-value">
-                                {item.flightTicketType !== null ? item.flightTicketType.name : 'N/A'}
+                                {item.flightTicketType !== null && item.flightTicketType !== undefined ? (typeof item.flightTicketType === 'object' ? item.flightTicketType.name : item.flightTicketType) : 'N/A'}
                             </span>
                         </div>
                         <div className="detail-item preview-train-type" >
                             <span className="label">Train Ticket Type:</span>
-                            <span className="value"> {item.trainTicketType && item.trainTicketType.name ? item.trainTicketType.name :
-                                'N/A'}</span>
+                            <span className="value"> {item.trainTicketType && item.trainTicketType !== undefined ? (typeof item.trainTicketType === 'object' ? item.trainTicketType.name : item.trainTicketType) : 'N/A'}</span>
                         </div>
                         {/* <div className="preview-detail-item">
                             <span className="preview-label">Reason:</span>
@@ -316,12 +316,12 @@ const FormPreview = ({ item, travelInfo, attachments }) => {
 
 
                 <div className="preview-summary-details">
-                    <DataTable value={travelInfo} showGridlines tableStyle={{ minWidth: '50rem' }}>
+                    <DataTable value={travelInfo} className='previewDataTable' showGridlines tableStyle={{ minWidth: '50rem' }}>
                         <Column sortable field="onwardJourney" header="Onward Journey (From - To)" headerClassName="preview-custom-header" />
                         <Column sortable field="onwardDepartureDate" header="Departure Date" body={(rowData) => formatDate(rowData.onwardDepartureDate)} headerClassName="preview-custom-header" />
                         <Column sortable field="onwardPreferredTime" header="Onward Preferred Time" body={(rowData) => formatPickList(rowData.onwardPreferredTime)} headerClassName="preview-custom-header" />
                         <Column sortable field="onwardTransportNumber" header="Onward Flight/Train No" headerClassName="preview-custom-header" />
-                        <Column sortable field="returnJourney" header="Return Journey" headerClassName="preview-custom-header" />
+                        <Column sortable field="returnJourney" header="Return Journey (From - To)" headerClassName="preview-custom-header" />
                         <Column sortable field="returnArrivalDate" header="Arrival Date" body={(rowData) => formatDate(rowData.returnArrivalDate)} headerClassName="preview-custom-header" />
                         <Column sortable field="returnPreferredTime" header="Return Preferred Time" body={(rowData) => formatPickList(rowData.returnPreferredTime)} headerClassName="preview-custom-header" />
                         <Column sortable field="returnTransportNumber" header="Return Flight/Train No" headerClassName="preview-custom-header" />
@@ -333,8 +333,7 @@ const FormPreview = ({ item, travelInfo, attachments }) => {
                 <div className="summary-details">
                     <div className="detail-item">
                         <span className="label">Reason:</span>
-                        <span className="value"> {item.flightTicketReason && item.flightTicketReason.name ? item.flightTicketReason.name :
-                            'N/A'}</span>
+                        <span className="value"> {item.flightTicketReason && item.flightTicketReason !== undefined ? (typeof item.flightTicketReason === 'object' ? item.flightTicketReason.name : item.flightTicketReason) : 'N/A'}</span>
                     </div>
                 </div>
 

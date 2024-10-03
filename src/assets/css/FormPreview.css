@@ -75,7 +75,15 @@ tbody, td, tfoot, th, thead, tr {
   font-weight: 500;
 }
 
+.previewDataTable td {
+  font-size: 11px !important;
+}
+.previewDataTable th, thead {
+  font-size: 12px !important;
+  padding: 3px;
+}
 .preview-train-type{
   border-left: 2px solid #003D71;
   padding-left: 100px;
+  text-wrap: nowrap;
 }
