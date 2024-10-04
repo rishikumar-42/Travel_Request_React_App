@@ -261,15 +261,15 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
         <div className="summary-details">
           <div className="details-grid">
             <div className="detail-item">
-              <span className="label">Issuer:</span>
+              <span className="summary-label">Issuer:</span>
               <span className="value">{item.issuer || 'N/A'}</span>
             </div>
             <div className="detail-item">
-              <span className="label">Issue Date:</span>
+              <span className="summary-label">Issue Date:</span>
               <span className="value">{formatDate(item.issuerDate) || 'N/A'}</span>
             </div>
             <div className="detail-item">
-              <span className="label">Telephone Number:</span>
+              <span className="summary-label">Telephone Number:</span>
               <span className="value">{item.issuerNumber || 'N/A'}</span>
             </div>
           </div>
@@ -338,31 +338,31 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
         <div className="summary-details">
           <div className="details-grid">
             <div className="detail-item">
-              <span className="label">Email:</span>
+              <span className="summary-label">Email:</span>
               <span className="value">{item.email || 'N/A'}</span>
             </div>
             <div className="detail-item">
-              <span className="label">First Name:</span>
+              <span className="summary-label">First Name:</span>
               <span className="value">{item.firstName || 'N/A'}</span>
             </div>
             <div className="detail-item">
-              <span className="label">Last Name:</span>
+              <span className="summary-label">Last Name:</span>
               <span className="value">{item.lastName || 'N/A'}</span>
             </div>
             <div className="detail-item">
-              <span className="label">Employee Number:</span>
+              <span className="summary-label">Employee Number:</span>
               <span className="value">{item.employeeNumber || 'N/A'}</span>
             </div>
             <div className="detail-item">
-              <span className="label">Position Title:</span>
+              <span className="summary-label">Position Title:</span>
               <span className="value">{item.positionTitle || 'N/A'}</span>
             </div>
             <div className="detail-item">
-              <span className="label">Entity:</span>
+              <span className="summary-label">Entity:</span>
               <span className="value">{item.entity || 'N/A'}</span>
             </div>
             <div className="detail-item">
-              <span className="label">Cost Center:</span>
+              <span className="summary-label">Cost Center:</span>
               <span className="value">{item.costCenter || 'N/A'}</span>
             </div>
           </div>
@@ -376,47 +376,47 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
         <div className="summary-details">
           <div className="details-grid">
             <div className="detail-item">
-              <span className="label">Travel Request Id:</span>
+              <span className="summary-label">Travel Request Id:</span>
               <span className="value">{item.travelRequestId || 'N/A'}</span>
             </div>
             <div className="detail-item">
-              <span className="label">Travel Type:</span>
+              <span className="summary-label">Travel Type:</span>
               <span className="value">{item.travelType || 'N/A'}</span>
             </div>
             <div className="detail-item">
-              <span className="label">Travel Purpose:</span>
+              <span className="summary-label">Travel Purpose:</span>
               <span className="value">{item.travelPurpose || 'N/A'}</span>
             </div>
             <div className="detail-item">
-              <span className="label">Participants:</span>
+              <span className="summary-label">Participants:</span>
               <span className="value">{item.participants || 'N/A'}</span>
             </div>
             <div className="detail-item">
-              <span className="label">Destination:</span>
+              <span className="summary-label">Destination:</span>
               <span className="value">{item.destination || 'N/A'}</span>
             </div>
             <div className="detail-item">
-              <span className="label">Departure Date:</span>
+              <span className="summary-label">Departure Date:</span>
               <span className="value">{formatDate(item.travelDepartureDate) || 'N/A'}</span>
             </div>
             <div className="detail-item">
-              <span className="label">Return Date:</span>
+              <span className="summary-label">Return Date:</span>
               <span className="value">{formatDate(item.travelArrivalDate) || 'N/A'}</span>
             </div>
             <div className="detail-item">
-              <span className="label">Estimated Duration:</span>
+              <span className="summary-label">Estimated Duration:</span>
               <span className="value">{item.travelEstimatedDuration || 'N/A'}</span>
             </div>
             <div className="detail-item">
-              <span className="label">Currency:</span>
+              <span className="summary-label">Currency:</span>
               <span className="value">{item.travelCurrency === null ? 'N/A' : item.travelCurrency?.name || 'N/A'}</span>
             </div>
             <div className="detail-item">
-              <span className="label">Budget:</span>
+              <span className="summary-label">Budget:</span>
               <span className="value">{item.travelBudget || 'N/A'}</span>
             </div>
             <div className="detail-item">
-              <span className="label">Remarks:</span>
+              <span className="summary-label">Remarks:</span>
               <span className="value">{item.travelNote || 'N/A'}</span>
             </div>
           </div>
@@ -428,15 +428,15 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
         <div className="summary-details">
           <div className="details-grid">
             <div className="detail-item">
-              <span className="label">Approver 1:</span>
+              <span className="summary-label">Approver 1:</span>
               <span className="value">{item.manager || 'N/A'}</span>
             </div>
             <div className="detail-item">
-              <span className="label">Approver 2:</span>
+              <span className="summary-label">Approver 2:</span>
               <span className="value">{item.hod || 'N/A'}</span>
             </div>
             <div className="detail-item">
-              <span className="label">Status:</span>
+              <span className="summary-label">Status:</span>
               <span className="value">{item.approveStatus?.name || 'N/A'}</span>
             </div>
           </div>
@@ -448,25 +448,25 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
         <div className="summary-details">
           <div className="details-grid">
             <div className="detail-item">
-              <span className="label">Location:</span>
+              <span className="summary-label">Location:</span>
               <span className="value">
                 {item.hotelLocation || 'N/A'}
               </span>
             </div>
             <div className="detail-item">
-              <span className="label">Check In:</span>
+              <span className="summary-label">Check In:</span>
               <span className="value"> {formatDateTime(item.hotelCheckIn) || 'N/A'}</span>
             </div>
             <div className="detail-item">
-              <span className="label">Check Out:</span>
+              <span className="summary-label">Check Out:</span>
               <span className="value"> {formatDateTime(item.hotelCheckOut) || 'N/A'}</span>
             </div>
             <div className="detail-item">
-              <span className="label">Number of Nights:</span>
+              <span className="summary-label">Number of Nights:</span>
               <span className="value">{item.hotelNumberOfNights || 'N/A'}</span>
             </div>
             <div className="detail-item">
-              <span className="label">Remarks:</span>
+              <span className="summary-label">Remarks:</span>
               <span className="value">{item.hotelNote || 'N/A'}</span>
             </div>
           </div>
@@ -478,35 +478,35 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
         <div className="summary-details">
           <div className="details-grid">
             <div className="detail-item">
-              <span className="label">Category:</span>
+              <span className="summary-label">Category:</span>
               <span className="value">{item.carRentalCategory || 'N/A'}</span>
             </div>
             <div className="detail-item">
-              <span className="label">From:</span>
+              <span className="summary-label">From:</span>
               <span className="value">{item.carRentalFrom || 'N/A'}</span>
             </div>
             <div className="detail-item">
-              <span className="label">To:</span>
+              <span className="summary-label">To:</span>
               <span className="value">{item.carRentalTo || 'N/A'}</span>
             </div>
             <div className="detail-item">
-              <span className="label">On:</span>
+              <span className="summary-label">On:</span>
               <span className="value">{formatDate(item.carRentalOn) || 'N/A'}</span>
             </div>
             <div className="detail-item">
-              <span className="label">Until:</span>
+              <span className="summary-label">Until:</span>
               <span className="value">{formatDate(item.carRentalUntil) || 'N/A'}</span>
             </div>
             <div className="detail-item">
-              <span className="label">Birth Date:</span>
+              <span className="summary-label">Birth Date:</span>
               <span className="value">{formatDate(item.carRentalBirthDate) || 'N/A'}</span>
             </div>
             <div className="detail-item">
-              <span className="label">Driving License:</span>
+              <span className="summary-label">Driving License:</span>
               <span className="value">{item.carRentalDrivingLicense || 'N/A'}</span>
             </div>
             <div className="detail-item">
-              <span className="label">Remarks:</span>
+              <span className="summary-label">Remarks:</span>
               <span className="value">{item.carRentalNote || 'N/A'}</span>
             </div>
           </div>
@@ -518,15 +518,15 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
         <div className="summary-details">
           <div className="details-grid">
             <div className="detail-item">
-              <span className="label">Car Registration Number:</span>
+              <span className="summary-label">Car Registration Number:</span>
               <span className="value">{item.personalCarRegistrationNumber || 'N/A'}</span>
             </div>
             <div className="detail-item">
-              <span className="label">Driving License Number:</span>
+              <span className="summary-label">Driving License Number:</span>
               <span className="value">{item.personalCarDrivingLicenseNumber || 'N/A'}</span>
             </div>
             <div className="detail-item">
-              <span className="label">Remarks:</span>
+              <span className="summary-label">Remarks:</span>
               <span className="value">{item.personalCarNote || 'N/A'}</span>
             </div>
           </div>
@@ -538,13 +538,13 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
         <div className="summary-details">
           <div className="details-grid">
             <div className="detail-item">
-              <span className="label">Flight Ticket Type:</span>
+              <span className="summary-label">Flight Ticket Type:</span>
               <span className="value">
                 {item.flightTicketType && item.flightTicketType.name ? item.flightTicketType.name : 'N/A'}
               </span>
             </div>
             <div className="detail-item train-type">
-              <span className="label">Train Ticket Type:</span>
+              <span className="summary-label">Train Ticket Type:</span>
               <span className="value"> {item.trainTicketType && item.trainTicketType.name ? item.trainTicketType.name :
                 'N/A'}</span>
             </div>
@@ -576,7 +576,7 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
         <hr className="separator mb-2 mt-2" />
 
         <div className="summary-details">
-          <span className="label">Attachments:</span>
+          <span className="summary-label">Attachments:</span>
           {attachmentInfo.length > 0 ? <ol>
             {attachmentInfo.map(task => (
               <li key={task.id}>
@@ -613,7 +613,7 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
 
         <div className="summary-details">
           <div className="detail-item">
-            <span className="label">Reason:</span>
+            <span className="summary-label">Reason:</span>
             <span className="value"> {item.flightTicketReason && item.flightTicketReason.name ? item.flightTicketReason.name :
               'N/A'}</span>
           </div>

@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import { useSnackbar } from 'notistack';
 import { useAuth } from '../contexts/AuthContext';
 import "../assets/css/LoginPage.css";
+import { useNavigate } from 'react-router-dom';
 
 const LoginPage = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const { enqueueSnackbar } = useSnackbar();
   const { login } = useAuth();
+  const navigate = useNavigate();
 
   console.log(username,password);
 
@@ -40,8 +42,8 @@ const LoginPage = () => {
       localStorage.setItem('password', password);
   
       enqueueSnackbar('Login successful!', { variant: 'success' });
-      window.location.href = '/myList';
-  
+//      window.location.href = '/MyList';
+        navigate('/MyList');
     } catch (err) {
       enqueueSnackbar(err.message, { variant: 'error' });
     }

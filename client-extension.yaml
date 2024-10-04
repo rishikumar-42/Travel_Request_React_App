@@ -1,0 +1,22 @@
+assemble:
+    - from: build/static
+      into: static
+travel-request-react-app:
+    cssURLs:
+        - css/main.*.css
+    friendlyURLMapping: travel-request-react-app
+    htmlElementName: travel-request-react-app
+    instanceable: false
+    name: Digitus Travel Request Application
+    portletCategoryName: category.client-extensions
+    type: customElement
+    urls:
+        - js/main.*.js
+    useESM: true
+
+
+
+    
+
+
+ 

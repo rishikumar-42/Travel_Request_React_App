@@ -1,13 +1,20 @@
 import React, { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import { Link, useNavigate } from 'react-router-dom';
 import "../assets/css/Header.css";
 
 function Header() {
     const { isAuthenticated } = useAuth(); // Get the authentication status
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const navigate = useNavigate();
 
     const toggleDropdown = () => {
         setIsDropdownOpen(!isDropdownOpen);
+    };
+
+    const handleNavigation = (path) => {
+        navigate(path);
+        setIsDropdownOpen(false); // Close dropdown after navigation
     };
 
     return (
@@ -16,16 +23,20 @@ function Header() {
             {isAuthenticated && (
                 <div>
                     <span className="view-span">
-                        <a href="/TravelRequestForm" className="view-Create">
+                        <Link to="/TravelRequestForm" className="view-Create">
                             Create Travel Request
-                        </a>
+                        </Link>
                         <span className="view-View" onClick={toggleDropdown}>
                             View Travel Request
                         </span>
                         {isDropdownOpen && (
                             <ul className="dropdown-menu-header">
-                                <li><a href="MyList">View My Travel Request</a></li>
-                                <li><a href="Dashboard">Waiting for My Approval</a></li>
+                                <li onClick={() => handleNavigation('/MyList')}>
+                                    <Link to="/MyList">View My Travel Request</Link>
+                                </li>
+                                <li onClick={() => handleNavigation('/Dashboard')}>
+                                    <Link to="/Dashboard">Waiting for My Approval</Link>
+                                </li>
                             </ul>
                         )}
                     </span>
