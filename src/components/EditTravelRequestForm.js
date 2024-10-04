@@ -1117,7 +1117,7 @@ function EditTravelRequestForm() {
                             <h6 className="text-left">Travel Details</h6>
                             <hr className="separator mt-2" />
                         </div>
-                        <p className="mx-2">Note: All International flights have to be approved by Head of Department/GM/VP.</p>
+                        <p className="my-2">Note: All International flights have to be approved by Head of Department/GM/VP.</p>
                         <div className="travel-type mb-3">
                             <label htmlFor="travelType" className="mr-2">Travel Type<span className="text-danger px-1">*</span></label>
                             <div className="radio-group">
@@ -1685,8 +1685,8 @@ function EditTravelRequestForm() {
                                                 <div className="form-row d-flex align-content-stretch gap-3">
                                                     <div className="calendar-item">
                                                         <FloatLabel>
-                                                            <InputText id="onwardJourney" value={newItinerary.onwardJourney} onChange={e => handleInputChange('onwardJourney', e)} />
-                                                            <label htmlFor="onwardJourney">Onward Journey</label>
+                                                            <InputText className="journeyField" id="onwardJourney" value={newItinerary.onwardJourney} onChange={e => handleInputChange('onwardJourney', e)} />
+                                                            <label htmlFor="onwardJourney">Onward Journey (From - To)</label>
                                                         </FloatLabel>
                                                     </div>
                                                     <div className="calendar-item col-width">
@@ -1706,7 +1706,7 @@ function EditTravelRequestForm() {
                                                     <div className="calendar-item">
                                                         <FloatLabel>
                                                             <InputText id="onwardTransportNumber" value={newItinerary.onwardTransportNumber} onChange={e => handleInputChange('onwardTransportNumber', e)} />
-                                                            <label htmlFor="onwardTransportNumber"> Flight/Train Number</label>
+                                                            <label htmlFor="onwardTransportNumber">Onward Flight/Train No</label>
                                                         </FloatLabel>
                                                     </div>
                                                     <div className="calendar-item flex-grow-1">
@@ -1729,8 +1729,8 @@ function EditTravelRequestForm() {
                                                         <div className="form-row2 gap-3">
                                                             <div >
                                                                 <FloatLabel>
-                                                                    <InputText id="returnJourney" value={newItinerary.returnJourney} onChange={e => handleInputChange('returnJourney', e)} />
-                                                                    <label htmlFor="returnJourney">Return Journey</label>
+                                                                    <InputText className="journeyField" id="returnJourney" value={newItinerary.returnJourney} onChange={e => handleInputChange('returnJourney', e)} />
+                                                                    <label htmlFor="returnJourney">Return Journey (From - To)</label>
                                                                 </FloatLabel>
                                                             </div>
                                                             <div className="col-width">
@@ -1750,7 +1750,7 @@ function EditTravelRequestForm() {
                                                             <div >
                                                                 <FloatLabel>
                                                                     <InputText id="returnTransportNumber" value={newItinerary.returnTransportNumber} onChange={e => handleInputChange('returnTransportNumber', e)} />
-                                                                    <label htmlFor="returnTransportNumber"> Flight/Train Number</label>
+                                                                    <label htmlFor="returnTransportNumber">Return Flight/Train No</label>
                                                                 </FloatLabel>
                                                             </div>
                                                         </div>

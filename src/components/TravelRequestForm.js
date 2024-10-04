@@ -969,7 +969,7 @@ function TravelRequestForm() {
                             <h6 className="text-left">Travel Details</h6>
                             <hr className="separator mt-2" />
                         </div>
-                        <p className="mx-2">Note: All International flights have to be approved by Head of Department/GM/VP.</p>
+                        <p className="my-2">Note: All International flights have to be approved by Head of Department/GM/VP.</p>
                         <div className="travel-type mb-3">
                             <label htmlFor="travelType" className="mr-2">Travel Type<span className="text-danger px-1">*</span></label>
                             <div className="radio-group">
@@ -1564,7 +1564,7 @@ function TravelRequestForm() {
                                                     <div className="form-row d-flex align-content-stretch gap-3">
                                                         <div className="calendar-item">
                                                             <FloatLabel>
-                                                                <InputText id="onwardJourney" maxLength={250} value={newItinerary.onwardJourney} onChange={e => handleInputChange('onwardJourney', e)} />
+                                                                <InputText className="journeyField" id="onwardJourney" maxLength={250} value={newItinerary.onwardJourney} onChange={e => handleInputChange('onwardJourney', e)} />
                                                                 <label htmlFor="onwardJourney">Onward Journey (From - To)</label>
                                                             </FloatLabel>
                                                         </div>
@@ -1609,7 +1609,7 @@ function TravelRequestForm() {
                                                             <div className="form-row2 gap-3">
                                                                 <div >
                                                                     <FloatLabel>
-                                                                        <InputText id="returnJourney" maxLength={250} value={newItinerary.returnJourney} onChange={e => handleInputChange('returnJourney', e)} />
+                                                                        <InputText className="journeyField" id="returnJourney" maxLength={250} value={newItinerary.returnJourney} onChange={e => handleInputChange('returnJourney', e)} />
                                                                         <label htmlFor="returnJourney">Return Journey (From - To)</label>
                                                                     </FloatLabel>
                                                                 </div>

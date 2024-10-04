@@ -732,3 +732,12 @@ input#checkOut {
 .calendar-item.col-width {
     width: 18%;
 }
+label.small {
+    font-size: 14px;
+}
+label {
+    font-size: 14px;
+}
+.journeyField{
+    width: 200px;
+}

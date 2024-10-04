@@ -1,7 +1,7 @@
 .bg-color{background-color: #114B7D !important;} 
-label { font-weight: 500; font-size: .875em;}
+label { font-weight: 500}
 input[type="text"]:disabled { cursor: no-drop;}
-.p-inputtext {background: #F1F0F6;}
+.p-inputtext {background: #F1F0F6; font-size: medium;}
 .onwardDepartureDate { background: #F1F0F6; }
 .form-single-special input {width: 100%;}
 .approvers-container input{width:100%;}
