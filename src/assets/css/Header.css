@@ -163,3 +163,16 @@ button.base-MenuButton-root.css-odoo30 {
     border: none;
     color: white;
 }
+a.view-Create:hover{
+    text-decoration: none !important;
+    color: white !important;
+    
+}
+a.view-Create:active {
+    text-decoration: none !important;
+    color: white !important;
+} 
+a.view-Create:visited {
+    color: white !important;
+    text-decoration: none !important;
+}

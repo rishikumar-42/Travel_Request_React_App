@@ -19,7 +19,7 @@ function Header() {
 
     return (
         <header className="header-travelform">
-            <h1>Amphenol</h1>
+            <h3>Amphenol</h3>
             {isAuthenticated && (
                 <div>
                     <span className="view-span">
