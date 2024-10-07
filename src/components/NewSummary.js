@@ -513,7 +513,7 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
             </div>
             <div className="detail-item">
               <span className="summary-label">Driving License:</span>
-              <span className="value">{item.carRentalDrivingLicense || 'N/A'}</span>
+              <span className="value">{item.carDrivingLicense || 'N/A'}</span>
             </div>
             <div className="detail-item">
               <span className="summary-label">Remarks:</span>
