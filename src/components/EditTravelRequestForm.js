@@ -31,6 +31,11 @@ import { useNavigate } from 'react-router-dom';
 import { Toast } from "primereact/toast";
 import ConfirmationDialog from './ConfirmationDialog';
 import { DatePicker } from "rsuite";
+import CloseIcon from '@mui/icons-material/Close';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
+import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
 
 function EditTravelRequestForm() {
     const location = useLocation();
@@ -1735,7 +1740,7 @@ function EditTravelRequestForm() {
                                                             </div>
                                                             <div className="col-width">
                                                                 <FloatLabel>
-                                                                    <Calendar id="returnArrivalDate" minDate={newItinerary.onwardDepartureDate} dateFormat="dd-M-yy" value={newItinerary.returnArrivalDate} onChange={(e) => handleInputChange('returnArrivalDate', e)} showIcon  />
+                                                                    <Calendar id="returnArrivalDate" minDate={newItinerary.onwardDepartureDate} dateFormat="dd-M-yy" value={newItinerary.returnArrivalDate} onChange={(e) => handleInputChange('returnArrivalDate', e)} showIcon />
                                                                     <label htmlFor="returnArrivalDate">Arrival Date</label>
                                                                 </FloatLabel>
                                                             </div>
@@ -1803,9 +1808,9 @@ function EditTravelRequestForm() {
                                                 <Column header="Actions" headerClassName="custom-header"
                                                     body={(rowData, { rowIndex }) => (
                                                         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                                                            <Button icon="pi pi-pencil" style={{ marginRight: '0.5rem', backgroundColor: 'white', color: 'black', border: 'none' }} type="button" onClick={() => handleEditItinerary(rowIndex)} />
+                                                            <Button icon={<EditIcon />} style={{ marginRight: '0.5rem', backgroundColor: 'white', color: 'black', border: 'none', padding: 0 }} type="button" onClick={() => handleEditItinerary(rowIndex)} />
                                                             {/* <Button severity="danger" icon="pi pi-trash" type="button" onClick={() => handleRemoveItinerary(rowIndex)} style={{ backgroundColor: 'white', color: 'black', border: 'none' }} /> */}
-                                                            <Button severity="danger" icon="pi pi-trash" type="button" onClick={() => openConfirmationDialog(rowIndex)} style={{ backgroundColor: 'white', color: 'black', border: 'none' }} />
+                                                            <Button severity="danger" icon={<DeleteIcon />} type="button" onClick={() => openConfirmationDialog(rowIndex)} style={{ backgroundColor: 'white', color: 'black', border: 'none', padding: 0 }} />
                                                             <ConfirmationDialog
                                                                 open={dialogOpen}
                                                                 onClose={() => setDialogOpen(false)}
@@ -1865,8 +1870,8 @@ function EditTravelRequestForm() {
                                                     <div style={{ display: 'flex', justifyContent: 'left', alignItems: 'left' }}>
                                                         {/* <Button severity="danger" type="button" icon="pi pi-times"
                                                 onClick={() => handleRemovefiles(rowIndex)} style={{ backgroundColor: 'white', color: 'black', border: 'none' }} /> */}
-                                                        <Button severity="danger" type="button" icon="pi pi-times"
-                                                            onClick={() => handleRemoveClick(rowIndex)} style={{ backgroundColor: 'white', color: 'black', border: 'none' }} />
+                                                        <Button severity="danger" type="button" icon={<CloseIcon />}
+                                                            onClick={() => handleRemoveClick(rowIndex)} style={{ backgroundColor: 'white', color: 'black', border: 'none', padding: 0, paddingLeft: '4px' }} />
                                                         <ConfirmationDialog
                                                             open={openDialog}
                                                             onClose={handleCloseDialog}
@@ -1903,8 +1908,8 @@ function EditTravelRequestForm() {
 
                     {/* <button type="submit">Submit</button> */}
                     <div className="gap-5" style={{ display: 'flex', justifyContent: 'center' }}>
-                        <Button type="button" className="back-button-draft mb-3" icon="pi pi-angle-double-left" label="Back" rounded onClick={handleBack} />
-                        <Button className="mb-3" type="button" icon="pi pi-angle-double-right" label="Next" rounded onClick={() => setPreviewVisible(true)} />
+                        <Button type="button" className="back-button-draft mb-3" icon={<KeyboardDoubleArrowLeftIcon />} label="Back" rounded onClick={handleBack} />
+                        <Button className="mb-3" type="button" label="Next" icon={<KeyboardDoubleArrowRightIcon />} rounded onClick={() => setPreviewVisible(true)} />
                         <Button className="mb-3"
                             style={{
                                 display: 'none'
@@ -1920,7 +1925,7 @@ function EditTravelRequestForm() {
                                 {/* {previewVisible && { NewSummary(formData,itineraries) }} */}
                                 <FormPreview item={formData} travelInfo={itineraries} attachments={attachments} />
                                 <div className="gap-5 mt-3" style={{ display: 'flex', justifyContent: 'center' }} >
-                                    <Button icon="pi pi-angle-double-left" className="mb-3" label="Back" type="button" rounded onClick={() => setPreviewVisible(false)} />
+                                    <Button icon={<KeyboardDoubleArrowLeftIcon />} className="mb-3" label="Back" type="button" rounded onClick={() => setPreviewVisible(false)} />
                                     <Button className="mb-3"
                                         // ref={updateButtonRef}
                                         //  style={{

@@ -12,6 +12,10 @@ import { Button } from 'primereact/button';
 import Snackbar from '@mui/material/Snackbar';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
+import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
 import { FloatLabel } from 'primereact/floatlabel';
 import 'primeicons/primeicons.css';
 import { InputText } from "primereact/inputtext";
@@ -1195,27 +1199,27 @@ function TravelRequestForm() {
                                 <div className="calendar-item col-width">
                                     {/* <FloatLabel> */}
                                     <lable className="startdate">Check In<span className="text-danger px-1">*</span></lable>
-                                        <DatePicker format="dd/MMM/yyyy hh:mm aa" showMeridian id="checkIn" value={formData.hotelCheckIn}
-                                            onChange={(e) => {
-                                                console.log("date : ", e)
-                                                setFormData({
-                                                    ...formData,
-                                                    hotelCheckIn: e,
-                                                    hotelCheckOut: null,
-                                                    hotelNumberOfNights: null
-                                                });
-                                                // calculateEstimatedNights(e.value, formData.hotelCheckOut);
-                                            }} 
-                                            placeholder="CheckIn"
-                                            hideMinutes={(e) => e % 10 !== 0}
-                                            required />
-                                        {/* <label htmlFor="checkIn" className="mr-2">Check In<span className="text-danger px-1">*</span></label> */}
+                                    <DatePicker format="dd/MMM/yyyy hh:mm aa" showMeridian id="checkIn" value={formData.hotelCheckIn}
+                                        onChange={(e) => {
+                                            console.log("date : ", e)
+                                            setFormData({
+                                                ...formData,
+                                                hotelCheckIn: e,
+                                                hotelCheckOut: null,
+                                                hotelNumberOfNights: null
+                                            });
+                                            // calculateEstimatedNights(e.value, formData.hotelCheckOut);
+                                        }}
+                                        placeholder="CheckIn"
+                                        hideMinutes={(e) => e % 10 !== 0}
+                                        required />
+                                    {/* <label htmlFor="checkIn" className="mr-2">Check In<span className="text-danger px-1">*</span></label> */}
                                     {/* </FloatLabel> */}
                                 </div>
                                 <div className="calendar-item col-width">
-                                <lable className="endate">Check Out<span className="text-danger px-1">*</span></lable>                                    
+                                    <lable className="endate">Check Out<span className="text-danger px-1">*</span></lable>
                                     {/* <FloatLabel> */}
-                                        {/* <DatePicker format="dd/MM/yyyy hh:mm aa" showMeridian  id="checkOut"  value={formData.hotelCheckOut}
+                                    {/* <DatePicker format="dd/MM/yyyy hh:mm aa" showMeridian  id="checkOut"  value={formData.hotelCheckOut}
                                             onChange={(e) => {
                                                 setFormData({
                                                     ...formData,
@@ -1224,28 +1228,28 @@ function TravelRequestForm() {
                                                 calculateEstimatedNights(formData.hotelCheckIn, e);
                                             }} 
                                             minDate={formData.hotelCheckIn} required /> */}
-                                        <DatePicker
-                                            format="dd/MMM/yyyy hh:mm aa"
-                                            showMeridian
-                                            id="checkOut"
-                                            value={formData.hotelCheckOut}
-                                            placeholder="CheckOut"
-                                            hideMinutes={(e) => e % 10 !== 0}
-                                            onChange={(e) => {
-                                                setFormData({
-                                                    ...formData,
-                                                    hotelCheckOut: e,
-                                                });
-                                                calculateEstimatedNights(formData.hotelCheckIn, e);
-                                            }}
-                                            shouldDisableDate={(date) => {
-                                                const checkInDate = formData.hotelCheckIn ? new Date(formData.hotelCheckIn) : null;
-                                                return checkInDate && date < checkInDate; // Disable dates before check-in
-                                            }}
-                                            required
-                                        />
+                                    <DatePicker
+                                        format="dd/MMM/yyyy hh:mm aa"
+                                        showMeridian
+                                        id="checkOut"
+                                        value={formData.hotelCheckOut}
+                                        placeholder="CheckOut"
+                                        hideMinutes={(e) => e % 10 !== 0}
+                                        onChange={(e) => {
+                                            setFormData({
+                                                ...formData,
+                                                hotelCheckOut: e,
+                                            });
+                                            calculateEstimatedNights(formData.hotelCheckIn, e);
+                                        }}
+                                        shouldDisableDate={(date) => {
+                                            const checkInDate = formData.hotelCheckIn ? new Date(formData.hotelCheckIn) : null;
+                                            return checkInDate && date < checkInDate; // Disable dates before check-in
+                                        }}
+                                        required
+                                    />
 
-                                        {/* <label htmlFor="checkOut" className="mr-2">Check Out<span className="text-danger px-1">*</span></label> */}
+                                    {/* <label htmlFor="checkOut" className="mr-2">Check Out<span className="text-danger px-1">*</span></label> */}
                                     {/* </FloatLabel> */}
                                 </div>
                                 <div className="calendar-item">
@@ -1664,16 +1668,17 @@ function TravelRequestForm() {
                                                 <Column header="Actions" headerClassName="custom-header"
                                                     body={(rowData, { rowIndex }) => (
                                                         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                                                            <Button icon="pi pi-pencil" type="button" style={{ marginRight: '0.5rem', backgroundColor: 'white', color: 'black', border: 'none' }}
-                                                                onClick={() => handleEditItinerary(rowIndex)} />
+                                                            <Button type="button" style={{ marginRight: '0.5rem', backgroundColor: 'white', color: 'black', border: 'none', padding: 0 }}
+                                                                onClick={() => handleEditItinerary(rowIndex)} icon={<EditIcon />} />
                                                             {/* <Button severity="danger" type="button" icon="pi pi-trash"
                                                 onClick={() => handleRemoveItinerary(rowIndex)} style={{ backgroundColor: 'white', color: 'black', border: 'none' }} /> */}
                                                             <Button
                                                                 severity="danger"
                                                                 type="button"
-                                                                icon="pi pi-trash"
+                                                                // icon="pi pi-trash"
+                                                                icon={<DeleteIcon />}
                                                                 onClick={() => handleRemoveClick(rowIndex)} // Ensure rowIndex is defined
-                                                                style={{ backgroundColor: 'white', color: 'black', border: 'none' }}
+                                                                style={{ backgroundColor: 'white', color: 'black', border: 'none', padding: 0 }}
                                                             />
 
                                                             {/* Confirmation Dialog */}
@@ -1716,8 +1721,8 @@ function TravelRequestForm() {
                                                         <div style={{ display: 'flex', justifyContent: 'left', alignItems: 'left' }}>
                                                             {/* <Button severity="danger" type="button" icon="pi pi-times"
                                                 onClick={() => handleRemovefiles(rowIndex)} style={{ backgroundColor: 'white', color: 'black', border: 'none' }} /> */}
-                                                            <Button severity="danger" type="button" icon="pi pi-times"
-                                                                onClick={() => handleDeleteFileClick(rowIndex)} style={{ backgroundColor: 'white', color: 'black', border: 'none' }} />
+                                                            <Button severity="danger" type="button"
+                                                                onClick={() => handleDeleteFileClick(rowIndex)} style={{ backgroundColor: 'white', color: 'black', border: 'none', padding: 0, paddingLeft: '4px' }} icon={<CloseIcon />} />
                                                             <ConfirmationDialog
                                                                 open={dialogOpen}
                                                                 onClose={() => setDialogOpen(false)}
@@ -1754,7 +1759,7 @@ function TravelRequestForm() {
 
                     {/* <button type="submit">Submit</button> */}
                     <div className="gap-5" style={{ display: 'flex', justifyContent: 'center' }}>
-                        <Button type="button" className="back-button-travel mb-3" icon="pi pi-angle-double-left" label="Back" rounded onClick={handleBack} />
+                        <Button type="button" className="back-button-travel mb-3" label="Back" rounded onClick={handleBack} icon={<KeyboardDoubleArrowLeftIcon />} />
                         <Button className="mb-3"
                             onClick={() => setFormData(prevFormData => ({
                                 ...prevFormData, // Spread the existing formData
@@ -1765,7 +1770,7 @@ function TravelRequestForm() {
                             label="Save As Draft"
                             disabled={loading || isEmailValidSubmit}
                         />
-                        <Button className="mb-3" type="button" icon="pi pi-angle-double-right" label="Next" rounded onClick={() => setPreviewVisible(true)} />
+                        <Button className="mb-3" type="button" icon={<KeyboardDoubleArrowRightIcon />} label="Next" rounded onClick={() => setPreviewVisible(true)} />
                         <Button
                             type="submit"
                             ref={submitButtonRef} // Set the ref
@@ -1779,7 +1784,7 @@ function TravelRequestForm() {
                                 {/* {previewVisible && { NewSummary(formData,itineraries) }} */}
                                 <FormPreview item={formData} travelInfo={itineraries} attachments={files} />
                                 <div className="gap-5 mt-3" style={{ display: 'flex', justifyContent: 'center' }} >
-                                    <Button icon="pi pi-angle-double-left" label="Back" type="button" rounded onClick={() => setPreviewVisible(false)} />
+                                    <Button label="Back" type="button" rounded onClick={() => setPreviewVisible(false)} icon={<KeyboardDoubleArrowLeftIcon />} />
                                     <Button
                                         // disabled={isEmailValidSubmit}
                                         onClick={() => {
