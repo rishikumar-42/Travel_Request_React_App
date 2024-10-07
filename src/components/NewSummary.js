@@ -228,6 +228,7 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
   };
 
   const handleCancel = async () => {
+    setLoadingNew(true);
     try {
       if (item.approveStatus?.key === 'draft') {
         await TravelRequestFormServiceLayer.updatePatchFormData(item.id, { approveStatus: { key: "cancelled" } });
@@ -248,6 +249,9 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
     } catch (error) {
       console.log("error while deleting : ", error)
       showMessage('error', 'Error', `Error response : ${error.response.data.title}`)
+    }
+    finally{
+      setLoadingNew(false);
     }
   }
 
@@ -630,8 +634,13 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
             <button className="back-button" onClick={handleRefresh}>Back</button>
             {(item.approveStatus?.key === 'draft' || item.approveStatus?.key === 'pendingAtApprover1') && cancelFlag && !isDashboardNavigate &&
               // <button className="back-button" onClick={handleCancel}>Cancel</button>
-              <button className="back-button" onClick={() => setDialogOpen(true)}>Cancel</button>
+              <button className="back-button" disabled={loadingNew} onClick={() => setDialogOpen(true)}>Cancel</button>
             }
+               {loadingNew && (
+                            <div className="loader-container">
+                                <div className="loader"></div>
+                            </div>
+                        )}
             <CancelDialog 
                 open={dialogOpen} 
                 onClose={() => setDialogOpen(false)} 
