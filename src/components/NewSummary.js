@@ -18,6 +18,7 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
   const [dialogType, setDialogType] = useState(''); // 'approve' or 'reject'
   const [comment, setComment] = useState('');
   const [loading, setLoading] = useState(true);
+  const [loadingNew, setLoadingNew] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
 
 
@@ -166,6 +167,7 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
       workflowTaskId
     };
 
+    setLoadingNew(true);
     try {
       await axios.post(`http://localhost:8080/o/headless-admin-workflow/v1.0/workflow-tasks/${workflowTaskId}/change-transition`, payload, {
         headers: {
@@ -182,6 +184,9 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
       console.error(`Failed to ${transitionName} task:`, err);
       // alert(`Failed to ${transitionName} task.`);
       showMessage('error', 'Error', `Error response : ${err.response.data.title}`)
+    }
+    finally{
+      setLoadingNew(false);
     }
   };
 
@@ -672,7 +677,12 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
               />
               <div className="dialog-buttons">
                 <button className='cancel-dialog' onClick={handleDialogCancel}>Cancel</button>
-                <button className='done-dialog' onClick={handleDialogSubmit}>Done</button>
+                <button className='done-dialog'  disabled={loadingNew} onClick={handleDialogSubmit}>Done</button>
+                {loadingNew && (
+                            <div className="loader-container">
+                                <div className="loader"></div>
+                            </div>
+                        )}
               </div>
             </div>
           </div>
