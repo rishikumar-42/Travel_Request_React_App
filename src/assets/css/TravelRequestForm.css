@@ -741,3 +741,6 @@ label {
 .journeyField{
     width: 200px;
 }
+div#onwardDepartureDate_panel {
+    margin-top: 40px !important;
+}

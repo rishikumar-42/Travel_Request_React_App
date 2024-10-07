@@ -1691,7 +1691,7 @@ function EditTravelRequestForm() {
                                                     </div>
                                                     <div className="calendar-item col-width">
                                                         <FloatLabel >
-                                                            <Calendar id="onwardDepartureDate" dateFormat="dd-M-yy" value={newItinerary.onwardDepartureDate} onChange={(e) => handleInputChange('onwardDepartureDate', e)} showIcon appendTo="self" />
+                                                            <Calendar id="onwardDepartureDate" dateFormat="dd-M-yy" value={newItinerary.onwardDepartureDate} onChange={(e) => handleInputChange('onwardDepartureDate', e)} showIcon />
                                                             <label htmlFor="onwardDepartureDate">Departure Date</label>
                                                         </FloatLabel>
                                                     </div>
@@ -1735,7 +1735,7 @@ function EditTravelRequestForm() {
                                                             </div>
                                                             <div className="col-width">
                                                                 <FloatLabel>
-                                                                    <Calendar id="returnArrivalDate" minDate={newItinerary.onwardDepartureDate} dateFormat="dd-M-yy" value={newItinerary.returnArrivalDate} onChange={(e) => handleInputChange('returnArrivalDate', e)} showIcon appendTo="self" />
+                                                                    <Calendar id="returnArrivalDate" minDate={newItinerary.onwardDepartureDate} dateFormat="dd-M-yy" value={newItinerary.returnArrivalDate} onChange={(e) => handleInputChange('returnArrivalDate', e)} showIcon  />
                                                                     <label htmlFor="returnArrivalDate">Arrival Date</label>
                                                                 </FloatLabel>
                                                             </div>
