@@ -1892,7 +1892,7 @@ function EditTravelRequestForm() {
                                 </div>
 
                                 <div className="form-dropdown-container d-flex gap-3 mx-2 reason-dropdown align-items-center mt-4">
-                                    <label htmlFor="reason">Reason<span className="text-danger px-1 mt-2">*</span></label>
+                                    <label htmlFor="reason">Reason</label>
                                     <Dropdown inputId="dd-city" value={reasonValue} onChange={(e) => {
                                         const selectedReason = reasonList.find(option => option.name === e.value);
                                         setReasonValue(e.value);
@@ -1904,7 +1904,7 @@ function EditTravelRequestForm() {
                                                 // name: e.value.name // Update only the firstName property
                                             }
                                         }));
-                                    }} options={reasonList} optionLabel="name" optionValue="name" className="w-full" required />
+                                    }} options={reasonList} optionLabel="name" optionValue="name" className="w-full" />
                                 </div>
                             </div>
                         )}

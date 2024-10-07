@@ -1743,7 +1743,7 @@ function TravelRequestForm() {
                                     </div>
 
                                     <div className="form-dropdown-container d-flex gap-3 mx-2 reason-dropdown align-items-center mt-4">
-                                        <label htmlFor="reason">Reason<span className="text-danger px-1 mt-2">*</span></label>
+                                        <label htmlFor="reason">Reason</label>
                                         <Dropdown inputId="dd-city" value={reasonValue} onChange={(e) => {
                                             setReasonValue(e.value);
                                             setFormData({
@@ -1754,7 +1754,7 @@ function TravelRequestForm() {
                                                     // name: e.value.name // Update only the firstName property
                                                 }
                                             });
-                                        }} options={reasonList} optionLabel="name" className="w-full" required />
+                                        }} options={reasonList} optionLabel="name" className="w-full" />
                                     </div>
                                 </div>
 
