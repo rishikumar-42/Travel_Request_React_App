@@ -268,8 +268,8 @@ const FormPreview = ({ item, travelInfo, attachments }) => {
                             </span>
                         </div>
                         <div className="detail-item preview-train-type" >
-                            <span className="label">Train Ticket Type:</span>
-                            <span className="value"> {item.trainTicketType && item.trainTicketType !== undefined ? (typeof item.trainTicketType === 'object' ? item.trainTicketType.name : item.trainTicketType) : 'N/A'}</span>
+                            <span className="preview-label">Train Ticket Type:</span>
+                            <span className="preview-value"> {item.trainTicketType && item.trainTicketType !== undefined ? (typeof item.trainTicketType === 'object' ? item.trainTicketType.name : item.trainTicketType) : 'N/A'}</span>
                         </div>
                         {/* <div className="preview-detail-item">
                             <span className="preview-label">Reason:</span>
@@ -295,7 +295,7 @@ const FormPreview = ({ item, travelInfo, attachments }) => {
                 <hr className="separator mb-2 mt-2" />
 
                 <div className="preview-summary-details">
-                    <span className="label">Attachments:</span>
+                    <span className="preview-label">Attachments:</span>
                     {attachments.length > 0 ? <ol>
                         {attachments.map(task => (
                             <li key={task.id}>
@@ -332,8 +332,8 @@ const FormPreview = ({ item, travelInfo, attachments }) => {
 
                 <div className="summary-details">
                     <div className="detail-item">
-                        <span className="label">Reason:</span>
-                        <span className="value"> {item.flightTicketReason && item.flightTicketReason !== undefined ? (typeof item.flightTicketReason === 'object' ? item.flightTicketReason.name : item.flightTicketReason) : 'N/A'}</span>
+                        <span className="preview-label">Reason:</span>
+                        <span className="preview-value"> {item.flightTicketReason && item.flightTicketReason !== undefined ? (typeof item.flightTicketReason === 'object' ? item.flightTicketReason.name : item.flightTicketReason) : 'N/A'}</span>
                     </div>
                 </div>
 
