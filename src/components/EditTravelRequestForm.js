@@ -1157,7 +1157,7 @@ function EditTravelRequestForm() {
                                         ...formData,
                                         participants: e.target.value
                                     })} rows={2} cols={30} />
-                                <label htmlFor="participants" className="small">Participants<span className="text-danger px-1">*</span></label>
+                                <label htmlFor="participants" className="small">Participants</label>
                             </FloatLabel>
                         </div>
                         <div className="d-flex justify-content-between align-items-stretch gap-3 my-4">
