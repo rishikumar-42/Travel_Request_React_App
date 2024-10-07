@@ -422,12 +422,16 @@ function EditTravelRequestForm() {
 
     useEffect(() => {
         const getAllReasons = async () => {
+            setLoading(true);
             try {
                 const reasonList = await TravelRequestFormService.fetchReasonPicklist();
                 setReasonList(reasonList);
                 console.log("reasons :", reasonList);
             } catch (error) {
                 console.error("Error fetching reason", error);
+            }
+            finally{
+                setLoading(false);
             }
         };
 
@@ -436,12 +440,16 @@ function EditTravelRequestForm() {
 
     useEffect(() => {
         const getAllFlightTypes = async () => {
+            setLoading(true);
             try {
                 const flightTypes = await TravelRequestFormService.fetchFlightTypePicklist();
                 setFlightTypeList(flightTypes);
                 console.log("flight types :", flightTypes);
             } catch (error) {
                 console.error("Error fetching flight ", error);
+            }
+            finally{
+                setLoading(false);
             }
         };
 
