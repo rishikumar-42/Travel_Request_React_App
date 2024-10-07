@@ -24,6 +24,7 @@ const MyList = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState(null);
   const navigate = useNavigate();
+  const fetchDataRef = useRef();
 
   const toast = useRef(null);
 
@@ -135,6 +136,7 @@ const MyList = () => {
   const handleBack = () => {
     setSelectedItem(null);
     setSelectedItemTravelInfo(null);
+    fetchDataRef.current();
   };
 
   const handleSearchChange = (event) => {
@@ -267,6 +269,7 @@ const MyList = () => {
       }
     };
 
+    fetchDataRef.current = fetchData;
     fetchData();
   }, [authHeader]);
 

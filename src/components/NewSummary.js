@@ -90,7 +90,8 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
 
 
   const handleRefresh = () => {
-    window.location.reload();
+    // window.location.reload()
+    onBack();
   };
 
   const toast = useRef(null);

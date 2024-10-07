@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import NewSummary from './NewSummary.js'; // Import the Summary component
 import "../assets/css/Dashboard.css";
 import Pagination from '@mui/material/Pagination';
@@ -18,6 +18,7 @@ const Dashboard = () => {
   const { auth, login } = useAuth(); // Access auth from context
   const { username, password } = auth;
   const authHeader = 'Basic ' + btoa(username + ':' + password);
+  const fetchDataRef = useRef();
 
   useEffect(() => {
     const storedUsername = localStorage.getItem('username');
@@ -102,6 +103,7 @@ const Dashboard = () => {
   const handleBack = () => {
     setSelectedItem(null);
     setSelectedItemTravelInfo(null);
+    fetchDataRef.current();
   };
 
   const handleSearchChange = (event) => {
@@ -143,6 +145,7 @@ const Dashboard = () => {
         setLoading(false);
       }
     };
+    fetchDataRef.current = fetchData;
     fetchData();
   }, [authHeader]);
 
