@@ -376,7 +376,7 @@ const MyList = () => {
                 {activeTab === 'approved' && 'My Approved Requests'}
                 {activeTab === 'cancelled' && 'My Cancelled Requests'}
                 {activeTab === 'rejected' && 'My Rejected Requests'}
-                {activeTab === 'all' && 'All Requests'}
+                {activeTab === 'all' && 'Others Requests'}
               </span>
             </div>
           </div>
