@@ -685,7 +685,14 @@ function TravelRequestForm() {
     };
 
     const createUniqueId = async () => {
-        const count = (await TravelRequestFormService.fetchCount()).data.totalCount;
+        const response = (await TravelRequestFormService.fetchCount()).data;
+        let count = 0;
+        if (response.totalCount !== 0){
+            const latestId = response.items[0].travelRequestId;
+            const lastFourDigits = latestId.slice(-4);
+            count = Number(lastFourDigits) + 1;
+        }
+        // const count = (await TravelRequestFormService.fetchCount()).data.totalCount;
         const now = new Date();
         const year = String(now.getFullYear()).slice(-2); // Last two digits of the year
         const month = String(now.getMonth() + 1).padStart(2, '0'); // Month, zero-padded

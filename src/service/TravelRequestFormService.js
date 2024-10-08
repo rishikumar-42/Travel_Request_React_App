@@ -162,7 +162,8 @@ const TravelRequestFormServiceLayer = {
     fetchCount: async () => {
         try {
             console.log("Counting")
-            const response = await axios.get(`http://localhost:8080/o/c/travelinfos/?fields=totalCount`);
+            // const response = await axios.get(`http://localhost:8080/o/c/travelinfos/?fields=totalCount`);
+            const response = await axios.get(`http://localhost:8080/o/c/travelinfos/?pageSize=1&sort=travelRequestId:desc`);
             console.log("Fetch count : ", response);
             return response;
         } catch (error) {
