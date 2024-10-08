@@ -628,9 +628,9 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
           </div>
         </div>
 
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-          <div className="gap-5" style={{ display: 'flex' }}>
-            <button className="back-button" onClick={handleRefresh}>Back</button>
+        <div style={{ display: 'flex', justifyContent: 'end' }}>
+          <div className="gap-2" style={{ display: 'flex' }}>
+            <button className="back-buttons" onClick={handleRefresh}>Back</button>
             {(item.approveStatus?.key === 'draft' || item.approveStatus?.key === 'pendingAtApprover1') && cancelFlag && !isDashboardNavigate &&
               // <button className="back-button" onClick={handleCancel}>Cancel</button>
               <button className="back-button" disabled={loadingNew} onClick={() => setDialogOpen(true)}>Cancel</button>
@@ -649,7 +649,7 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
           {/* </div> */}
 
           {isDashboardNavigate && (
-            <div className="gap-4" style={{ display: 'flex', justifyContent: 'right' }}>
+            <div className="gap-3" style={{ display: 'flex', justifyContent: 'right' }}>
 
               {(isPendingAtApprover1 && auth.username === item.manager) && !isTaskCompleted && (
                 <>
