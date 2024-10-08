@@ -1958,6 +1958,18 @@ function EditTravelRequestForm() {
                     {/* <button type="submit">Submit</button> */}
                     <div className="gap-5" style={{ display: 'flex', justifyContent: 'center' }}>
                         <Button type="button" className="back-button-draft mb-3" icon={<KeyboardDoubleArrowLeftIcon />} label="Back" rounded onClick={handleBack} />
+                        {item.approveStatus?.key === 'draft' &&
+                        <Button className="mb-3"
+                            // disabled={loading || isEmailValidSubmit}
+                            onClick={() => setFormData(prevFormData => ({
+                                ...prevFormData, // Spread the existing formData
+                                status: { code: 2 },
+                                approveStatus: { key: 'draft' }
+                            }))}
+                            type="submit"
+                            label={"Update"}
+                        />
+                       }
                         <Button className="mb-3" type="button" label="Next" icon={<KeyboardDoubleArrowRightIcon />} rounded onClick={() => setPreviewVisible(true)} />
                         <Button className="mb-3"
                             style={{
@@ -1966,7 +1978,7 @@ function EditTravelRequestForm() {
                             ref={updateButtonRef}
                             // disabled={loading || isEmailValidSubmit}
                             type="submit"
-                            label={"Update"}
+                            label={"Submit"}
                         />
                         <div>
 
@@ -1982,7 +1994,7 @@ function EditTravelRequestForm() {
                                             updateButtonRef.current.click();
                                         }}
                                         type="button"
-                                        label={"Update"}
+                                        label={"Submit"}
                                     />
                                 </div>
 
