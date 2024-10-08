@@ -133,8 +133,7 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
   const formatDate = (dateString) => {
     if (!dateString) return 'N/A';
     const options = { year: 'numeric', month: 'short', day: '2-digit' };
-    const date = new Date(dateString);
-    return date.toLocaleDateString(undefined, options);
+    return new Intl.DateTimeFormat('en-GB', options).format(new Date(dateString))
   };
 
   const formatDateTime = (date) => {
