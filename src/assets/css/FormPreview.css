@@ -88,3 +88,7 @@ tbody, td, tfoot, th, thead, tr {
   padding-left: 100px;
   text-wrap: nowrap;
 }
+
+.p-dialog {
+width: 1200px !important;
+}

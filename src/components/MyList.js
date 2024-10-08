@@ -358,16 +358,7 @@ const MyList = () => {
             </button>
           </div>
 
-          <div className="search-box-container">
-            <input
-              type="text"
-              placeholder="Search..."
-              value={searchTerm}
-              onChange={handleSearchChange}
-              className="search-box"
-            />
-          </div>
-
+          <div>
           <div className="toolbar2">
             <div className="toolbar2-content">
               <span>
@@ -380,6 +371,19 @@ const MyList = () => {
               </span>
             </div>
           </div>
+
+          <div className="search-box-container">
+            <input
+              type="text"
+              placeholder="Search..."
+              value={searchTerm}
+              onChange={handleSearchChange}
+              className="search-box"
+            />
+          </div>
+
+          </div>
+
 
           <div className="tab-content">
             {loading ? (

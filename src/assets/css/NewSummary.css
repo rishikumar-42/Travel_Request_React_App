@@ -23,6 +23,19 @@
     font-size: 16px;
     width: 80px;
   }
+
+  .back-buttons{
+    background-color: #003366;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    cursor: pointer;
+    margin-top: 20px;
+    font-size: 16px;
+    width: 80px;
+    margin-right: 17px;
+  }
   
   .summary-content {
     font-family: Arial, sans-serif;

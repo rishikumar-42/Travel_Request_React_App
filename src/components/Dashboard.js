@@ -221,6 +221,16 @@ const Dashboard = () => {
             </button>
           </div>
 
+          <div>
+          <div className="toolbar2">
+            <div className="toolbar2-content">
+              <span>
+              {activeTab === 'pending' && 'Waiting for My Approval'}
+              {activeTab === 'approved' && 'Approved By Me'}
+              {activeTab === 'rejected' && 'Rejected By Me'}
+              </span>
+            </div>
+          </div>
           <div className="search-box-container">
             <input
               type="text"
@@ -231,14 +241,6 @@ const Dashboard = () => {
             />
           </div>
 
-          <div className="toolbar2">
-            <div className="toolbar2-content">
-              <span>
-              {activeTab === 'pending' && 'Waiting for My Approval'}
-              {activeTab === 'approved' && 'Approved By Me'}
-              {activeTab === 'rejected' && 'Rejected By Me'}
-              </span>
-            </div>
           </div>
 
           <div className="tab-content">
