@@ -1849,7 +1849,7 @@ function TravelRequestForm() {
 
 
                     {/* <button type="submit">Submit</button> */}
-                    <div className="gap-5" style={{ display: 'flex', justifyContent: 'center' }}>
+                    <div className="gap-3" style={{ display: 'flex', justifyContent: 'end' }}>
                         <Button type="button" className="back-button-travel mb-3" label="Back" rounded onClick={handleBack} icon={<KeyboardDoubleArrowLeftIcon />} />
                         <div className="d-block">
                             <Button className="mb-3" style={{ height:'41px' }}
@@ -1876,7 +1876,7 @@ function TravelRequestForm() {
                             <Dialog header="Preview" visible={previewVisible} style={{ width: '80vw' }} onHide={() => { if (!previewVisible) return; setPreviewVisible(false); }}>
                                 {/* {previewVisible && { NewSummary(formData,itineraries) }} */}
                                 <FormPreview item={formData} travelInfo={itineraries} attachments={files} />
-                                <div className="gap-5 mt-3" style={{ display: 'flex', justifyContent: 'center' }} >
+                                <div className="gap-3 mt-3" style={{ display: 'flex', justifyContent: 'end' }} >
                                     <Button label="Back" type="button" rounded onClick={() => setPreviewVisible(false)} icon={<KeyboardDoubleArrowLeftIcon />} />
                                     <Button
                                         // disabled={isEmailValidSubmit}

@@ -8,6 +8,8 @@ import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
 import { border, borderLeft } from '@mui/system';
 import CancelDialog from './CancelDialog';
+import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
+import { Button } from 'primereact/button';
 
 const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, isDashboardNavigate = false }) => {
   const [workflowTasks, setWorkflowTasks] = useState([]);
@@ -630,10 +632,10 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
 
         <div style={{ display: 'flex', justifyContent: 'end' }}>
           <div className="gap-2" style={{ display: 'flex' }}>
-            <button className="back-buttons" onClick={handleRefresh}>Back</button>
+          <Button type="button" className="back-buttons" icon={<KeyboardDoubleArrowLeftIcon />} label="Back" rounded onClick={handleRefresh}  />
             {(item.approveStatus?.key === 'draft' || item.approveStatus?.key === 'pendingAtApprover1') && cancelFlag && !isDashboardNavigate &&
               // <button className="back-button" onClick={handleCancel}>Cancel</button>
-              <button className="back-button" disabled={loadingNew} onClick={() => setDialogOpen(true)}>Cancel</button>
+              <Button className="back-button" disabled={loadingNew} onClick={() => setDialogOpen(true) } label="Cancel" />
             }
                {loadingNew && (
                             <div className="loader-container">
@@ -654,20 +656,20 @@ const NewSummary = ({ item = {}, travelInfo = [], attachmentInfo = [], onBack, i
               {(isPendingAtApprover1 && auth.username === item.manager) && !isTaskCompleted && (
                 <>
                   <div>
-                    <button className="back-button" onClick={() => openDialog('ok')}>Approve</button>
+                    <Button className="back-button" onClick={() => openDialog('ok')} label="Approve"/>
                   </div>
                   <div>
-                    <button className="back-button" onClick={() => openDialog('reject')}>Reject</button>
+                    <Button className="back-button" onClick={() => openDialog('reject')} label="Reject" />
                   </div>
                 </>
               )}
               {(isPendingAtApprover2 && auth.username === item.hod) && !isTaskCompleted && (
                 <>
                   <div>
-                    <button className="back-button" onClick={() => openDialog('Approve')}>Approve</button>
+                    <Button className="back-button" onClick={() => openDialog('Approve')} label="Approve" />
                   </div>
                   <div>
-                    <button className="back-button" onClick={() => openDialog('REJECT')}>Reject</button>
+                    <Button className="back-button" onClick={() => openDialog('REJECT')} label="Reject" />
                   </div>
                 </>
               )}

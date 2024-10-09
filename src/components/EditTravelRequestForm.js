@@ -1956,7 +1956,7 @@ function EditTravelRequestForm() {
 
 
                     {/* <button type="submit">Submit</button> */}
-                    <div className="gap-5" style={{ display: 'flex', justifyContent: 'center' }}>
+                    <div className="gap-3" style={{ display: 'flex', justifyContent: 'end' }}>
                         <Button type="button" className="back-button-draft mb-3" icon={<KeyboardDoubleArrowLeftIcon />} label="Back" rounded onClick={handleBack} />
                         {item.approveStatus?.key === 'draft' &&
                         <Button className="mb-3"
@@ -1985,7 +1985,7 @@ function EditTravelRequestForm() {
                             <Dialog header="Preview" visible={previewVisible} style={{ width: '80vw' }} onHide={() => { if (!previewVisible) return; setPreviewVisible(false); }}>
                                 {/* {previewVisible && { NewSummary(formData,itineraries) }} */}
                                 <FormPreview item={formData} travelInfo={itineraries} attachments={attachments} />
-                                <div className="gap-5 mt-3" style={{ display: 'flex', justifyContent: 'center' }} >
+                                <div className="gap-3 mt-3" style={{ display: 'flex', justifyContent: 'end' }} >
                                     <Button icon={<KeyboardDoubleArrowLeftIcon />} className="mb-3" label="Back" type="button" rounded onClick={() => setPreviewVisible(false)} />
                                     <Button className="mb-3"
                                         disabled={loading || isEmailValidSubmit}
