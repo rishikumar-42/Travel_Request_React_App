@@ -711,6 +711,7 @@ function EditTravelRequestForm() {
         // Required fields validation
         if (!formData.issuer) newErrors.issuer = "Issuer is required.";
         if (!formData.issuerDate) newErrors.issuerDate = "Issuer Date is required.";
+        if (!isTelephoneNumberValid) newErrors.issuerNumber = "Issuer Number is not valid.";
         if (!formData.issuerNumber) newErrors.issuerNumber = "Issuer Number is required.";
         if (!formData.email) newErrors.email = "Email is required.";
         if (!formData.travelType) newErrors.travelType = "Travel type is required.";
@@ -1076,7 +1077,7 @@ function EditTravelRequestForm() {
                                     }} />
                                 <label htmlFor="number-input" className="small">Telephone Number<span className="text-danger px-1">*</span></label>
                             </FloatLabel>
-                            {(!isTelephoneNumberValid && formData.issuerNumber !== null) && <span htmlFor="number-input" className="small mt-1"><strong style={{ color: 'red' }}>Invalid Number</strong></span>}
+                            {(!isTelephoneNumberValid && formData.issuerNumber !== null) && <span htmlFor="number-input" style={{ color: 'red' }}>Invalid Number</span>}
                             {errors.issuerNumber && !formData.issuerNumber && <span style={{ color: 'red' }}>{errors.issuerNumber}</span>}
                         </div>
                     </div>
@@ -1136,7 +1137,7 @@ function EditTravelRequestForm() {
                                             required
                                         />
                                         <label htmlFor="employeeEmail" className="small"><strong>Email <span className="text-danger px-1">*</span></strong></label>
-                                        {!isEmployeeEmailValid && <span htmlFor="employeeEmail" className="small mt-1"><strong style={{ color: 'red' }}>Email not in the list</strong></span>}
+                                        {!isEmployeeEmailValid && <span htmlFor="employeeEmail" style={{ color: 'red' }}>Invalid Email</span>}
                                     </FloatLabel>
                                 </div>
                                 <div className="form-single">
@@ -1364,7 +1365,7 @@ function EditTravelRequestForm() {
                                     // tooltip="Disabled"
                                     />
                                     <label htmlFor="manager" className="small">Manager<span className="text-danger px-1">*</span></label>
-                                    {!isManagerEmailValid && <span htmlFor="manager" className="small"> <strong style={{ color: 'red' }}>Email not in the list</strong></span>}
+                                    {!isManagerEmailValid && <span htmlFor="manager" style={{ color: 'red' }}>Invalid Email</span>}
                                 </FloatLabel>
                             </div>
                             <div className="w-50">
@@ -1399,7 +1400,7 @@ function EditTravelRequestForm() {
                                     />
                                     <label htmlFor="hod" className="small">Head Of Department/GM/VP{formData.travelType === 'international' && <span className="text-danger px-1">*</span>}</label>
 
-                                    {!isHODEmailValid && <span htmlFor="hod" className="small"> <strong style={{ color: 'red' }}>Email not in the list</strong></span>}
+                                    {!isHODEmailValid && <span htmlFor="hod" style={{ color: 'red' }}>Invalid Email</span>}
                                 </FloatLabel>
                             </div>
                         </div>

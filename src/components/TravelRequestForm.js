@@ -636,6 +636,7 @@ function TravelRequestForm() {
         // Required fields validation
         if (!formData.issuer) newErrors.issuer = "Issuer is required.";
         if (!formData.issuerDate) newErrors.issuerDate = "Issuer Date is required.";
+        if (!isTelephoneNumberValid) newErrors.issuerNumber = "Issuer Number is not valid.";
         if (!formData.issuerNumber) newErrors.issuerNumber = "Issuer Number is required.";
         if (!formData.email) newErrors.email = "Email is required.";
         if (!formData.travelType) newErrors.travelType = "Travel type is required.";
