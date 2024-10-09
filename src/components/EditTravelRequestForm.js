@@ -40,7 +40,7 @@ import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArro
 function EditTravelRequestForm() {
     const location = useLocation();
     const { item, travelInfo, attachmentInfo } = location.state || {};
-    const [isEmailValidSubmit, setIsEmailValidSubmit] = useState(false);
+    // const [isEmailValidSubmit, setIsEmailValidSubmit] = useState(false);
     const [loading, setLoading] = useState(false);
     const [dialogOpen, setDialogOpen] = useState(false);
     const [itineraryIndexToDelete, setItineraryIndexToDelete] = useState(null);
@@ -722,6 +722,12 @@ function EditTravelRequestForm() {
         if (formData.travelCurrency.key === undefined) newErrors.travelCurrency = "Travel Currency is required.";
         if (!formData.travelBudget) newErrors.travelBudget = "Travel Budget is required.";
 
+        if (!isEmployeeEmailValid) newErrors.email = "Email not valid.";
+        if (!isManagerEmailValid) newErrors.manager = "Email not valid.";
+        if (!isHODEmailValid) newErrors.hod = "Email not valid.";
+        if (!formData.manager) newErrors.manager = "Email is required.";
+        if (formData.travelType === 'international' && !formData.hod) newErrors.hod = "Email is required.";
+
         if (showNights) {
             if (!formData.hotelLocation) newErrors.hotelLocation = "Hotel location is required.";
             if (!formData.hotelCheckIn) newErrors.hotelCheckIn = "Hotel CheckIn is required.";
@@ -834,10 +840,10 @@ function EditTravelRequestForm() {
 
     }, [newItinerary, showReturnFields]);
 
-    useEffect(() => {
-        console.log("status :", (!isManagerEmailValid || !isHODEmailValid))
-        setIsEmailValidSubmit(((!isManagerEmailValid) || !isHODEmailValid)); // || !isTelephoneNumberValid
-    }, [isHODEmailValid, isManagerEmailValid]); //, isTelephoneNumberValid
+    // useEffect(() => {
+    //     console.log("status :", (!isManagerEmailValid || !isHODEmailValid))
+    //     setIsEmailValidSubmit(((!isManagerEmailValid) || !isHODEmailValid)); // || !isTelephoneNumberValid
+    // }, [isHODEmailValid, isManagerEmailValid]); //, isTelephoneNumberValid
 
 
     const formatFormData = (data) => {
@@ -1138,6 +1144,7 @@ function EditTravelRequestForm() {
                                         />
                                         <label htmlFor="employeeEmail" className="small"><strong>Email <span className="text-danger px-1">*</span></strong></label>
                                         {!isEmployeeEmailValid && <span htmlFor="employeeEmail" style={{ color: 'red' }}>Invalid Email</span>}
+                                        {errors.email && !formData.email && isEmployeeEmailValid && <span style={{ color: 'red' }}>{errors.email}</span>}
                                     </FloatLabel>
                                 </div>
                                 <div className="form-single">
@@ -1196,14 +1203,14 @@ function EditTravelRequestForm() {
                                         travelType: e.value
                                     })}
                                     checked={formData.travelType === 'domestic'} />
-                                <label htmlFor="domestic" className="mr-1 small">Domestic</label>
+                                <label htmlFor="domestic" className="mr-1 small">D</label>
                                 <RadioButton inputId="international" name="travelType" value="international"
                                     onChange={(e) => setFormData({
                                         ...formData,
                                         travelType: e.value
                                     })}
                                     checked={formData.travelType === 'international'} />
-                                <label htmlFor="international" className="mr-1 small">International</label>
+                                <label htmlFor="international" className="mr-1 small">I</label>
                             </div>
                         </div>
                         {errors.travelType && !formData.travelType && <span style={{ color: 'red' }}>{errors.travelType}</span>}
@@ -1359,13 +1366,14 @@ function EditTravelRequestForm() {
                                         }}
                                         itemTemplate={itemTemplate}
                                         disabled={selectedEmployee === null || item.approveStatus?.key !== 'draft'}
-                                        // readOnly={formData.approveStatus?.key !== 'draft'}
-                                        required
+                                    // readOnly={formData.approveStatus?.key !== 'draft'}
+                                    // required
                                     // tooltipOptions={{ showOnDisabled: true, position: 'bottom' }}
                                     // tooltip="Disabled"
                                     />
                                     <label htmlFor="manager" className="small">Manager<span className="text-danger px-1">*</span></label>
                                     {!isManagerEmailValid && <span htmlFor="manager" style={{ color: 'red' }}>Invalid Email</span>}
+                                    {errors.manager && !formData.manager && isManagerEmailValid && <span style={{ color: 'red' }}>{errors.manager}</span>}
                                 </FloatLabel>
                             </div>
                             <div className="w-50">
@@ -1393,7 +1401,7 @@ function EditTravelRequestForm() {
                                         }}
                                         itemTemplate={itemTemplate}
                                         disabled={selectedItem === null || item.approveStatus?.key !== 'draft'}
-                                        required={formData.travelType === 'international'}
+                                    // required={formData.travelType === 'international'}
                                     // tooltipOptions={{ showOnDisabled: true, position: 'bottom' }}
                                     // readOnly={formData.approveStatus?.key !== 'draft'}
                                     // tooltip="Disabled"
@@ -1401,6 +1409,7 @@ function EditTravelRequestForm() {
                                     <label htmlFor="hod" className="small">Head Of Department/GM/VP{formData.travelType === 'international' && <span className="text-danger px-1">*</span>}</label>
 
                                     {!isHODEmailValid && <span htmlFor="hod" style={{ color: 'red' }}>Invalid Email</span>}
+                                    {errors.hod && !formData.hod && isHODEmailValid && <span style={{ color: 'red' }}>{errors.hod}</span>}
                                 </FloatLabel>
                             </div>
                         </div>
@@ -1960,18 +1969,27 @@ function EditTravelRequestForm() {
                     <div className="gap-3" style={{ display: 'flex', justifyContent: 'end' }}>
                         <Button type="button" className="back-button-draft mb-3" icon={<KeyboardDoubleArrowLeftIcon />} label="Back" rounded onClick={handleBack} />
                         {item.approveStatus?.key === 'draft' &&
-                        <Button className="mb-3"
-                            // disabled={loading || isEmailValidSubmit}
-                            onClick={() => setFormData(prevFormData => ({
-                                ...prevFormData, // Spread the existing formData
-                                status: { code: 2 },
-                                approveStatus: { key: 'draft' }
-                            }))}
-                            type="submit"
-                            label={"Update"}
-                        />
-                       }
-                        <Button className="mb-3" type="button" label="Next" icon={<KeyboardDoubleArrowRightIcon />} rounded onClick={() => setPreviewVisible(true)} />
+                            <Button className="mb-3"
+                                // disabled={loading || isEmailValidSubmit}
+                                onClick={() => setFormData(prevFormData => ({
+                                    ...prevFormData, // Spread the existing formData
+                                    status: { code: 2 },
+                                    approveStatus: { key: 'draft' }
+                                }))}
+                                type="submit"
+                                label={"Update"}
+                            />
+                        }
+                        <Button className="mb-3" type="button" label="Next" icon={<KeyboardDoubleArrowRightIcon />} rounded
+                            onClick={() => {
+                                if (validateForm()) {
+                                    setErrors({});
+                                    setPreviewVisible(true);
+                                } else {
+                                    showMessage('error', 'Error', `Fill all the required fields`);
+                                    return;
+                                }
+                            }} />
                         <Button className="mb-3"
                             style={{
                                 display: 'none'
@@ -1989,7 +2007,7 @@ function EditTravelRequestForm() {
                                 <div className="gap-3 mt-3" style={{ display: 'flex', justifyContent: 'end' }} >
                                     <Button icon={<KeyboardDoubleArrowLeftIcon />} className="mb-3" label="Back" type="button" rounded onClick={() => setPreviewVisible(false)} />
                                     <Button className="mb-3"
-                                        disabled={loading || isEmailValidSubmit}
+                                        disabled={loading} //|| isEmailValidSubmit
                                         onClick={() => {
                                             setPreviewVisible(false);
                                             updateButtonRef.current.click();
