@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import NewSummary from './NewSummary.js'; // Import the Summary component
 import "../assets/css/Dashboard.css";
 import Pagination from '@mui/material/Pagination';
-import { useAuth } from '../contexts/AuthContext';
+// import { useAuth } from '../contexts/AuthContext';
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState('pending'); // Changed to 'pending' to handle both cases
@@ -15,19 +15,20 @@ const Dashboard = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [currentUseremail, setCurrentUserId] = useState(null);
   const [selectedItemAttachmentsInfo, setSelectedItemAttachmentsInfo] = useState([]);
-  const { auth, login } = useAuth(); // Access auth from context
-  const { username, password } = auth;
-  const authHeader = 'Basic ' + btoa(username + ':' + password);
+  // const { auth, login } = useAuth(); // Access auth from context
+  // const { username, password } = auth;
+  // const authHeader = 'Basic ' + btoa(username + ':' + password);
+  const authHeader = window.Liferay.authToken;
   const fetchDataRef = useRef();
 
-  useEffect(() => {
-    const storedUsername = localStorage.getItem('username');
-    const storedPassword = localStorage.getItem('password');
+  // useEffect(() => {
+  //   const storedUsername = localStorage.getItem('username');
+  //   const storedPassword = localStorage.getItem('password');
 
-    if (storedUsername && storedPassword && (username !== storedUsername || password !== storedPassword)) {
-      login(storedUsername, storedPassword);
-    }
-  }, [login, username, password]);
+  //   if (storedUsername && storedPassword && (username !== storedUsername || password !== storedPassword)) {
+  //     login(storedUsername, storedPassword);
+  //   }
+  // }, [login, username, password]);
 
   const fetchUserId = async () => {
     try {
@@ -35,7 +36,7 @@ const Dashboard = () => {
         method: 'GET',
         headers: {
           'Accept': 'application/json',
-          'Authorization': authHeader,
+          'x-csrf-token': authHeader,
         },
       });
 
@@ -51,10 +52,13 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    if (username && password) {
       fetchUserId();
-    }
-  }, [username, password]);
+  }, [authHeader]);
+  // useEffect(() => {
+  //   if (username && password) {
+  //     fetchUserId();
+  //   }
+  // }, [username, password]);
 
   const handleTabClick = (tab) => {
     setActiveTab(tab);
@@ -68,7 +72,7 @@ const Dashboard = () => {
         method: 'GET',
         headers: {
           'Accept': 'application/json',
-          'Authorization': authHeader,
+          'x-csrf-token': authHeader,
         },
       });
 
@@ -76,7 +80,7 @@ const Dashboard = () => {
         method: 'GET',
         headers: {
           'Accept': 'application/json',
-          'Authorization': authHeader,
+          'x-csrf-token': authHeader,
         },
       });
 
@@ -128,7 +132,7 @@ const Dashboard = () => {
           method: 'GET',
           headers: {
             'Accept': 'application/json',
-            'Authorization': authHeader,
+            'x-csrf-token': authHeader,
           },
         });
 

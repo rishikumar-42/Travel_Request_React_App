@@ -1,6 +1,6 @@
 import axios from "axios";
 import { Buffer } from 'buffer';
-import { useAuth } from "../contexts/AuthContext";
+// import { useAuth } from "../contexts/AuthContext";
 
 function setAxios() {
     // const username = process.env.REACT_APP_USERNAME;
@@ -8,11 +8,12 @@ function setAxios() {
     // const credentials = `${username}:${password}`;
     // const encodedCred = Buffer.from(credentials, 'latin1').toString('base64');
     // const authHeader = `Basic ${encodedCred}`;
-    const username = localStorage.getItem('username');
-    const password = localStorage.getItem('password');
-    const authHeader = 'Basic ' + btoa(username + ':' + password);
+    // const username = localStorage.getItem('username');
+    // const password = localStorage.getItem('password');
+    // const authHeader = 'Basic ' + btoa(username + ':' + password);
+    const authHeader = window.Liferay.authToken;
 
-    axios.defaults.headers.common['Authorization'] = authHeader;
+    axios.defaults.headers.common['x-csrf-token'] = authHeader;
     axios.defaults.headers.common['Content-Type'] = 'application/json';
 }
 

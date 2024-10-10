@@ -26,7 +26,7 @@ import HelpIcon from '@mui/icons-material/Help';
 import { Dialog } from 'primereact/dialog';
 import "../assets/css/Style.css";
 import { useLocation } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
+// import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { Toast } from "primereact/toast";
 import ConfirmationDialog from './ConfirmationDialog';
@@ -56,19 +56,20 @@ function EditTravelRequestForm() {
 
 
 
-    const { auth, login } = useAuth();// Access auth from context
-    const { username, password } = auth;
-    const authHeader = 'Basic ' + btoa(username + ':' + password);
+    // const { auth, login } = useAuth();// Access auth from context
+    // const { username, password } = auth;
+    // const authHeader = 'Basic ' + btoa(username + ':' + password);
+    const authHeader = window.Liferay.authToken;
 
 
-    useEffect(() => {
-        const storedUsername = localStorage.getItem('username');
-        const storedPassword = localStorage.getItem('password');
+    // useEffect(() => {
+    //     const storedUsername = localStorage.getItem('username');
+    //     const storedPassword = localStorage.getItem('password');
 
-        if (storedUsername && storedPassword && (username !== storedUsername || password !== storedPassword)) {
-            login(storedUsername, storedPassword);
-        }
-    }, [login, username, password]);
+    //     if (storedUsername && storedPassword && (username !== storedUsername || password !== storedPassword)) {
+    //         login(storedUsername, storedPassword);
+    //     }
+    // }, [login, username, password]);
 
 
     const navigate = useNavigate();
@@ -348,7 +349,7 @@ function EditTravelRequestForm() {
                 method: 'DELETE',
                 headers: {
                     'Accept': 'application/json',
-                    'Authorization': authHeader,
+                    'x-csrf-token': authHeader,
                 },
             });
         } catch (error) {

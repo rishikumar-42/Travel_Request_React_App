@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import NewSummary from './NewSummary.js';
 import "../assets/css/MyList.css";
 import Pagination from '@mui/material/Pagination';
-import { useAuth } from '../contexts/AuthContext';
+// import { useAuth } from '../contexts/AuthContext';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { useNavigate } from 'react-router-dom';
@@ -39,19 +39,20 @@ const MyList = () => {
 
   // const currentUserId = 33801;
 
-  const { auth, login } = useAuth();// Access auth from context
-  const { username, password } = auth;
-  const authHeader = 'Basic ' + btoa(username + ':' + password);
+  // const { auth, login } = useAuth();// Access auth from context
+  // const { username, password } = auth;
+  // const authHeader = 'Basic ' + btoa(username + ':' + password);
+  const authHeader = window.Liferay.authToken;
 
 
-  useEffect(() => {
-    const storedUsername = localStorage.getItem('username');
-    const storedPassword = localStorage.getItem('password');
+  // useEffect(() => {
+  //   const storedUsername = localStorage.getItem('username');
+  //   const storedPassword = localStorage.getItem('password');
 
-    if (storedUsername && storedPassword && (username !== storedUsername || password !== storedPassword)) {
-      login(storedUsername, storedPassword);
-    }
-  }, [login, username, password]);
+  //   if (storedUsername && storedPassword && (username !== storedUsername || password !== storedPassword)) {
+  //     login(storedUsername, storedPassword);
+  //   }
+  // }, [login, username, password]);
 
 
   const fetchUserId = async () => {
@@ -60,7 +61,7 @@ const MyList = () => {
         method: 'GET',
         headers: {
           'Accept': 'application/json',
-          'Authorization': authHeader,
+          'x-csrf-token': authHeader,
         },
       });
 
@@ -78,15 +79,15 @@ const MyList = () => {
     }
   };
 
-  // useEffect(() => {
-  //   fetchUserId();
-  // },);
-
   useEffect(() => {
-    if (username && password) {
-      fetchUserId();
-    }
-  }, [username, password]);
+    fetchUserId();
+  },[authHeader]);
+
+  // useEffect(() => {
+  //   if (username && password) {
+  //     fetchUserId();
+  //   }
+  // }, [username, password]);
 
   const handleTabClick = (tab) => {
     setActiveTab(tab);
@@ -100,7 +101,7 @@ const MyList = () => {
         method: 'GET',
         headers: {
           'Accept': 'application/json',
-          'Authorization': authHeader,
+          'x-csrf-token': authHeader,
         },
       });
 
@@ -108,7 +109,7 @@ const MyList = () => {
         method: 'GET',
         headers: {
           'Accept': 'application/json',
-          'Authorization': authHeader,
+          'x-csrf-token': authHeader,
         },
       });
 
@@ -165,14 +166,14 @@ const MyList = () => {
           method: 'GET',
           headers: {
             'Accept': 'application/json',
-            'Authorization': authHeader,
+            'x-csrf-token': authHeader,
           },
         });
         const attachmentResponse = await fetch(`http://localhost:8080/o/c/travelattachments?filter=r_attachmentRelation_c_travelInfoId eq \'${item.id}\'`, {
           method: 'GET',
           headers: {
             'Accept': 'application/json',
-            'Authorization': authHeader,
+            'x-csrf-token': authHeader,
           },
         });
 
@@ -203,7 +204,7 @@ const MyList = () => {
         method: 'DELETE',
         headers: {
           'Accept': 'application/json',
-          'Authorization': authHeader,
+          'x-csrf-token': authHeader,
         },
       });
 
@@ -252,7 +253,7 @@ const MyList = () => {
           method: 'GET',
           headers: {
             'Accept': 'application/json',
-            'Authorization': authHeader,
+            'x-csrf-token': authHeader,
           },
         });
 
