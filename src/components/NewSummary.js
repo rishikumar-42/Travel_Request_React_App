@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import "../assets/css/NewSummary.css";
 import axios from "axios";
-import { useAuth } from "../contexts/AuthContext";
+// import { useAuth } from "../contexts/AuthContext";
 import TravelRequestFormServiceLayer from "../service/TravelRequestFormService";
 import { Toast } from "primereact/toast";
 import { Column } from "primereact/column";
@@ -30,6 +30,7 @@ const NewSummary = ({
   const [loading, setLoading] = useState(true);
   const [loadingNew, setLoadingNew] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [currentEmailAddress, setEmailAddress] = useState(null);
   const [itineraries, setItineraries] = useState(
     Array.isArray(travelInfo) ? travelInfo : []
   );
@@ -37,22 +38,49 @@ const NewSummary = ({
     Array.isArray(attachmentInfo) ? attachmentInfo : []
   );
 
-  const { auth, login } = useAuth(); // Access auth from context
-  const { username, password } = auth;
-  const authHeader = "Basic " + btoa(username + ":" + password);
+  // const { auth, login } = useAuth(); // Access auth from context
+  // const { username, password } = auth;
+  // const authHeader = "Basic " + btoa(username + ":" + password);
+  const authHeader = window.Liferay.authToken;
+
+  // useEffect(() => {
+  //   const storedUsername = localStorage.getItem("username");
+  //   const storedPassword = localStorage.getItem("password");
+
+  //   if (
+  //     storedUsername &&
+  //     storedPassword &&
+  //     (username !== storedUsername || password !== storedPassword)
+  //   ) {
+  //     login(storedUsername, storedPassword);
+  //   }
+  // }, [login, username, password]);
+
+  const fetchUserId = async () => {
+    try {
+      const response = await fetch('http://localhost:8080/o/headless-admin-user/v1.0/my-user-account', {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'x-csrf-token': authHeader,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const user = await response.json();
+      setEmailAddress(user.emailAddress);
+      console.log(user.id);
+    } catch (error) {
+      console.error('Error fetching user ID:', error);
+    }
+  };
 
   useEffect(() => {
-    const storedUsername = localStorage.getItem("username");
-    const storedPassword = localStorage.getItem("password");
-
-    if (
-      storedUsername &&
-      storedPassword &&
-      (username !== storedUsername || password !== storedPassword)
-    ) {
-      login(storedUsername, storedPassword);
-    }
-  }, [login, username, password]);
+    fetchUserId();
+  },[authHeader]);
 
   useEffect(() => {
     const fetchWorkflowTasks = async () => {
@@ -64,7 +92,7 @@ const NewSummary = ({
             method: "GET",
             headers: {
               Accept: "application/json",
-              Authorization: authHeader,
+              'x-csrf-token': authHeader,
             },
           }
         );
@@ -96,7 +124,7 @@ const NewSummary = ({
           method: "GET",
           headers: {
             Accept: "application/json",
-            Authorization: authHeader,
+            'x-csrf-token': authHeader,
           },
         }
       );
@@ -332,7 +360,7 @@ const NewSummary = ({
         payload,
         {
           headers: {
-            Authorization: authHeader,
+            'x-csrf-token': authHeader,
             "Content-Type": "application/json",
           },
         }
@@ -422,7 +450,7 @@ const NewSummary = ({
           `http://localhost:8080/o/headless-admin-workflow/v1.0/workflow-instances/${currentTask.id}`,
           {
             headers: {
-              Authorization: authHeader,
+              'x-csrf-token': authHeader,
               "Content-Type": "application/json",
             },
           }
@@ -449,10 +477,6 @@ const NewSummary = ({
   // Determine button visibility
   const isPendingAtApprover1 = item.approveStatus?.key === "pendingAtApprover1";
   const isPendingAtApprover2 = item.approveStatus?.key === "pendingAtApprover2";
-  const isCurrentUserApprover1 =
-    isPendingAtApprover1 && auth.username === item.manager; // Assuming the current user is approver1
-  const isCurrentUserApprover2 =
-    isPendingAtApprover2 && auth.username === item.hod; // Assuming the current user is approver2
 
   return (
     <div className="summary-container">
@@ -967,7 +991,7 @@ const NewSummary = ({
               style={{ display: "flex", justifyContent: "right" }}
             >
               {isPendingAtApprover1 &&
-                auth.username === item.manager &&
+                currentEmailAddress === item.manager &&
                 !isTaskCompleted && (
                   <>
                     <div>
@@ -987,7 +1011,7 @@ const NewSummary = ({
                   </>
                 )}
               {isPendingAtApprover2 &&
-                auth.username === item.hod &&
+                currentEmailAddress === item.hod &&
                 !isTaskCompleted && (
                   <>
                     <div>
