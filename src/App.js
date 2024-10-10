@@ -4,6 +4,7 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 
 import LoginPage from './components/LoginPage';
+import Home from './components/Home';
 import Dashboard from './components/Dashboard';
 import MyList from './components/MyList';
 import EditTravelRequestForm from './components/EditTravelRequestForm';
@@ -19,6 +20,7 @@ function App() {
         <Header />
           <Routes>
             <Route path="/" element={<LoginPage />} />
+            <Route path="/home" element={<Home />} />
             <Route path="/MyList" element={<MyList />} />
              <Route path="/Dashboard" element={<Dashboard />} />
             <Route path="/EditTravelRequestForm" element={<EditTravelRequestForm />} />

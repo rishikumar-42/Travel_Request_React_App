@@ -43,7 +43,7 @@ const LoginPage = () => {
   
       enqueueSnackbar('Login successful!', { variant: 'success' });
 //      window.location.href = '/MyList';
-        navigate('/MyList');
+        navigate('/Home');
     } catch (err) {
       enqueueSnackbar(err.message, { variant: 'error' });
     }

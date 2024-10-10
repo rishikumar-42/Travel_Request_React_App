@@ -23,6 +23,9 @@ function Header() {
             {isAuthenticated && (
                 <div>
                     <span className="view-span">
+                        <Link to="/Home" className="view-Create">
+                            Home
+                        </Link>
                         <Link to="/TravelRequestForm" className="view-Create">
                             Create Travel Request
                         </Link>
