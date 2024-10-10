@@ -23,7 +23,7 @@
     display: block;
     position: absolute;
     top: 100%;
-    left: 53rem; 
+    left: 59rem; 
     background: #FFFFFF;
     border: 1px solid #ccc;
     list-style: none;
@@ -152,6 +152,7 @@
     font-size: 16px;
     font-weight: 500;
     color: white;
+    margin-left: 20px;
 }
 .view-View{
     font-size: 16px;
