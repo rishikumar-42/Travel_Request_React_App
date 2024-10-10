@@ -63,7 +63,7 @@ function TravelRequestForm() {
     const [isTelephoneNumberValid, setIsTelephoneNumberValid] = useState(false);
     const [isManagerEmailValid, setIsManagerEmailValid] = useState(true);
     const [isHODEmailValid, setIsHODEmailValid] = useState(true);
-    const [isEmailValidSubmit, setIsEmailValidSubmit] = useState(true);
+    // const [isEmailValidSubmit, setIsEmailValidSubmit] = useState(true);
     const [newItinerary, setNewItinerary] = useState({
         onwardJourney: '',
         onwardDepartureDate: null,
@@ -647,6 +647,12 @@ function TravelRequestForm() {
         if (formData.travelCurrency.key === undefined) newErrors.travelCurrency = "Travel Currency is required.";
         if (!formData.travelBudget) newErrors.travelBudget = "Travel Budget is required.";
 
+        if (!isEmployeeEmailValid) newErrors.email = "Email not valid.";
+        if (!isManagerEmailValid) newErrors.manager = "Email not valid.";
+        if (!isHODEmailValid) newErrors.hod = "Email not valid.";
+        if (!formData.manager) newErrors.manager = "Email is required.";
+        if (formData.travelType === 'international' && !formData.hod) newErrors.hod = "Email is required.";
+
         if (showNights) {
             if (!formData.hotelLocation) newErrors.hotelLocation = "Hotel location is required.";
             if (!formData.hotelCheckIn) newErrors.hotelCheckIn = "Hotel CheckIn is required.";
@@ -688,7 +694,7 @@ function TravelRequestForm() {
     const createUniqueId = async () => {
         const response = (await TravelRequestFormService.fetchCount()).data;
         let count = 0;
-        if (response.totalCount !== 0){
+        if (response.totalCount !== 0) {
             const latestId = response.items[0].travelRequestId;
             const lastFourDigits = latestId.slice(-4);
             count = Number(lastFourDigits) + 1;
@@ -872,10 +878,10 @@ function TravelRequestForm() {
             setIsHODEmailValid(validateHODEmail(value));
     };
 
-    useEffect(() => {
-        console.log("status :", (!isManagerEmailValid || !isHODEmailValid))
-        setIsEmailValidSubmit(((!isManagerEmailValid || selectedItem === '') || !isHODEmailValid)); // || !isTelephoneNumberValid
-    }, [isHODEmailValid, isManagerEmailValid]); // , isTelephoneNumberValid
+    // useEffect(() => {
+    //     console.log("status :", (!isManagerEmailValid || !isHODEmailValid))
+    //     setIsEmailValidSubmit(((!isManagerEmailValid || selectedItem === '') || !isHODEmailValid)); // || !isTelephoneNumberValid
+    // }, [isHODEmailValid, isManagerEmailValid]); // , isTelephoneNumberValid
 
     return (
         <div className="form-container mx-5">
@@ -998,6 +1004,7 @@ function TravelRequestForm() {
                                         />
                                         <label htmlFor="employeeEmail" className="small"><strong>Email <span className="text-danger px-1">*</span></strong></label>
                                         {!isEmployeeEmailValid && <span htmlFor="employeeEmail" className="mt-1" style={{ color: 'red' }}>Invalid Email</span>}
+                                        {errors.email && !formData.email && isEmployeeEmailValid && <span style={{ color: 'red' }}>{errors.email}</span>}
                                     </FloatLabel>
                                 </div>
                                 <div className="form-single">
@@ -1056,14 +1063,14 @@ function TravelRequestForm() {
                                         travelType: e.value
                                     })}
                                     checked={formData.travelType === 'domestic'} />
-                                <label htmlFor="domestic" className="mr-1 small">Domestic</label>
+                                <label htmlFor="domestic" className="mr-1 small">D</label>
                                 <RadioButton inputId="international" name="travelType" value="international"
                                     onChange={(e) => setFormData({
                                         ...formData,
                                         travelType: e.value
                                     })}
                                     checked={formData.travelType === 'international'} />
-                                <label htmlFor="international" className="mr-1 small">International</label>
+                                <label htmlFor="international" className="mr-1 small">I</label>
                             </div>
                         </div>
                         {errors.travelType && !formData.travelType && <span style={{ color: 'red' }}>{errors.travelType}</span>}
@@ -1220,12 +1227,13 @@ function TravelRequestForm() {
                                         }}
                                         itemTemplate={itemTemplate}
                                         disabled={selectedEmployee === null}
-                                        required
+                                        // required
                                     // tooltipOptions={{ showOnDisabled: true, position: 'bottom' }}
                                     // tooltip="Disabled"
                                     />
                                     <label htmlFor="manager" className="small">Manager<span className="text-danger px-1">*</span></label>
                                     {!isManagerEmailValid && <span htmlFor="manager" strong style={{ color: 'red' }}>Invalid Email</span>}
+                                    {errors.manager && !formData.manager && isManagerEmailValid && <span style={{ color: 'red' }}>{errors.manager}</span>}
                                 </FloatLabel>
                             </div>
                             <div className="w-50">
@@ -1254,7 +1262,7 @@ function TravelRequestForm() {
                                         }}
                                         itemTemplate={itemTemplate}
                                         disabled={selectedItem === null}
-                                        required={formData.travelType === 'international'}
+                                        // required={formData.travelType === 'international'}
                                     // forceSelection
                                     // tooltipOptions={{ showOnDisabled: true, position: 'bottom' }}
                                     // tooltip="Disabled"
@@ -1262,6 +1270,7 @@ function TravelRequestForm() {
                                     <label htmlFor="hod" className="small">Head Of Department/GM/VP{formData.travelType === 'international' && <span className="text-danger px-1">*</span>}</label>
 
                                     {!isHODEmailValid && <span htmlFor="hod" style={{ color: 'red' }}>Invalid Email</span>}
+                                    {errors.hod && !formData.hod && isHODEmailValid && <span style={{ color: 'red' }}>{errors.hod}</span>}
                                 </FloatLabel>
                             </div>
                         </div>
@@ -1853,7 +1862,7 @@ function TravelRequestForm() {
                     <div className="gap-3" style={{ display: 'flex', justifyContent: 'end' }}>
                         <Button type="button" className="back-button-travel mb-3" label="Back" rounded onClick={handleBack} icon={<KeyboardDoubleArrowLeftIcon />} />
                         <div className="d-block">
-                            <Button className="mb-3" style={{ height:'41px' }}
+                            <Button className="mb-3" style={{ height: '41px' }}
                                 onClick={() => setFormData(prevFormData => ({
                                     ...prevFormData, // Spread the existing formData
                                     status: { code: 2 },
@@ -1861,10 +1870,19 @@ function TravelRequestForm() {
                                 }))}
                                 type="submit"
                                 label="Save As Draft"
-                                disabled={loading || isEmailValidSubmit}
+                                disabled={loading} //|| isEmailValidSubmit
                             />
                         </div>
-                        <Button className="mb-3" type="button" icon={<KeyboardDoubleArrowRightIcon />} label="Next" rounded onClick={() => setPreviewVisible(true)} />
+                        <Button className="mb-3" type="button" icon={<KeyboardDoubleArrowRightIcon />} label="Next" rounded
+                            onClick={() => {
+                                if (validateForm()) {
+                                    setErrors({});
+                                    setPreviewVisible(true);
+                                } else {
+                                    showMessage('error', 'Error', `Fill all the required fields`);
+                                    return;
+                                }
+                            }} />
                         <Button
                             type="submit"
                             ref={submitButtonRef} // Set the ref
@@ -1887,7 +1905,7 @@ function TravelRequestForm() {
                                         }}
                                         // type="submit"
                                         // label="Submit"
-                                        disabled={loading || isEmailValidSubmit}
+                                        disabled={loading } //|| isEmailValidSubmit
                                         type="submit"
                                         label={"Submit"}
                                     />
