@@ -693,18 +693,20 @@ function TravelRequestForm() {
 
     const createUniqueId = async () => {
         const response = (await TravelRequestFormService.fetchCount()).data;
-        let count = 0;
+        let seq = 0;
         if (response.totalCount !== 0) {
             const latestId = response.items[0].travelRequestId;
             const lastFourDigits = latestId.slice(-4);
-            count = Number(lastFourDigits) + 1;
+            const monthFromId = Number(latestId.slice(4, 6));
+            const currentMonth = (new Date().getMonth() + 1);
+            if (monthFromId === currentMonth)
+                seq = Number(lastFourDigits) + 1;
         }
-        // const count = (await TravelRequestFormService.fetchCount()).data.totalCount;
         const now = new Date();
         const year = String(now.getFullYear()).slice(-2); // Last two digits of the year
         const month = String(now.getMonth() + 1).padStart(2, '0'); // Month, zero-padded
-        const seq = String(count).padStart(4, '0');
-        const uniqId = `TR${year}${month}${seq}`;
+        const finalSeq = String(seq).padStart(4, '0');
+        const uniqId = `TR${year}${month}${finalSeq}`;
         return uniqId;
     };
 
@@ -1227,7 +1229,7 @@ function TravelRequestForm() {
                                         }}
                                         itemTemplate={itemTemplate}
                                         disabled={selectedEmployee === null}
-                                        // required
+                                    // required
                                     // tooltipOptions={{ showOnDisabled: true, position: 'bottom' }}
                                     // tooltip="Disabled"
                                     />
@@ -1262,7 +1264,7 @@ function TravelRequestForm() {
                                         }}
                                         itemTemplate={itemTemplate}
                                         disabled={selectedItem === null}
-                                        // required={formData.travelType === 'international'}
+                                    // required={formData.travelType === 'international'}
                                     // forceSelection
                                     // tooltipOptions={{ showOnDisabled: true, position: 'bottom' }}
                                     // tooltip="Disabled"
@@ -1905,7 +1907,7 @@ function TravelRequestForm() {
                                         }}
                                         // type="submit"
                                         // label="Submit"
-                                        disabled={loading } //|| isEmailValidSubmit
+                                        disabled={loading} //|| isEmailValidSubmit
                                         type="submit"
                                         label={"Submit"}
                                     />
