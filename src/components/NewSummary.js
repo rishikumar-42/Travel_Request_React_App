@@ -58,7 +58,7 @@ const NewSummary = ({
 
   const fetchUserId = async () => {
     try {
-      const response = await fetch('http://localhost:8080/o/headless-admin-user/v1.0/my-user-account', {
+      const response = await fetch(`${process.env.REACT_APP_API_LIFERAY_BASE_URL}/o/headless-admin-user/v1.0/my-user-account`, {
         method: 'GET',
         headers: {
           'Accept': 'application/json',
@@ -87,7 +87,7 @@ const NewSummary = ({
       setLoading(true);
       try {
         const response = await fetch(
-          "http://localhost:8080/o/headless-admin-workflow/v1.0/workflow-tasks/assigned-to-me?page=1&pageSize=1000",
+          `${process.env.REACT_APP_API_LIFERAY_BASE_URL}/o/headless-admin-workflow/v1.0/workflow-tasks/assigned-to-me?page=1&pageSize=1000`,
           {
             method: "GET",
             headers: {
@@ -119,7 +119,7 @@ const NewSummary = ({
   const fetchWorkflowInstances = async () => {
     try {
       const response = await fetch(
-        "http://localhost:8080/o/headless-admin-workflow/v1.0/workflow-instances",
+        `${process.env.REACT_APP_API_LIFERAY_BASE_URL}/o/headless-admin-workflow/v1.0/workflow-instances`,
         {
           method: "GET",
           headers: {
@@ -286,7 +286,7 @@ const NewSummary = ({
 
   const OnwardJourneyLink = (rowData) => {
     console.log("url : ", rowData.contentUrl);
-    let urlObj = new URL(rowData.contentUrl, "http://localhost:8080");
+    let urlObj = new URL(rowData.contentUrl, `${process.env.REACT_APP_API_LIFERAY_BASE_URL}`);
     urlObj.searchParams.delete("download");
     let newUrl = urlObj.toString();
     console.log("new url : ", newUrl);
@@ -356,7 +356,7 @@ const NewSummary = ({
     setLoadingNew(true);
     try {
       await axios.post(
-        `http://localhost:8080/o/headless-admin-workflow/v1.0/workflow-tasks/${workflowTaskId}/change-transition`,
+        `${process.env.REACT_APP_API_LIFERAY_BASE_URL}/o/headless-admin-workflow/v1.0/workflow-tasks/${workflowTaskId}/change-transition`,
         payload,
         {
           headers: {
@@ -447,7 +447,7 @@ const NewSummary = ({
         console.log(currentTask);
         console.log("work insta", currentTask.id);
         await axios.delete(
-          `http://localhost:8080/o/headless-admin-workflow/v1.0/workflow-instances/${currentTask.id}`,
+          `${process.env.REACT_APP_API_LIFERAY_BASE_URL}/o/headless-admin-workflow/v1.0/workflow-instances/${currentTask.id}`,
           {
             headers: {
               'x-csrf-token': authHeader,

@@ -11,7 +11,7 @@ const FormPreview = ({ item, travelInfo, attachments }) => {
     const OnwardJourneyLink = (rowData) => {
 
         console.log("url : ", rowData.contentUrl)
-        let urlObj = new URL(rowData.contentUrl, "http://localhost:8080");
+        let urlObj = new URL(rowData.contentUrl, `${process.env.REACT_APP_API_LIFERAY_BASE_URL}`);
         urlObj.searchParams.delete('download');
         let newUrl = urlObj.toString();
         console.log("new url : ", newUrl)

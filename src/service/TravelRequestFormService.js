@@ -36,7 +36,7 @@ const TravelRequestFormServiceLayer = {
     updateFormData: async (id, formData) => {
         try {
             console.log("update")
-            const response = await axios.put(`http://localhost:8080/o/c/travelinfos/${id}`, JSON.stringify(formData));
+            const response = await axios.put(`${process.env.REACT_APP_API_LIFERAY_BASE_URL}/o/c/travelinfos/${id}`, JSON.stringify(formData));
             console.log("Form update response:", response);
             return response;
         } catch (error) {
@@ -48,7 +48,7 @@ const TravelRequestFormServiceLayer = {
         await setAxios();
         try {
             console.log("patch")
-            const response = await axios.patch(`http://localhost:8080/o/c/travelinfos/${id}`, JSON.stringify(patchData), {
+            const response = await axios.patch(`${process.env.REACT_APP_API_LIFERAY_BASE_URL}/o/c/travelinfos/${id}`, JSON.stringify(patchData), {
                 headers: {
                     'Content-Type': 'application/json'
                 }
@@ -124,7 +124,7 @@ const TravelRequestFormServiceLayer = {
     submitFormData: async (formData) => {
         try {
             console.log("submittion")
-            const response = await axios.post(`http://localhost:8080/o/c/travelinfos/`, JSON.stringify(formData));
+            const response = await axios.post(`${process.env.REACT_APP_API_LIFERAY_BASE_URL}/o/c/travelinfos/`, JSON.stringify(formData));
             console.log("Form submission response:", response);
             return response;
         } catch (error) {
@@ -137,7 +137,7 @@ const TravelRequestFormServiceLayer = {
             console.log("Adding")
             const formData = new FormData();
             formData.append('file', file);
-            const response = await axios.post(`http://localhost:8080/o/headless-delivery/v1.0/sites/${process.env.REACT_APP_API_LIFERAY_SITE_ID}/documents`, formData, {
+            const response = await axios.post(`${process.env.REACT_APP_API_LIFERAY_BASE_URL}/o/headless-delivery/v1.0/sites/${process.env.REACT_APP_API_LIFERAY_SITE_ID}/documents`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
@@ -152,7 +152,7 @@ const TravelRequestFormServiceLayer = {
     deleteDocuments: async (documentId) => {
         try {
             console.log("deleting");
-            const response = await axios.delete(`http://localhost:8080/o/headless-delivery/v1.0/documents/${documentId}`);
+            const response = await axios.delete(`${process.env.REACT_APP_API_LIFERAY_BASE_URL}/o/headless-delivery/v1.0/documents/${documentId}`);
             console.log("document delete response:", response.status);
             return response.status;
         } catch (error) {
@@ -163,8 +163,8 @@ const TravelRequestFormServiceLayer = {
     fetchCount: async () => {
         try {
             console.log("Counting")
-            // const response = await axios.get(`http://localhost:8080/o/c/travelinfos/?fields=totalCount`);
-            const response = await axios.get(`http://localhost:8080/o/c/travelinfos/?pageSize=1&sort=travelRequestId:desc`);
+            // const response = await axios.get(`${process.env.REACT_APP_API_LIFERAY_BASE_URL}/o/c/travelinfos/?fields=totalCount`);
+            const response = await axios.get(`${process.env.REACT_APP_API_LIFERAY_BASE_URL}/o/c/travelinfos/?pageSize=1&sort=travelRequestId:desc`);
             console.log("Fetch count : ", response);
             return response;
         } catch (error) {

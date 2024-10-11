@@ -21,7 +21,7 @@ const LoginPage = () => {
       return;
     }
   
-    const apiUrl = 'http://localhost:8080/o/headless-admin-user/v1.0/user-accounts';
+    const apiUrl = `${process.env.REACT_APP_API_LIFERAY_BASE_URL}/o/headless-admin-user/v1.0/user-accounts`;
   
     try {
       const response = await fetch(apiUrl, {

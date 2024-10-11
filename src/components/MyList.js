@@ -57,7 +57,7 @@ const MyList = () => {
 
   const fetchUserId = async () => {
     try {
-      const response = await fetch('http://localhost:8080/o/headless-admin-user/v1.0/my-user-account', {
+      const response = await fetch(`${process.env.REACT_APP_API_LIFERAY_BASE_URL}/o/headless-admin-user/v1.0/my-user-account`, {
         method: 'GET',
         headers: {
           'Accept': 'application/json',
@@ -97,7 +97,7 @@ const MyList = () => {
   const handleRowClick = async (item) => {
     setSelectedItem(item);
     try {
-      const response = await fetch(`http://localhost:8080/o/c/travelinfos/${item.id}/itineraryRelation`, {
+      const response = await fetch(`${process.env.REACT_APP_API_LIFERAY_BASE_URL}/o/c/travelinfos/${item.id}/itineraryRelation`, {
         method: 'GET',
         headers: {
           'Accept': 'application/json',
@@ -105,7 +105,7 @@ const MyList = () => {
         },
       });
 
-      const attachmentResponse = await fetch(`http://localhost:8080/o/c/travelattachments?filter=r_attachmentRelation_c_travelInfoId eq \'${item.id}\'`, {
+      const attachmentResponse = await fetch(`${process.env.REACT_APP_API_LIFERAY_BASE_URL}/o/c/travelattachments?filter=r_attachmentRelation_c_travelInfoId eq \'${item.id}\'`, {
         method: 'GET',
         headers: {
           'Accept': 'application/json',
@@ -162,14 +162,14 @@ const MyList = () => {
     // Use the item id to fetch the associated travel information
     const fetchTravelInfo = async () => {
       try {
-        const response = await fetch(`http://localhost:8080/o/c/travelinfos/${item.id}/itineraryRelation`, {
+        const response = await fetch(`${process.env.REACT_APP_API_LIFERAY_BASE_URL}/o/c/travelinfos/${item.id}/itineraryRelation`, {
           method: 'GET',
           headers: {
             'Accept': 'application/json',
             'x-csrf-token': authHeader,
           },
         });
-        const attachmentResponse = await fetch(`http://localhost:8080/o/c/travelattachments?filter=r_attachmentRelation_c_travelInfoId eq \'${item.id}\'`, {
+        const attachmentResponse = await fetch(`${process.env.REACT_APP_API_LIFERAY_BASE_URL}/o/c/travelattachments?filter=r_attachmentRelation_c_travelInfoId eq \'${item.id}\'`, {
           method: 'GET',
           headers: {
             'Accept': 'application/json',
@@ -200,7 +200,7 @@ const MyList = () => {
 
   const handleDelete = async (id) => {
     try {
-      const response = await fetch(`http://localhost:8080/o/c/travelinfos/${id}`, {
+      const response = await fetch(`${process.env.REACT_APP_API_LIFERAY_BASE_URL}/o/c/travelinfos/${id}`, {
         method: 'DELETE',
         headers: {
           'Accept': 'application/json',
@@ -249,7 +249,7 @@ const MyList = () => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const response = await fetch('http://localhost:8080/o/c/travelinfos?page=1&pageSize=1000', {
+        const response = await fetch(`${process.env.REACT_APP_API_LIFERAY_BASE_URL}/o/c/travelinfos?page=1&pageSize=1000`, {
           method: 'GET',
           headers: {
             'Accept': 'application/json',

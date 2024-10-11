@@ -243,7 +243,7 @@ function EditTravelRequestForm() {
     const OnwardJourneyLink = (rowData) => {
 
         console.log("url : ", rowData.contentUrl)
-        let urlObj = new URL(rowData.contentUrl, "http://localhost:8080");
+        let urlObj = new URL(rowData.contentUrl, `${process.env.REACT_APP_API_LIFERAY_BASE_URL}`);
         urlObj.searchParams.delete('download');
         let newUrl = urlObj.toString();
         console.log("new url : ", newUrl)
@@ -345,7 +345,7 @@ function EditTravelRequestForm() {
 
     const deleteItineraryFromServer = async (id) => {
         try {
-            await fetch(`http://localhost:8080/o/c/traveldetailses/${id}`, {
+            await fetch(`${process.env.REACT_APP_API_LIFERAY_BASE_URL}/o/c/traveldetailses/${id}`, {
                 method: 'DELETE',
                 headers: {
                     'Accept': 'application/json',
