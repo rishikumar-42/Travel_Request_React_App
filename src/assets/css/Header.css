@@ -14,7 +14,7 @@
 }
  
 .view-span {
-    padding-left: 43rem;
+    padding-left: 7rem;
     position: relative; /* Necessary for absolute positioning of the dropdown */
 }
  
@@ -23,7 +23,7 @@
     display: block;
     position: absolute;
     top: 100%;
-    left: 59rem; 
+    left: 24rem; 
     background: #FFFFFF;
     border: 1px solid #ccc;
     list-style: none;
@@ -152,7 +152,7 @@
     font-size: 16px;
     font-weight: 500;
     color: white;
-    margin-left: 20px;
+    margin-left: 30px;
 }
 .view-View{
     font-size: 16px;
@@ -176,4 +176,7 @@ a.view-Create:active {
 a.view-Create:visited {
     color: white !important;
     text-decoration: none !important;
+}
+.travel-request-header{
+    margin-left:25rem;
 }

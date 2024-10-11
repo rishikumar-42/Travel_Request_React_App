@@ -24,14 +24,14 @@
 }
 
 .flight-icon {
-    font-size: 120px; /* Icon size */
+    font-size: 50px !important; /* Icon size */
     color: #FFFFFF; /* Icon color */
     margin-bottom: 16px; /* Space between icon and text */
 }
 
 .travel-text {
     text-align: center; 
-    color: #FFFDD0;
+    color: #FFFFFF;
     font-weight: bold; 
     font-size: 16px; /* Text size */
 }

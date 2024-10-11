@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
-// import { useAuth } from '../contexts/AuthContext';
-import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import "../assets/css/Header.css";
 
 function Header() {
-    // const { isAuthenticated } = useAuth(); // Get the authentication status
+    const { isAuthenticated } = useAuth(); // Get the authentication status
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const navigate = useNavigate();
+    const location = useLocation();
 
     const toggleDropdown = () => {
         setIsDropdownOpen(!isDropdownOpen);
@@ -17,13 +18,18 @@ function Header() {
         setIsDropdownOpen(false); // Close dropdown after navigation
     };
 
+    const isHome = window.location.pathname === '/home';
+
     return (
         <header className="header-travelform">
             <h3>Amphenol</h3>
-            {/* {isAuthenticated && ( */}
+            {!isHome && (
+            <h5 className='travel-request-header'>Travel Request</h5>
+            )}
+            {!isHome && (
                 <div>
                     <span className="view-span">
-                        <Link to="/Home" className="view-Create">
+                        <Link to="/home" className="view-Create">
                             Home
                         </Link>
                         <Link to="/TravelRequestForm" className="view-Create">
@@ -44,7 +50,7 @@ function Header() {
                         )}
                     </span>
                 </div>
-            {/* )} */}
+            )}
         </header>
     );
 }

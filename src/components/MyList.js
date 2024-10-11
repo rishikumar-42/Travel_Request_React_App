@@ -325,31 +325,31 @@ const MyList = () => {
               className={`tab-button ${activeTab === 'pendingAtApprover1 || pendingAtApprover2' ? 'active' : ''}`}
               onClick={() => handleTabClick('pendingAtApprover1 || pendingAtApprover2')}
             >
-              In Progress Requests
+              In Progress
             </button>
             <button
               className={`tab-button ${activeTab === 'draft' ? 'active' : ''}`}
               onClick={() => handleTabClick('draft')}
             >
-              Draft Requests
+              Draft
             </button>
             <button
               className={`tab-button ${activeTab === 'approved' ? 'active' : ''}`}
               onClick={() => handleTabClick('approved')}
             >
-              Approved Requests
+              Approved
             </button>
             <button
               className={`tab-button ${activeTab === 'cancelled' ? 'active' : ''}`}
               onClick={() => handleTabClick('cancelled')}
             >
-              Cancelled Requests
+              Cancelled
             </button>
             <button
               className={`tab-button ${activeTab === 'rejected' ? 'active' : ''}`}
               onClick={() => handleTabClick('rejected')}
             >
-              Rejected Requests
+              Rejected
             </button>
             <button
               className={`tab-button ${activeTab === 'all' ? 'active' : ''}`}
