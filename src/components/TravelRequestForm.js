@@ -697,7 +697,7 @@ function TravelRequestForm() {
         if (response.totalCount !== 0) {
             const latestId = response.items[0].travelRequestId;
             const lastFourDigits = latestId.slice(-4);
-            const monthFromId = Number(latestId.slice(4, 6));
+            const monthFromId = Number(latestId.slice(5, 7));
             const currentMonth = (new Date().getMonth() + 1);
             if (monthFromId === currentMonth)
                 seq = Number(lastFourDigits) + 1;
