@@ -706,7 +706,8 @@ function TravelRequestForm() {
         const year = String(now.getFullYear()).slice(-2); // Last two digits of the year
         const month = String(now.getMonth() + 1).padStart(2, '0'); // Month, zero-padded
         const finalSeq = String(seq).padStart(4, '0');
-        const uniqId = `TR${year}${month}${finalSeq}`;
+        const prefix = (formData.travelType === 'international') ? 'I' : (formData.travelType === 'domestic') ? 'D' : '';
+        const uniqId = `${prefix}TR${year}${month}${finalSeq}`;
         return uniqId;
     };
 
@@ -1065,14 +1066,14 @@ function TravelRequestForm() {
                                         travelType: e.value
                                     })}
                                     checked={formData.travelType === 'domestic'} />
-                                <label htmlFor="domestic" className="mr-1 small">D</label>
+                                <label htmlFor="domestic" className="mr-1 small">Domestic</label>
                                 <RadioButton inputId="international" name="travelType" value="international"
                                     onChange={(e) => setFormData({
                                         ...formData,
                                         travelType: e.value
                                     })}
                                     checked={formData.travelType === 'international'} />
-                                <label htmlFor="international" className="mr-1 small">I</label>
+                                <label htmlFor="international" className="mr-1 small">International</label>
                             </div>
                         </div>
                         {errors.travelType && !formData.travelType && <span style={{ color: 'red' }}>{errors.travelType}</span>}

@@ -214,4 +214,6 @@ div.dt-container.no-data-footer tbody > tr:last-child > * {
   padding: 5px;
 }
 
- 
+.td-mylist {
+  padding-left: 4px;
+}

@@ -848,8 +848,20 @@ function EditTravelRequestForm() {
 
 
     const formatFormData = (data) => {
+        var newId = formData.travelRequestId;
+        if (item.approveStatus?.key === 'draft') {
+            if( item.travelType !== formData.travelType){
+                const prefix = (formData.travelType === 'international') ? 'I' : (formData.travelType === 'domestic') ? 'D' : '';
+                newId = prefix + item.travelRequestId.slice(1);
+                setFormData({
+                    ...formData,
+                    travelRequestId: newId
+                })
+            }
+        }
         return {
             ...data,
+            travelRequestId : newId,
             itineraryRelation: data.itineraryRelation.map(itinerary => ({
                 id: itinerary.id || null,
                 r_itineraryRelation_c_travelInfoId: itinerary.r_itineraryRelation_c_travelInfoId,
@@ -877,8 +889,18 @@ function EditTravelRequestForm() {
     // Handle form submission
     const handleFormSubmit = async (e) => {
         console.log('Submitting formData:', formData);
-        const formattedData = formatFormData(formData);
         e.preventDefault();
+        // if (item.approveStatus?.key === 'draft') {
+        //     if( item.travelType !== formData.travelType){
+        //         const prefix = (formData.travelType === 'international') ? 'I' : (formData.travelType === 'domestic') ? 'D' : '';
+        //         const newId = prefix + item.travelRequestId.slice(1);
+        //         setFormData({
+        //             ...formData,
+        //             travelRequestId: newId
+        //         })
+        //     }
+        // }
+        const formattedData = formatFormData(formData);
         if (validateForm()) {
             setErrors({});
         } else {
@@ -887,8 +909,8 @@ function EditTravelRequestForm() {
         }
         setLoading(true);
         console.log("Form submission started");
-        const uniqId = await createUniqueId();
-        console.log("unique Id : ", uniqId);
+        // const uniqId = await createUniqueId();
+        // console.log("unique Id : ", uniqId);
 
         try {
             let response;
@@ -897,12 +919,13 @@ function EditTravelRequestForm() {
                 response = await TravelRequestFormService.updateFormData(item.id, formattedData);
                 // setMessage(`Successfully updated Id : ${response.data.id}`);
                 showMessage('success', 'Success', `Successfully updated Id : ${response.data.travelRequestId}`);
-            } else {
-                // Otherwise, create a new record
-                response = await TravelRequestFormService.submitFormData(formData);
-                // setMessage(`Successfully created Id : ${response.data.id}`);
-                showMessage('success', 'Success', `Successfully created Id : ${response.data.travelRequestId}`);
-            }
+            } 
+            // else {
+            //     // Otherwise, create a new record
+            //     response = await TravelRequestFormService.submitFormData(formData);
+            //     // setMessage(`Successfully created Id : ${response.data.id}`);
+            //     showMessage('success', 'Success', `Successfully created Id : ${response.data.travelRequestId}`);
+            // }
             setTimeout(() => {
                 handleBack();
             }, 1000);
@@ -1203,15 +1226,17 @@ function EditTravelRequestForm() {
                                         ...formData,
                                         travelType: e.value
                                     })}
-                                    checked={formData.travelType === 'domestic'} />
-                                <label htmlFor="domestic" className="mr-1 small">D</label>
+                                    checked={formData.travelType === 'domestic'}
+                                    disabled={item.approveStatus?.key !== 'draft'} />
+                                <label htmlFor="domestic" className="mr-1 small">Domestic</label>
                                 <RadioButton inputId="international" name="travelType" value="international"
                                     onChange={(e) => setFormData({
                                         ...formData,
                                         travelType: e.value
                                     })}
-                                    checked={formData.travelType === 'international'} />
-                                <label htmlFor="international" className="mr-1 small">I</label>
+                                    checked={formData.travelType === 'international'}
+                                    disabled={item.approveStatus?.key !== 'draft'} />
+                                <label htmlFor="international" className="mr-1 small">International</label>
                             </div>
                         </div>
                         {errors.travelType && !formData.travelType && <span style={{ color: 'red' }}>{errors.travelType}</span>}
