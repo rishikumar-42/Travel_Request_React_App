@@ -438,10 +438,12 @@ const NewSummary = ({
       if (item.approveStatus?.key === "draft") {
         await TravelRequestFormServiceLayer.updatePatchFormData(item.id, {
           approveStatus: { key: "cancelled" },
+          numericStatus: 5,
         });
       } else if (item.approveStatus?.key === "pendingAtApprover1") {
         await TravelRequestFormServiceLayer.updatePatchFormData(item.id, {
           approveStatus: { key: "cancelled" },
+          numericStatus: 5,
         });
         const currentTask = await fetchWorkflowInstances();
         console.log(currentTask);
@@ -970,10 +972,6 @@ const NewSummary = ({
                   disabled={loadingNew}
                   onClick={() => {
                     setDialogOpen(true);
-                    setFormData(prevFormData => ({
-                      ...prevFormData,
-                      numericStatus: 5,
-                    }));
                   }}
                   label="Cancel"
                 />
