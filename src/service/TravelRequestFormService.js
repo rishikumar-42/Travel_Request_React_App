@@ -164,7 +164,7 @@ const TravelRequestFormServiceLayer = {
         try {
             console.log("Counting")
             // const response = await axios.get(`${process.env.REACT_APP_API_LIFERAY_BASE_URL}/o/c/travelinfos/?fields=totalCount`);
-            const response = await axios.get(`${process.env.REACT_APP_API_LIFERAY_BASE_URL}/o/c/travelinfos/?pageSize=1&sort=travelRequestId:desc`);
+            const response = await axios.get(`${process.env.REACT_APP_API_LIFERAY_BASE_URL}/o/c/travelinfos/?pageSize=1&sort=dateCreated:desc`);
             console.log("Fetch count : ", response);
             return response;
         } catch (error) {
