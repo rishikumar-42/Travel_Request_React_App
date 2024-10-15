@@ -1,21 +1,24 @@
 .home-container {
-    display: flex;
-    justify-content: center; 
-    align-items: center; 
-    height: 100vh; 
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Responsive grid */
+    gap: 20px; /* Space between boxes */
+    justify-items: center; /* Center items in each grid cell */
+    align-items: center; /* Center items vertically */
+    height: 83vh; 
     cursor: pointer; 
-    background: lightgray;
+    background: lightgray; /* Background color */
 }
 
 .icon-container {
     display: flex;
     flex-direction: column; 
     align-items: center; 
-    background: linear-gradient(90deg, #003d71 0%, #5482ab 100%);
+    background: linear-gradient(90deg, #003d71 0%, #5482ab 100%); /* Gradient background */
     padding: 40px; /* Padding around the icon and text */
     border-radius: 20px; 
     box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.2); 
     transition: transform 0.3s, box-shadow 0.3s; /* Smooth hover transition */
+    width: 60%; /* Ensures all boxes are the same size */
 }
 
 .icon-container:hover {
@@ -23,7 +26,7 @@
     box-shadow: 0px 8px 30px rgba(0, 0, 0, 0.2); /* Enhanced shadow on hover */
 }
 
-.flight-icon {
+.flight-icon, .file-icon, .share-icon {
     font-size: 50px !important; /* Icon size */
     color: #FFFFFF; /* Icon color */
     margin-bottom: 16px; /* Space between icon and text */
@@ -35,10 +38,26 @@
     font-weight: bold; 
     font-size: 16px; /* Text size */
 }
-.lfr-layout-structure-item-6a36cc21-165a-478e-b017-e6e8d4534e47 {
-font-size: 10px !important;
-position: absolute;
-top: 0% !important;
-margin-left: 74rem !important;
 
+/* Adjusting for specific layout items */
+.lfr-layout-structure-item-6a36cc21-165a-478e-b017-e6e8d4534e47 {
+    font-size: 10px !important;
+    position: absolute;
+    top: 0% !important;
+    margin-left: 74rem !important; /* Adjust as needed */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .icon-container {
+        padding: 20px; /* Smaller padding on mobile */
+    }
+
+    .flight-icon, .file-icon, .share-icon {
+        font-size: 40px; /* Smaller icons on mobile */
+    }
+
+    .travel-text {
+        font-size: 14px; /* Smaller text on mobile */
+    }
 }

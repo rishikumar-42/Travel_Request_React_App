@@ -23,7 +23,7 @@
     display: block;
     position: absolute;
     top: 100%;
-    left: 24rem; 
+    left: 22.5rem; 
     background: #FFFFFF;
     border: 1px solid #ccc;
     list-style: none;
@@ -149,13 +149,13 @@
     color: #FFFFFF; /* White */
 }
 .view-Create{
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 500;
     color: white;
     margin-left: 30px;
 }
 .view-View{
-    font-size: 16px;
+    font-size: 14px;
     margin-left: 30px;
     font-weight: 500;
 }

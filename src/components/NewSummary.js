@@ -968,7 +968,13 @@ const NewSummary = ({
                 <Button
                   className="back-buttons"
                   disabled={loadingNew}
-                  onClick={() => setDialogOpen(true)}
+                  onClick={() => {
+                    setDialogOpen(true);
+                    setFormData(prevFormData => ({
+                      ...prevFormData,
+                      numericStatus: 5,
+                    }));
+                  }}
                   label="Cancel"
                 />
               )}
