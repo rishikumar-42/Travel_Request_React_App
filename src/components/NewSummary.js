@@ -12,6 +12,8 @@ import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrow
 import { Button } from "primereact/button";
 import TravelRequestFormService from "../service/TravelRequestFormService.js";
 import { useNavigate } from "react-router-dom";
+import html2pdf from "html2pdf.js";
+import ReportTemplate from "./reportTemplate.js";
 
 const NewSummary = ({
   item = {},
@@ -80,7 +82,7 @@ const NewSummary = ({
 
   useEffect(() => {
     fetchUserId();
-  },[authHeader]);
+  }, [authHeader]);
 
   useEffect(() => {
     const fetchWorkflowTasks = async () => {
@@ -369,8 +371,7 @@ const NewSummary = ({
       showMessage(
         "success",
         "Success",
-        `${
-          transitionName.charAt(0).toUpperCase() + transitionName.slice(1)
+        `${transitionName.charAt(0).toUpperCase() + transitionName.slice(1)
         } action successful.`
       );
       setIsTaskCompleted(true);
@@ -405,24 +406,28 @@ const NewSummary = ({
       item.approver1Comment = comment;
       TravelRequestFormServiceLayer.updatePatchFormData(item.id, {
         approver1Comment: comment,
+        managerActionTime: new Date()
       });
     } else if (dialogType === "reject") {
       handleTransition("reject");
       item.approver1Comment = comment;
       TravelRequestFormServiceLayer.updatePatchFormData(item.id, {
         approver1Comment: comment,
+        managerActionTime: new Date()
       });
     } else if (dialogType === "Approve") {
       handleTransition("Approve");
       item.approver1Comment = comment;
       TravelRequestFormServiceLayer.updatePatchFormData(item.id, {
         approver2Comment: comment,
+        hodActionTime: new Date()
       });
     } else if (dialogType === "REJECT") {
       handleTransition("REJECT");
       item.approver1Comment = comment;
       TravelRequestFormServiceLayer.updatePatchFormData(item.id, {
         approver2Comment: comment,
+        hodActionTime: new Date()
       });
     }
   };
@@ -482,341 +487,286 @@ const NewSummary = ({
     <div className="summary-container">
       <Toast ref={toast} position="top-center" />
       <div className="summary-content">
-        <div className="toolbar-summary">
-          <span className="title">Issuer Details</span>
-        </div>
-        <div className="summary-details">
-          <div className="details-grid">
-            <div className="detail-item">
-              <span className="summary-label">Issuer:</span>
-              <span className="value">{item.issuer || "N/A"}</span>
-            </div>
-            <div className="detail-item">
-              <span className="summary-label">Issue Date:</span>
-              <span className="value">
-                {formatDate(item.issuerDate) || "N/A"}
-              </span>
-            </div>
-            <div className="detail-item">
-              <span className="summary-label">Telephone Number:</span>
-              <span className="value">{item.issuerNumber || "N/A"}</span>
+        <div id="summary-export">
+          <div className="toolbar-summary">
+            <span className="title">Issuer Details</span>
+          </div>
+          <div className="summary-details">
+            <div className="details-grid">
+              <div className="detail-item">
+                <span className="summary-label">Issuer:</span>
+                <span className="value">{item.issuer || "N/A"}</span>
+              </div>
+              <div className="detail-item">
+                <span className="summary-label">Issue Date:</span>
+                <span className="value">
+                  {formatDate(item.issuerDate) || "N/A"}
+                </span>
+              </div>
+              <div className="detail-item">
+                <span className="summary-label">Telephone Number:</span>
+                <span className="value">{item.issuerNumber || "N/A"}</span>
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* <div className="toolbar-summary">
-          <span className="title">Traveler Request</span>
-        </div>
-        <div className="summary-details">
-          <div className="details-grid">
-            <div className="detail-item">
-              <span className="label">Travel Request Id:</span>
-              <span className="value">{item.travelRequestId || 'N/A'}</span>
-            </div>
-            <div className="detail-item">
-              <span className="label">Employee Name:</span>
-              <span className="value">{item.firstName + " " + item.lastName || 'N/A'}</span>
-            </div>
-            <div className="detail-item">
-              <span className="label">Employee Number:</span>
-              <span className="value">{item.employeeNumber || 'N/A'}</span>
-            </div>
-            <div className="detail-item">
-              <span className="label">Position Title:</span>
-              <span className="value">{item.positionTitle || 'N/A'}</span>
-            </div>
-            <div className="detail-item">
-              <span className="label">Entity:</span>
-              <span className="value">{item.entity || 'N/A'}</span>
-            </div>
-            <div className="detail-item">
-              <span className="label">Cost Center:</span>
-              <span className="value">{item.costCenter || 'N/A'}</span>
-            </div>
-            <div className="detail-item">
-              <span className="label">Travel Purpose:</span>
-              <span className="value">{item.travelPurpose || 'N/A'}</span>
-            </div>
-            <div className="detail-item">
-              <span className="label">Participants:</span>
-              <span className="value">{item.participants || 'N/A'}</span>
-            </div>
-            <div className="detail-item">
-              <span className="label">Budget:</span>
-              <span className="value">{item.travelBudget || 'N/A'}</span>
-            </div>
-            <div className="detail-item">
-              <span className="label">Approver 1:</span>
-              <span className="value">{item.manager || 'N/A'}</span>
-            </div>
-            <div className="detail-item">
-              <span className="label">Approver 2:</span>
-              <span className="value">{item.hod || 'N/A'}</span>
-            </div>
-            <div className="detail-item">
-              <span className="label">Status:</span>
-              <span className="value">{item.approveStatus?.name || 'N/A'}</span>
+
+          <div className="toolbar-summary">
+            <span className="title">Traveler Identification</span>
+          </div>
+          <div className="summary-details">
+            <div className="details-grid">
+              <div className="detail-item">
+                <span className="summary-label">Email:</span>
+                <span className="value">{item.email || "N/A"}</span>
+              </div>
+              <div className="detail-item">
+                <span className="summary-label">First Name:</span>
+                <span className="value">{item.firstName || "N/A"}</span>
+              </div>
+              <div className="detail-item">
+                <span className="summary-label">Last Name:</span>
+                <span className="value">{item.lastName || "N/A"}</span>
+              </div>
+              <div className="detail-item">
+                <span className="summary-label">Employee Number:</span>
+                <span className="value">{item.employeeNumber || "N/A"}</span>
+              </div>
+              <div className="detail-item">
+                <span className="summary-label">Position Title:</span>
+                <span className="value">{item.positionTitle || "N/A"}</span>
+              </div>
+              <div className="detail-item">
+                <span className="summary-label">Entity:</span>
+                <span className="value">{item.entity || "N/A"}</span>
+              </div>
+              <div className="detail-item">
+                <span className="summary-label">Cost Center:</span>
+                <span className="value">{item.costCenter || "N/A"}</span>
+              </div>
             </div>
           </div>
-        </div>
- */}
 
-        <div className="toolbar-summary">
-          <span className="title">Traveler Identification</span>
-        </div>
-        <div className="summary-details">
-          <div className="details-grid">
-            <div className="detail-item">
-              <span className="summary-label">Email:</span>
-              <span className="value">{item.email || "N/A"}</span>
-            </div>
-            <div className="detail-item">
-              <span className="summary-label">First Name:</span>
-              <span className="value">{item.firstName || "N/A"}</span>
-            </div>
-            <div className="detail-item">
-              <span className="summary-label">Last Name:</span>
-              <span className="value">{item.lastName || "N/A"}</span>
-            </div>
-            <div className="detail-item">
-              <span className="summary-label">Employee Number:</span>
-              <span className="value">{item.employeeNumber || "N/A"}</span>
-            </div>
-            <div className="detail-item">
-              <span className="summary-label">Position Title:</span>
-              <span className="value">{item.positionTitle || "N/A"}</span>
-            </div>
-            <div className="detail-item">
-              <span className="summary-label">Entity:</span>
-              <span className="value">{item.entity || "N/A"}</span>
-            </div>
-            <div className="detail-item">
-              <span className="summary-label">Cost Center:</span>
-              <span className="value">{item.costCenter || "N/A"}</span>
+          <div className="toolbar-summary">
+            <span className="title">Travel details</span>
+          </div>
+          <div className="summary-details">
+            <div className="details-grid">
+              <div className="detail-item">
+                <span className="summary-label">Travel Request Id:</span>
+                <span className="value">{item.travelRequestId || "N/A"}</span>
+              </div>
+              <div className="detail-item">
+                <span className="summary-label">Travel Type:</span>
+                <span className="value">{item.travelType || "N/A"}</span>
+              </div>
+              <div className="detail-item">
+                <span className="summary-label">Travel Purpose:</span>
+                <span className="value">{item.travelPurpose || "N/A"}</span>
+              </div>
+              <div className="detail-item">
+                <span className="summary-label">Participants:</span>
+                <span className="value">{item.participants || "N/A"}</span>
+              </div>
+              <div className="detail-item">
+                <span className="summary-label">Destination:</span>
+                <span className="value">{item.destination || "N/A"}</span>
+              </div>
+              <div className="detail-item">
+                <span className="summary-label">Departure Date:</span>
+                <span className="value">
+                  {formatDate(item.travelDepartureDate) || "N/A"}
+                </span>
+              </div>
+              <div className="detail-item">
+                <span className="summary-label">Return Date:</span>
+                <span className="value">
+                  {formatDate(item.travelArrivalDate) || "N/A"}
+                </span>
+              </div>
+              <div className="detail-item">
+                <span className="summary-label">Estimated Duration:</span>
+                <span className="value">
+                  {item.travelEstimatedDuration || "N/A"}
+                </span>
+              </div>
+              <div className="detail-item">
+                <span className="summary-label">Currency:</span>
+                <span className="value">
+                  {item.travelCurrency === null
+                    ? "N/A"
+                    : item.travelCurrency?.name || "N/A"}
+                </span>
+              </div>
+              <div className="detail-item">
+                <span className="summary-label">Budget:</span>
+                <span className="value">{item.travelBudget || "N/A"}</span>
+              </div>
+              <div className="detail-item">
+                <span className="summary-label">Remarks:</span>
+                <span className="value">{item.travelNote || "N/A"}</span>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="toolbar-summary">
-          <span className="title">Travel details</span>
-        </div>
-        <div className="summary-details">
-          <div className="details-grid">
-            <div className="detail-item">
-              <span className="summary-label">Travel Request Id:</span>
-              <span className="value">{item.travelRequestId || "N/A"}</span>
-            </div>
-            <div className="detail-item">
-              <span className="summary-label">Travel Type:</span>
-              <span className="value">{item.travelType || "N/A"}</span>
-            </div>
-            <div className="detail-item">
-              <span className="summary-label">Travel Purpose:</span>
-              <span className="value">{item.travelPurpose || "N/A"}</span>
-            </div>
-            <div className="detail-item">
-              <span className="summary-label">Participants:</span>
-              <span className="value">{item.participants || "N/A"}</span>
-            </div>
-            <div className="detail-item">
-              <span className="summary-label">Destination:</span>
-              <span className="value">{item.destination || "N/A"}</span>
-            </div>
-            <div className="detail-item">
-              <span className="summary-label">Departure Date:</span>
-              <span className="value">
-                {formatDate(item.travelDepartureDate) || "N/A"}
-              </span>
-            </div>
-            <div className="detail-item">
-              <span className="summary-label">Return Date:</span>
-              <span className="value">
-                {formatDate(item.travelArrivalDate) || "N/A"}
-              </span>
-            </div>
-            <div className="detail-item">
-              <span className="summary-label">Estimated Duration:</span>
-              <span className="value">
-                {item.travelEstimatedDuration || "N/A"}
-              </span>
-            </div>
-            <div className="detail-item">
-              <span className="summary-label">Currency:</span>
-              <span className="value">
-                {item.travelCurrency === null
-                  ? "N/A"
-                  : item.travelCurrency?.name || "N/A"}
-              </span>
-            </div>
-            <div className="detail-item">
-              <span className="summary-label">Budget:</span>
-              <span className="value">{item.travelBudget || "N/A"}</span>
-            </div>
-            <div className="detail-item">
-              <span className="summary-label">Remarks:</span>
-              <span className="value">{item.travelNote || "N/A"}</span>
+          <div className="toolbar-summary">
+            <span className="title">Approvers</span>
+          </div>
+          <div className="summary-details">
+            <div className="details-grid">
+              <div className="detail-item">
+                <span className="summary-label">Approver 1:</span>
+                <span className="value">{item.manager || "N/A"}</span>
+              </div>
+              <div className="detail-item">
+                <span className="summary-label">Approver 2:</span>
+                <span className="value">{item.hod || "N/A"}</span>
+              </div>
+              <div className="detail-item">
+                <span className="summary-label">Status:</span>
+                <span className="value">{item.approveStatus?.name || "N/A"}</span>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="toolbar-summary">
-          <span className="title">Approvers</span>
-        </div>
-        <div className="summary-details">
-          <div className="details-grid">
-            <div className="detail-item">
-              <span className="summary-label">Approver 1:</span>
-              <span className="value">{item.manager || "N/A"}</span>
-            </div>
-            <div className="detail-item">
-              <span className="summary-label">Approver 2:</span>
-              <span className="value">{item.hod || "N/A"}</span>
-            </div>
-            <div className="detail-item">
-              <span className="summary-label">Status:</span>
-              <span className="value">{item.approveStatus?.name || "N/A"}</span>
+          <div className="toolbar-summary">
+            <span className="title">Hotel</span>
+          </div>
+          <div className="summary-details">
+            <div className="details-grid">
+              <div className="detail-item">
+                <span className="summary-label">Location:</span>
+                <span className="value">{item.hotelLocation || "N/A"}</span>
+              </div>
+              <div className="detail-item">
+                <span className="summary-label">Check In:</span>
+                <span className="value">
+                  {" "}
+                  {formatDateTime(item.hotelCheckIn) || "N/A"}
+                </span>
+              </div>
+              <div className="detail-item">
+                <span className="summary-label">Check Out:</span>
+                <span className="value">
+                  {" "}
+                  {formatDateTime(item.hotelCheckOut) || "N/A"}
+                </span>
+              </div>
+              <div className="detail-item">
+                <span className="summary-label">Number of Nights:</span>
+                <span className="value">{item.hotelNumberOfNights || "N/A"}</span>
+              </div>
+              <div className="detail-item">
+                <span className="summary-label">Remarks:</span>
+                <span className="value">{item.hotelNote || "N/A"}</span>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="toolbar-summary">
-          <span className="title">Hotel</span>
-        </div>
-        <div className="summary-details">
-          <div className="details-grid">
-            <div className="detail-item">
-              <span className="summary-label">Location:</span>
-              <span className="value">{item.hotelLocation || "N/A"}</span>
-            </div>
-            <div className="detail-item">
-              <span className="summary-label">Check In:</span>
-              <span className="value">
-                {" "}
-                {formatDateTime(item.hotelCheckIn) || "N/A"}
-              </span>
-            </div>
-            <div className="detail-item">
-              <span className="summary-label">Check Out:</span>
-              <span className="value">
-                {" "}
-                {formatDateTime(item.hotelCheckOut) || "N/A"}
-              </span>
-            </div>
-            <div className="detail-item">
-              <span className="summary-label">Number of Nights:</span>
-              <span className="value">{item.hotelNumberOfNights || "N/A"}</span>
-            </div>
-            <div className="detail-item">
-              <span className="summary-label">Remarks:</span>
-              <span className="value">{item.hotelNote || "N/A"}</span>
+          <div className="toolbar-summary">
+            <span className="title">Car Rental</span>
+          </div>
+          <div className="summary-details">
+            <div className="details-grid">
+              <div className="detail-item">
+                <span className="summary-label">Category:</span>
+                <span className="value">{item.carRentalCategory || "N/A"}</span>
+              </div>
+              <div className="detail-item">
+                <span className="summary-label">From:</span>
+                <span className="value">{item.carRentalFrom || "N/A"}</span>
+              </div>
+              <div className="detail-item">
+                <span className="summary-label">To:</span>
+                <span className="value">{item.carRentalTo || "N/A"}</span>
+              </div>
+              <div className="detail-item">
+                <span className="summary-label">On:</span>
+                <span className="value">
+                  {formatDate(item.carRentalOn) || "N/A"}
+                </span>
+              </div>
+              <div className="detail-item">
+                <span className="summary-label">Until:</span>
+                <span className="value">
+                  {formatDate(item.carRentalUntil) || "N/A"}
+                </span>
+              </div>
+              <div className="detail-item">
+                <span className="summary-label">Birth Date:</span>
+                <span className="value">
+                  {formatDate(item.carRentalBirthDate) || "N/A"}
+                </span>
+              </div>
+              <div className="detail-item">
+                <span className="summary-label">Driving License:</span>
+                <span className="value">{item.carDrivingLicense || "N/A"}</span>
+              </div>
+              <div className="detail-item">
+                <span className="summary-label">Remarks:</span>
+                <span className="value">{item.carRentalNote || "N/A"}</span>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="toolbar-summary">
-          <span className="title">Car Rental</span>
-        </div>
-        <div className="summary-details">
-          <div className="details-grid">
-            <div className="detail-item">
-              <span className="summary-label">Category:</span>
-              <span className="value">{item.carRentalCategory || "N/A"}</span>
-            </div>
-            <div className="detail-item">
-              <span className="summary-label">From:</span>
-              <span className="value">{item.carRentalFrom || "N/A"}</span>
-            </div>
-            <div className="detail-item">
-              <span className="summary-label">To:</span>
-              <span className="value">{item.carRentalTo || "N/A"}</span>
-            </div>
-            <div className="detail-item">
-              <span className="summary-label">On:</span>
-              <span className="value">
-                {formatDate(item.carRentalOn) || "N/A"}
-              </span>
-            </div>
-            <div className="detail-item">
-              <span className="summary-label">Until:</span>
-              <span className="value">
-                {formatDate(item.carRentalUntil) || "N/A"}
-              </span>
-            </div>
-            <div className="detail-item">
-              <span className="summary-label">Birth Date:</span>
-              <span className="value">
-                {formatDate(item.carRentalBirthDate) || "N/A"}
-              </span>
-            </div>
-            <div className="detail-item">
-              <span className="summary-label">Driving License:</span>
-              <span className="value">{item.carDrivingLicense || "N/A"}</span>
-            </div>
-            <div className="detail-item">
-              <span className="summary-label">Remarks:</span>
-              <span className="value">{item.carRentalNote || "N/A"}</span>
+          <div className="toolbar-summary">
+            <span className="title">Personal Car</span>
+          </div>
+          <div className="summary-details">
+            <div className="details-grid">
+              <div className="detail-item">
+                <span className="summary-label">Car Registration Number:</span>
+                <span className="value">
+                  {item.personalCarRegistrationNumber || "N/A"}
+                </span>
+              </div>
+              <div className="detail-item">
+                <span className="summary-label">Driving License Number:</span>
+                <span className="value">
+                  {item.personalCarDrivingLicenseNumber || "N/A"}
+                </span>
+              </div>
+              <div className="detail-item">
+                <span className="summary-label">Remarks:</span>
+                <span className="value">{item.personalCarNote || "N/A"}</span>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="toolbar-summary">
-          <span className="title">Personal Car</span>
-        </div>
-        <div className="summary-details">
-          <div className="details-grid">
-            <div className="detail-item">
-              <span className="summary-label">Car Registration Number:</span>
-              <span className="value">
-                {item.personalCarRegistrationNumber || "N/A"}
-              </span>
-            </div>
-            <div className="detail-item">
-              <span className="summary-label">Driving License Number:</span>
-              <span className="value">
-                {item.personalCarDrivingLicenseNumber || "N/A"}
-              </span>
-            </div>
-            <div className="detail-item">
-              <span className="summary-label">Remarks:</span>
-              <span className="value">{item.personalCarNote || "N/A"}</span>
-            </div>
+          <div className="toolbar-summary">
+            <span className="title">Travel Itinerary</span>
           </div>
-        </div>
-
-        <div className="toolbar-summary">
-          <span className="title">Travel Itinerary</span>
-        </div>
-        <div className="summary-details">
-          <div className="details-grid">
-            <div className="detail-item">
-              <span className="summary-label">Flight Ticket Type:</span>
-              <span className="value">
-                {item.flightTicketType && item.flightTicketType.name
-                  ? item.flightTicketType.name
-                  : "N/A"}
-              </span>
-            </div>
-            <div className="detail-item train-type">
-              <span className="summary-label">Train Ticket Type:</span>
-              <span className="value">
-                {" "}
-                {item.trainTicketType && item.trainTicketType.name
-                  ? item.trainTicketType.name
-                  : "N/A"}
-              </span>
-            </div>
-            {/* <div className="detail-item">
+          <div className="summary-details">
+            <div className="details-grid">
+              <div className="detail-item">
+                <span className="summary-label">Flight Ticket Type:</span>
+                <span className="value">
+                  {item.flightTicketType && item.flightTicketType.name
+                    ? item.flightTicketType.name
+                    : "N/A"}
+                </span>
+              </div>
+              <div className="detail-item train-type">
+                <span className="summary-label">Train Ticket Type:</span>
+                <span className="value">
+                  {" "}
+                  {item.trainTicketType && item.trainTicketType.name
+                    ? item.trainTicketType.name
+                    : "N/A"}
+                </span>
+              </div>
+              {/* <div className="detail-item">
               <span className="label">Reason:</span>
               <span className="value"> {item.flightTicketReason && item.flightTicketReason.name ? item.flightTicketReason.name :
                 'N/A'}</span>
             </div> */}
+            </div>
           </div>
-        </div>
 
-        {/* <div className="toolbar-summary">
+          {/* <div className="toolbar-summary">
           <span className="title">Train Ticket</span>
         </div> */}
-        {/* <div className="summary-details">
+          {/* <div className="summary-details">
           <div className="details-grid">
             <div className="detail-item">
               <span className="label">Ticket Type:</span>
@@ -826,116 +776,118 @@ const NewSummary = ({
           </div>
         </div> */}
 
-        {/* <div className="toolbar-summary">
+          {/* <div className="toolbar-summary">
           <span className="title">Attachments</span>
         </div> */}
-        <hr className="separator mb-2 mt-2" />
+          <hr className="separator mb-2 mt-2" />
 
-        <div className="summary-details">
-          <span className="summary-label">Attachments:</span>
-          {attachmentInfo.length > 0 ? (
-            <ol>
-              {attachmentInfo.map((task) => (
-                <li key={task.id}>
-                  <a
-                    href={OnwardJourneyLink(task)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    {task.title}
-                  </a>
-                </li>
-              ))}
-            </ol>
-          ) : (
-            <p>No available attachments</p>
-          )}
-        </div>
+          <div className="summary-details">
+            <span className="summary-label">Attachments:</span>
+            {attachmentInfo.length > 0 ? (
+              <ol>
+                {attachmentInfo.map((task) => (
+                  <li key={task.id}>
+                    <a
+                      href={OnwardJourneyLink(task)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {task.title}
+                    </a>
+                  </li>
+                ))}
+              </ol>
+            ) : (
+              <p>No available attachments</p>
+            )}
+          </div>
 
-        <hr className="separator mb-2 mt-2" />
+          <hr className="separator mb-2 mt-2" />
 
-        {/* <div className="toolbar-summary">
+          {/* <div className="toolbar-summary">
           <span className="title">Itineraries</span>
         </div> */}
-        <div className="summary-details">
-          <DataTable
-            value={travelInfo}
-            showGridlines
-            tableStyle={{ minWidth: "50rem" }}
-          >
-            <Column
-              sortable
-              field="onwardJourney"
-              header="Onward Journey (From - To)"
-              headerClassName="preview-custom-header"
-            />
-            <Column
-              sortable
-              field="onwardDepartureDate"
-              header="Departure Date"
-              body={(rowData) => formatDate(rowData.onwardDepartureDate)}
-              headerClassName="preview-custom-header"
-            />
-            <Column
-              sortable
-              field="onwardPreferredTime"
-              header="Onward Preferred Time"
-              body={(rowData) => formatPickList(rowData.onwardPreferredTime)}
-              headerClassName="preview-custom-header"
-            />
-            <Column
-              sortable
-              field="onwardTransportNumber"
-              header="Onward Flight/Train No"
-              headerClassName="preview-custom-header"
-            />
-            <Column
-              sortable
-              field="returnJourney"
-              header="Return Journey (From - To)"
-              headerClassName="preview-custom-header"
-            />
-            <Column
-              sortable
-              field="returnArrivalDate"
-              header="Arrival Date"
-              body={(rowData) => formatDate(rowData.returnArrivalDate)}
-              headerClassName="preview-custom-header"
-            />
-            <Column
-              sortable
-              field="returnPreferredTime"
-              header="Return Preferred Time"
-              body={(rowData) => formatPickList(rowData.returnPreferredTime)}
-              headerClassName="preview-custom-header"
-            />
-            <Column
-              sortable
-              field="returnTransportNumber"
-              header="Return Flight/Train No"
-              headerClassName="preview-custom-header"
-            />
-            <Column
-              sortable
-              field="onwardJourneyNote"
-              header="Remarks"
-              headerClassName="preview-custom-header"
-            />
-          </DataTable>
-        </div>
-
-        <hr className="separator mb-2 mt-2" />
-
-        <div className="summary-details">
-          <div className="detail-item">
-            <span className="summary-label">Reason:</span>
-            <span className="value">
-              {" "}
-              {item.flightTicketReason && item.flightTicketReason.name
-                ? item.flightTicketReason.name
-                : "N/A"}
-            </span>
+          <div className="summary-details">
+            <DataTable className="itineraryTable"
+              value={travelInfo}
+              showGridlines
+              tableStyle={{ minWidth: "50rem" }}
+            >
+              <Column
+                sortable
+                field="onwardJourney"
+                header="Onward Journey (From - To)"
+                headerClassName="preview-custom-header"
+              />
+              <Column
+                sortable
+                field="onwardDepartureDate"
+                header="Departure Date"
+                body={(rowData) => formatDate(rowData.onwardDepartureDate)}
+                headerClassName="preview-custom-header"
+              />
+              <Column
+                sortable
+                field="onwardPreferredTime"
+                header="Onward Preferred Time"
+                body={(rowData) => formatPickList(rowData.onwardPreferredTime)}
+                headerClassName="preview-custom-header"
+              />
+              <Column
+                sortable
+                field="onwardTransportNumber"
+                header="Onward Flight/Train No"
+                headerClassName="preview-custom-header"
+              />
+              <Column
+                sortable
+                field="returnJourney"
+                header="Return Journey (From - To)"
+                headerClassName="preview-custom-header"
+              />
+              <Column
+                sortable
+                field="returnArrivalDate"
+                header="Arrival Date"
+                body={(rowData) => formatDate(rowData.returnArrivalDate)}
+                headerClassName="preview-custom-header"
+              />
+              <Column
+                sortable
+                field="returnPreferredTime"
+                header="Return Preferred Time"
+                body={(rowData) => formatPickList(rowData.returnPreferredTime)}
+                headerClassName="preview-custom-header"
+              />
+              <Column
+                sortable
+                field="returnTransportNumber"
+                header="Return Flight/Train No"
+                headerClassName="preview-custom-header"
+              />
+              <Column
+                sortable
+                field="onwardJourneyNote"
+                header="Remarks"
+                headerClassName="preview-custom-header"
+              />
+            </DataTable>
           </div>
+
+          <hr className="separator mb-2 mt-2" />
+
+          <div className="summary-details">
+            <div className="detail-item">
+              <span className="summary-label">Reason:</span>
+              <span className="value">
+                {" "}
+                {item.flightTicketReason && item.flightTicketReason.name
+                  ? item.flightTicketReason.name
+                  : "N/A"}
+              </span>
+            </div>
+          </div>
+
         </div>
 
         <div style={{ display: "flex", justifyContent: "end" }}>
@@ -978,6 +930,29 @@ const NewSummary = ({
                   label="Cancel"
                 />
               )}
+            {(item.approveStatus?.key === "approved" && (
+              // <button className="back-button" onClick={handleCancel}>Cancel</button>
+              <Button
+                className="back-buttons"
+                disabled={loadingNew}
+                onClick={() => {
+                  console.log("exporting....")
+                  const element = document.getElementById('report');
+
+                  var opt = {
+                    margin: 4,
+                    filename: 'export.pdf',
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { scale: 2, dpi: 192, letterRendering: true },
+                    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                  };
+
+                  // New Promise-based usage:
+                  html2pdf().set(opt).from(element).save();
+                }}
+                label="Export"
+              />
+            ))}
             {loadingNew && (
               <div className="loader-container">
                 <div className="loader"></div>
@@ -1072,6 +1047,14 @@ const NewSummary = ({
             </div>
           </div>
         )}
+      </div>
+
+      <div style={{ display: 'none' }}>
+        <ReportTemplate 
+        item={item}
+        travelInfo={travelInfo}
+        attachmentInfo={attachmentInfo}
+        />
       </div>
     </div>
   );

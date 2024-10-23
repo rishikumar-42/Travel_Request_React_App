@@ -1,0 +1,116 @@
+#report h2 {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.report-container {
+    border: 1px solid #000;
+    /* Black border */
+    padding: 0;
+    margin: 20px auto;
+    max-width: 1000px;
+    /* box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.1); */
+    /* Optional shadow for better look */
+}
+
+#report .section {
+    margin: 0;
+    /* No margin between sections */
+    padding: 10px 20px;
+    /* Padding for content, but not left/right */
+    border-top: 1px solid #000;
+    border-bottom: 1px solid #000;
+    border-left: none;
+    /* No left border */
+    border-right: none;
+    /* No right border */
+}
+
+#report .section-header {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+#report .field-row {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 5px;
+    flex-wrap: wrap;
+}
+
+#report .field-group {
+    width: 23%;
+    margin-bottom: 10px;
+}
+
+#report .field-label {
+    /* font-weight: bold; */
+    display: block;
+    margin-bottom: 2px;
+}
+
+#report .field-value {
+    display: block;
+    /* padding: 5px; */
+}
+
+#report table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#report table,
+th,
+td {
+    border: 1px solid black;
+}
+
+#report th,
+td {
+    padding: 1px;
+    text-align: left;
+}
+
+#report th {
+    background-color: #f2f2f2;
+}
+
+#report .itinerary-custom-header {
+    background-color: lightgray;
+    color: black;
+}
+
+.page-break {
+    page-break-after: always;
+    /* For modern browsers */
+    display: block;
+    /* Fallback for older browsers */
+    height: 0;
+    /* Ensures no extra space is added */
+    clear: both;
+}
+
+
+#approversTable {
+    /* font-family: Arial, Helvetica, sans-serif; */
+    border-collapse: collapse;
+    width: 100%;
+}
+
+#approversTable td,
+#approversTable th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+/* #approversTable tr:nth-child(even){background-color: #f2f2f2;} */
+
+/* #approversTable tr:hover {background-color: #ddd;} */
+
+#approversTable th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: lightgray;
+    color: black;
+}

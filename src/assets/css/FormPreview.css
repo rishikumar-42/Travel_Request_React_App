@@ -64,7 +64,8 @@
   .preview-custom-header {
     background-color: #003D71 !important;
     color: #ffff;
-    font-size: 13px;
+    font-size: 12px;
+    padding: 4px;
 }
 
 tbody, td, tfoot, th, thead, tr {

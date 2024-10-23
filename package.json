@@ -19,6 +19,7 @@
     "buffer": "^6.0.3",
     "cors": "^2.8.5",
     "html2canvas": "^1.4.1",
+    "html2pdf": "^0.0.11",
     "jspdf": "^2.5.1",
     "notistack": "^3.0.1",
     "primeicons": "^7.0.0",
