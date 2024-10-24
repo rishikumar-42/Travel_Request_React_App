@@ -203,11 +203,22 @@ const NewSummary = ({
     // itineraryRelation: Array.isArray(travelInfo) ? travelInfo : []
   });
 
+  // const setTimeZone = (dateString) => {
+  //   const date = new Date(dateString);
+  //   date.setHours(date.getHours() + 6);
+  //   return date;
+  // };
   const setTimeZone = (dateString) => {
     const date = new Date(dateString);
-    date.setHours(date.getHours() + 6);
+    const offsetInMinutes = new Date().getTimezoneOffset(); // Offset in minutes
+    const offsetInHours = Math.floor(-offsetInMinutes / 60);
+    const offsetInRemainingMinutes = -offsetInMinutes % 60;
+    console.log("offset : ", offsetInHours)
+    date.setHours(date.getHours() + offsetInHours);
+    date.setMinutes(date.getMinutes() + offsetInRemainingMinutes);
+    console.log("date : ", date)
     return date;
-  };
+  }
 
   const formatFormData = (data) => {
     return {
@@ -331,7 +342,7 @@ const NewSummary = ({
       minute: "2-digit",
       // second: '2-digit',
       hour12: false, // You can set this to true if you want 12-hour time format
-      timeZone: "Asia/Kolkata",
+      // timeZone: "Asia/Kolkata",
     };
     return new Intl.DateTimeFormat("en-GB", options).format(new Date(date));
   };
@@ -1048,10 +1059,10 @@ const NewSummary = ({
       </div>
 
       <div style={{ display: 'none' }}>
-        <ReportTemplate 
-        item={item}
-        travelInfo={travelInfo}
-        attachmentInfo={attachmentInfo}
+        <ReportTemplate
+          item={item}
+          travelInfo={travelInfo}
+          attachmentInfo={attachmentInfo}
         />
       </div>
     </div>

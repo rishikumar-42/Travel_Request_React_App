@@ -649,9 +649,20 @@ function EditTravelRequestForm() {
 
     console.log("flightTicketType", item.flightTicketType?.name);
 
+    // const setTimeZone = (dateString) => {
+    //     const date = new Date(dateString);
+    //     date.setHours(date.getHours() + 6);
+    //     return date;
+    // }
     const setTimeZone = (dateString) => {
         const date = new Date(dateString);
-        date.setHours(date.getHours() + 6);
+        const offsetInMinutes = new Date().getTimezoneOffset(); // Offset in minutes
+        const offsetInHours = Math.floor(-offsetInMinutes / 60);
+        const offsetInRemainingMinutes = -offsetInMinutes % 60;
+        console.log("offset : ", offsetInHours)
+        date.setHours(date.getHours() + offsetInHours);
+        date.setMinutes(date.getMinutes() + offsetInRemainingMinutes);
+        console.log("date : ", date)
         return date;
     }
 

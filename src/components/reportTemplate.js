@@ -49,7 +49,7 @@ const ReportTemplate = ({
       minute: "2-digit",
       // second: '2-digit',
       hour12: false, // You can set this to true if you want 12-hour time format
-      timeZone: "Asia/Kolkata",
+      // timeZone: "Asia/Kolkata",
     };
     return new Intl.DateTimeFormat("en-GB", options).format(new Date(date));
   };
