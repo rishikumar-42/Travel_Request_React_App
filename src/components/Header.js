@@ -2,6 +2,8 @@ import React, { useState , useRef, useEffect} from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import "../assets/css/Header.css";
+import { Menubar } from 'primereact/menubar';
+import Logo from './Logo/logo';
 
 function Header() {
     const { isAuthenticated } = useAuth(); // Get the authentication status
@@ -36,7 +38,8 @@ function Header() {
 
     return (
         <header className="header-travelform">
-            <h3>Amphenol</h3>
+            {/* <h3>Amphenol</h3> */}
+            <Logo />
             {!isHome && (
             <h5 className='travel-request-header'>Travel Request</h5>
             )}
