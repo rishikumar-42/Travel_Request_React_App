@@ -1,12 +1,13 @@
 .home-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Responsive grid */
+    display: flex;
     gap: 20px; /* Space between boxes */
     justify-items: center; /* Center items in each grid cell */
     align-items: center; /* Center items vertically */
     height: 83vh; 
     cursor: pointer; 
     background: lightgray; /* Background color */
+    padding: 10px;
+    padding-left: 20%;
 }
 
 .icon-container {
@@ -18,7 +19,7 @@
     border-radius: 20px; 
     box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.2); 
     transition: transform 0.3s, box-shadow 0.3s; /* Smooth hover transition */
-    width: 60%; /* Ensures all boxes are the same size */
+    width: 240px; /* Ensures all boxes are the same size */
 }
 
 .icon-container:hover {
