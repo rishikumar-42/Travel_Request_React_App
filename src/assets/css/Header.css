@@ -4,179 +4,104 @@
     text-align: center;
     font-size: 13px;
     height: 60px;
-    line-height: 50px;  /* Vertically centers text within the header */
+    line-height: 50px;
     display: flex;
-    align-items: center; /* Ensures content is vertically centered */
-    margin: 0; /* Removes any default margin */
-    padding: 0; /* Removes any default padding */
-    box-sizing: border-box; /* Ensures padding and border are included in the height */
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
     padding-left: 10px;
 }
- 
-.view-span {
-    padding-left: 7rem;
-    position: relative; /* Necessary for absolute positioning of the dropdown */
+
+.travel-request-header {
+    margin-left: 25rem;
 }
- 
-/* General styles for dropdown menu */
-.dropdown-menu-header {
-    display: block;
-    position: absolute;
-    top: 100%;
-    left: 22.5rem; 
-    background: #FFFFFF;
-    border: 1px solid #ccc;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    z-index: 1000;
-    border-radius: 12px;
-    box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.1); 
+
+.small-menubar .p-menubar-root {
+    background-color: #003D71; /* Match the header */
 }
- 
-/* Styles for dropdown menu items */
-.dropdown-menu-header li {
-    padding: 2px 4px;
+
+.small-menubar .p-menuitem-link {
+    color: white; /* Match color for links */
+    background: #003D71;
 }
- 
-.dropdown-menu-header li a {
-    text-decoration: none;
-    color: #000;
-    font-weight: 600;
-    font-size: 14px;
-    padding: 2px;
-    display: block;
-    margin: 0;
-    white-space: nowrap;
+
+.small-menubar .p-menuitem-link:hover {
+   background-color: #003D71;
+}
+
+.small-menubar .p-menuitem {
+    white-space: nowrap; /* Prevent wrapping */
+}
+
+/* Dropdown menu styles */
+.p-submenu {
+    background: #fff; /* White background for the submenu */
     border-radius: 8px;
 }
- 
-/* Hover effects for dropdown menu items */
-.dropdown-menu-header li a:hover {
-    background: #003D71; /* Dark blue */
-    color: #FFFFFF; /* White */
+
+.p-menuitem {
+    white-space: nowrap; /* Prevent item text from wrapping */
 }
- 
-.menu-button {
-    font-family: 'IBM Plex Sans', sans-serif;
-    font-weight: 600;
-    font-size: 0.875rem;
-    line-height: 1.5;
-    padding: 8px 16px;
-    border-radius: 8px;
-    transition: all 150ms ease;
-    cursor: pointer;
-    border: 1px solid #E5EAF2; /* Light grey border */
-    color: #1C2025; /* Dark grey */
-    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+
+.p-menuitem-link {
+    color: black; /* Black font color for submenu items */
 }
- 
-.menu-button:hover {
-    background: #F3F6F9; /* Light grey hover */
-    border-color: #DAE2ED; /* Slightly darker grey border */
+
+.p-menuitem-link:hover {
+    background-color: #003D71; /* Change background on hover */
+    color: white; /* Change text color on hover */
 }
- 
-.menu-button:active {
-    background: #DAE2ED; /* Active background color */
-}
- 
-.menu-button:focus-visible {
-    box-shadow: 0 0 0 4px #C2E0FF; /* Blue focus outline */
-    outline: none;
-}
- 
-/* Animated listbox styles */
-.animated-listbox {
-    font-family: 'IBM Plex Sans', sans-serif;
-    font-size: 0.875rem;
-    box-sizing: border-box;
-    padding: 6px;
-    margin: 12px 0;
-    min-width: 100px;
-    border-radius: 12px;
-    overflow: auto;
-    outline: 0;
-    background: #FFFFFF; /* White */
-    border: 1px solid #DAE2ED; /* Light grey border */
-    color: #1C2025; /* Dark grey */
-    box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.05); /* Light mode shadow */
-    z-index: 1;
-}
- 
-.animated-listbox.closed {
-    opacity: 0;
-    transform: scale(0.95, 0.8);
-    transition: opacity 200ms ease-in, transform 200ms ease-in;
-}
- 
-.animated-listbox.open {
-    opacity: 1;
-    transform: scale(1, 1);
-    transition: opacity 100ms ease-out, transform 100ms cubic-bezier(0.43, 0.29, 0.37, 1.48);
-}
- 
-/* Listbox placement styles */
-.placement-top .animated-listbox {
-    transform-origin: bottom;
-}
- 
-.placement-bottom .animated-listbox {
-    transform-origin: top;
-}
- 
-/* Menu item styles */
-.menu-item {
-    list-style: none;
-    font-size: 10px;
-    padding: 8px;
-    border-radius: 8px;
-    cursor: default;
-    user-select: none;
-}
- 
-.menu-item:focus-visible {
-    outline: 3px solid #99CCF3; /* Light blue outline */
-    background-color: #F3F6F9; /* Light grey */
-    color: #1C2025; /* Dark grey */
-}
- 
-.menu-item.disabled {
-    color: #B0B8C4; /* Disabled grey color */
-}
- 
-.menu-item:hover:not(.disabled) {
-    background-color: #003D71; /* Dark blue */
-    color: #FFFFFF; /* White */
-}
-.view-Create{
-    font-size: 14px;
-    font-weight: 500;
-    color: white;
-    margin-left: 30px;
-}
-.view-View{
-    font-size: 14px;
-    margin-left: 30px;
-    font-weight: 500;
-}
-button.base-MenuButton-root.css-odoo30 {
+
+.p-menubar {
+    display: flex;
+    align-items: center;
     background: none;
     border: none;
+    font-size: 0.9rem;
+    margin-left: 43px;
+    margin-top: 21px;
+}
+
+.p-menubar .p-menuitem>.p-menuitem-content .p-menuitem-link .p-menuitem-text {
     color: white;
 }
-a.view-Create:hover{
-    text-decoration: none !important;
-    color: white !important;
-    
+
+.p-menubar .p-submenu-list {
+    background: #fff; /* White background for the submenu list */
+    border: 0;
+    padding: 0px;
 }
-a.view-Create:active {
-    text-decoration: none !important;
-    color: white !important;
-} 
-a.view-Create:visited {
-    color: white !important;
-    text-decoration: none !important;
+
+..p-menuitem-content {
+    color: black; /* Initial font color */
+    background-color: white; /* Initial background color */
+    transition: color 0.3s, background-color 0.3s; /* Smooth transition */
+    padding: 10px; /* Add some padding for better click area */
 }
-.travel-request-header{
-    margin-left:25rem;
+
+..p-menuitem-content:hover {
+    color: white; /* Font color on hover */
+    background-color: #003D71; /* Background color on hover */
 }
+.view-my-travel-request {
+    background-color: white; /* Default background */
+    color: black; /* Default text color */
+}
+
+.view-my-travel-request:hover {
+    background-color: #003D71; /* Hover background */
+    color: white; /* Hover text color */
+}
+
+.waiting-approval {
+    background-color: white; /* Default background */
+    color: black; /* Default text color */
+}
+
+.waiting-approval:hover {
+    background-color: #003D71; /* Hover background */
+    color: white; /* Hover text color */
+}
+
+
