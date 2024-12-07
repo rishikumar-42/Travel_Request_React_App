@@ -13,7 +13,7 @@ function Header() {
     const items = [
         {
             label: 'Home',
-            command: () => navigate('/home')
+            command: () => navigate('/')
         },
         {
             label: 'Create Travel Request',
@@ -36,7 +36,7 @@ function Header() {
         }
     ];
 
-    const isHome = location.pathname === '/home';
+    const isHome = location.pathname === '/travel-request';
 
     const itemTemplate = (item) => {
         return (
