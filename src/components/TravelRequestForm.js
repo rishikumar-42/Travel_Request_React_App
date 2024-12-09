@@ -161,11 +161,13 @@ function TravelRequestForm() {
         return newFile
     }
     const onFileChange = (e) => {
+        setLoading(true);
         const selectedFile = e.target.files[0];
         console.log("File details : " + selectedFile.name)
         if (selectedFile) {
             if (selectedFile.size > 5 * 1024 * 1024) {
                 // setFileError('File size exceeds the maximum limit.');
+                setLoading(false);
                 showMessage('error', 'Error', 'File size exceeds the maximum limit')
                 return;
             }
@@ -176,14 +178,17 @@ function TravelRequestForm() {
         }
     };
     const handleRemovefiles = async (rowIndex) => {
+        setLoading(true);
         const selectedFile = files[rowIndex];
         console.log("selected file : ", selectedFile.name)
         try {
             await TravelRequestFormService.deleteDocuments(selectedFile.fileId)
+            setLoading(false);
             showMessage('success', 'Success', `Successfully removed ${selectedFile.title}`)
             setFiles(files.filter((_, i) => i !== rowIndex));
         } catch (error) {
             console.log("error while deleting : ", error)
+            setLoading(false);
             showMessage('error', 'Error', `Error response : ${error.response.data.title}`)
             // setFileError(error)
         }
@@ -206,6 +211,7 @@ function TravelRequestForm() {
         if (!selectedFile) {
             // setFileError('No file selected.');
             showMessage('error', 'Error', 'No file selected.')
+            setLoading(false);
             return;
         }
 
@@ -217,6 +223,7 @@ function TravelRequestForm() {
                 contentUrl: fileResponse.contentUrl
             };
             setFiles([...files, tempFile]);
+            setLoading(false);
             // setFile(null)
             showMessage('success', 'Success', `Successfully uploaded ${fileResponse.title}`)
             if (fileInputRef.current) {
@@ -224,6 +231,7 @@ function TravelRequestForm() {
             }
         } catch (error) {
             // setFileError(error.title)
+            setLoading(false);
             showMessage('error', 'Error', `Error response : ${error.response.data.title}`)
             if (fileInputRef.current) {
                 fileInputRef.current.value = null;
