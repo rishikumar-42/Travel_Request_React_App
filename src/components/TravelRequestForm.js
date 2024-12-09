@@ -573,7 +573,16 @@ function TravelRequestForm() {
 
     const setTimeZone = (dateString) => {
         const date = new Date(dateString);
-        date.setHours(date.getHours() + 6);
+    
+        const currentDate = new Date();
+        const offsetInMinutes = currentDate.getTimezoneOffset();
+        const offsetInHours = Math.floor(offsetInMinutes / 60);
+        const offsetInMinutesOnly = Math.abs(offsetInMinutes % 60);
+    
+        // Adjust the time by the offset
+        date.setMinutes(date.getMinutes() - offsetInMinutesOnly);
+        date.setHours(date.getHours() - offsetInHours);
+        // date.setHours(date.getHours() + 6);
         return date;
     }
 

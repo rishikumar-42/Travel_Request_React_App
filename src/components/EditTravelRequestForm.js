@@ -651,7 +651,16 @@ function EditTravelRequestForm() {
 
     const setTimeZone = (dateString) => {
         const date = new Date(dateString);
-        date.setHours(date.getHours() + 6);
+
+        const currentDate = new Date();
+        const offsetInMinutes = currentDate.getTimezoneOffset();
+        const offsetInHours = Math.floor(offsetInMinutes / 60);
+        const offsetInMinutesOnly = Math.abs(offsetInMinutes % 60);
+
+        // Adjust the time by the offset
+        date.setMinutes(date.getMinutes() - offsetInMinutesOnly);
+        date.setHours(date.getHours() - offsetInHours);
+        // date.setHours(date.getHours() + 6);
         return date;
     }
 
@@ -850,7 +859,7 @@ function EditTravelRequestForm() {
     const formatFormData = (data) => {
         var newId = formData.travelRequestId;
         if (item.approveStatus?.key === 'draft') {
-            if( item.travelType !== formData.travelType){
+            if (item.travelType !== formData.travelType) {
                 const prefix = (formData.travelType === 'international') ? 'I' : (formData.travelType === 'domestic') ? 'D' : '';
                 newId = prefix + item.travelRequestId.slice(1);
                 setFormData({
@@ -861,7 +870,7 @@ function EditTravelRequestForm() {
         }
         return {
             ...data,
-            travelRequestId : newId,
+            travelRequestId: newId,
             itineraryRelation: data.itineraryRelation.map(itinerary => ({
                 id: itinerary.id || null,
                 r_itineraryRelation_c_travelInfoId: itinerary.r_itineraryRelation_c_travelInfoId,
@@ -919,7 +928,7 @@ function EditTravelRequestForm() {
                 response = await TravelRequestFormService.updateFormData(item.id, formattedData);
                 // setMessage(`Successfully updated Id : ${response.data.id}`);
                 showMessage('success', 'Success', `Successfully updated Id : ${response.data.travelRequestId}`);
-            } 
+            }
             // else {
             //     // Otherwise, create a new record
             //     response = await TravelRequestFormService.submitFormData(formData);
@@ -927,8 +936,9 @@ function EditTravelRequestForm() {
             //     showMessage('success', 'Success', `Successfully created Id : ${response.data.travelRequestId}`);
             // }
             setTimeout(() => {
+                // navigate("/MyList");
                 handleBack();
-            }, 1000);
+            }, 3000);
             // setOpen(true);
         } catch (error) {
             console.error("Error submitting form", error);

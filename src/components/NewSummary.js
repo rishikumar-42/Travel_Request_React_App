@@ -205,9 +205,18 @@ const NewSummary = ({
 
   const setTimeZone = (dateString) => {
     const date = new Date(dateString);
-    date.setHours(date.getHours() + 6);
+
+    const currentDate = new Date();
+    const offsetInMinutes = currentDate.getTimezoneOffset();
+    const offsetInHours = Math.floor(offsetInMinutes / 60);
+    const offsetInMinutesOnly = Math.abs(offsetInMinutes % 60);
+
+    // Adjust the time by the offset
+    date.setMinutes(date.getMinutes() - offsetInMinutesOnly);
+    date.setHours(date.getHours() - offsetInHours);
+    // date.setHours(date.getHours() + 6);
     return date;
-  };
+}
 
   const formatFormData = (data) => {
     return {
@@ -261,9 +270,9 @@ const NewSummary = ({
         );
         console.log("Navigating to MyList");
         setTimeout(() => {
-          // navigate("/MyList");
           onBack();
-        }, 1000);
+          handleBack();
+        }, 3000);
       }
       // setOpen(true);
     } catch (error) {
@@ -283,7 +292,7 @@ const NewSummary = ({
   const toast = useRef(null);
 
   const showMessage = (severity, summary, detail) => {
-    toast.current.show({ severity, summary, detail, life: 10000 });
+    toast.current.show({ severity, summary, detail, life: 3000 });
   };
 
   const OnwardJourneyLink = (rowData) => {
@@ -378,8 +387,8 @@ const NewSummary = ({
       setComment(""); // Clear comment after successful submission
       setIsDialogOpen(false); // Close the dialog
       setTimeout(() => {
-              onBack();
-            }, 2000);
+        onBack();
+      }, 3000);
     } catch (err) {
       console.error(`Failed to ${transitionName} task:`, err);
       // alert(`Failed to ${transitionName} task.`);
@@ -942,7 +951,7 @@ const NewSummary = ({
 
                   var opt = {
                     margin: 4,
-                    filename: 'export.pdf',
+                    filename: `${item.travelRequestId}`,
                     image: { type: 'jpeg', quality: 0.98 },
                     html2canvas: { scale: 2, dpi: 192, letterRendering: true },
                     jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
@@ -1051,10 +1060,10 @@ const NewSummary = ({
       </div>
 
       <div style={{ display: 'none' }}>
-        <ReportTemplate 
-        item={item}
-        travelInfo={travelInfo}
-        attachmentInfo={attachmentInfo}
+        <ReportTemplate
+          item={item}
+          travelInfo={travelInfo}
+          attachmentInfo={attachmentInfo}
         />
       </div>
     </div>
