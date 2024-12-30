@@ -49,16 +49,90 @@
 }
 
 /* Responsive adjustments */
-@media (max-width: 768px) {
+/* @media (max-width: 768px) {
     .icon-container {
-        padding: 20px; /* Smaller padding on mobile */
+        padding: 20px; 
     }
 
     .flight-icon, .file-icon, .share-icon {
-        font-size: 40px; /* Smaller icons on mobile */
+        font-size: 40px;
     }
 
     .travel-text {
-        font-size: 14px; /* Smaller text on mobile */
+        font-size: 14px; 
+    }
+} */
+
+
+/* Base styles (default for larger screens) */
+
+/* Responsive adjustments for small devices (e.g., phones) */
+@media (max-width: 768px) {
+    .home-container {
+        flex-direction: column; /* Stack boxes vertically */
+        gap: 15px; /* Reduce space between boxes */
+        padding-left: 10%; /* Adjust padding for smaller screens */
+        height: auto; /* Allow height to adjust dynamically */
+    }
+
+    .icon-container {
+        width: 200px; /* Smaller box width */
+        padding: 20px; /* Adjust padding */
+        border-radius: 15px; /* Slightly smaller border radius */
+    }
+
+    .flight-icon, .file-icon, .share-icon {
+        font-size: 40px; /* Smaller icons */
+    }
+
+    .travel-text {
+        font-size: 14px; /* Adjust text size */
     }
 }
+
+/* Responsive adjustments for medium devices (e.g., tablets) */
+@media (max-width: 1024px) {
+    .home-container {
+        flex-wrap: wrap; /* Allow wrapping of boxes */
+        gap: 20px; /* Maintain space between boxes */
+        padding-left: 15%; /* Adjust padding */
+        height: auto; /* Allow dynamic height */
+    }
+
+    .icon-container {
+        width: 220px; /* Adjust box width */
+        padding: 30px; /* Moderate padding */
+        border-radius: 18px; /* Slightly smaller border radius */
+    }
+
+    .flight-icon, .file-icon, .share-icon {
+        font-size: 45px; /* Slightly smaller icons */
+    }
+
+    .travel-text {
+        font-size: 15px; /* Adjust text size */
+    }
+}
+
+/* Responsive adjustments for very small devices (e.g., extra small phones) */
+@media (max-width: 480px) {
+    .home-container {
+        gap: 10px; /* Minimal gap between boxes */
+        padding-left: 5%; /* Minimal padding */
+    }
+
+    .icon-container {
+        width: 180px; /* Smaller box width */
+        padding: 15px; /* Minimal padding */
+        border-radius: 10px; /* Compact border radius */
+    }
+
+    .flight-icon, .file-icon, .share-icon {
+        font-size: 35px; /* Compact icons */
+    }
+
+    .travel-text {
+        font-size: 12px; /* Smaller text */
+    }
+}
+

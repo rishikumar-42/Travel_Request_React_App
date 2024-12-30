@@ -11,7 +11,8 @@ import ConfirmationDialog from './ConfirmationDialog';
 
 const MyList = () => {
   const [activeTab, setActiveTab] = useState('pendingAtApprover1 || pendingAtApprover2');
-  const [data, setData] = useState({ items: [] });
+  // const [data, setData] = useState({ items: [] });
+  const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedItem, setSelectedItem] = useState(null);
   const [selectedItemTravelInfo, setSelectedItemTravelInfo] = useState({});
@@ -213,10 +214,13 @@ const MyList = () => {
       }
 
       // Refresh the data after deletion
-      setData(prevData => ({
-        ...prevData,
-        items: prevData.items.filter(item => item.id !== id)
-      }));
+      // setData(prevData => ({
+      //   ...prevData,
+      //   items: prevData.items.filter(item => item.id !== id)
+      // }));
+
+      setData(prevData => prevData.filter(item => item.id !== id));
+
 
       showMessage('success', 'Success', `Item deleted successfully.`);
       console.log(`Item with id ${id} deleted successfully.`);
@@ -245,36 +249,95 @@ const MyList = () => {
 
 
 
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     setLoading(true);
+  //     try {
+  //       const response = await fetch(`${process.env.REACT_APP_API_LIFERAY_BASE_URL}/o/c/travelinfos?page=1&pageSize=1000`, {
+  //         method: 'GET',
+  //         headers: {
+  //           'Accept': 'application/json',
+  //           'x-csrf-token': authHeader,
+  //         },
+  //       });
+
+  //       if (!response.ok) {
+  //         throw new Error(`HTTP error! Status: ${response.status}`);
+  //       }
+
+  //       const result = await response.json();
+  //       setData(result);
+  //     } catch (error) {
+  //       console.error('Error fetching data:', error);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   fetchDataRef.current = fetchData;
+  //   fetchData();
+  // }, [authHeader]);
+
+
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
+      let allItems = [];
+      let page = 1;
+      const pageSize = 100;
+  
       try {
-        const response = await fetch(`${process.env.REACT_APP_API_LIFERAY_BASE_URL}/o/c/travelinfos?page=1&pageSize=1000`, {
-          method: 'GET',
-          headers: {
-            'Accept': 'application/json',
-            'x-csrf-token': authHeader,
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
+        while (true) {
+          const response = await fetch(
+            `${process.env.REACT_APP_API_LIFERAY_BASE_URL}/o/c/travelinfos?page=${page}&pageSize=${pageSize}`,
+            {
+              method: 'GET',
+              headers: {
+                Accept: 'application/json',
+                'x-csrf-token': authHeader,
+              },
+            }
+          );
+  
+          if (!response.ok) {
+            console.error(`Error fetching page ${page}, Status Code: ${response.status}`);
+            break;
+          }
+  
+          const data = await response.json();
+  
+          // Log for debugging
+          console.log(`Page ${page} Response:`, data);
+  
+          // Break if no more items
+          if (!Array.isArray(data.items) || data.items.length === 0) {
+            console.warn(`No items found on page ${page}. Ending fetch.`);
+            break;
+          }
+  
+          allItems = [...allItems, ...data.items];
+  
+          if (page >= data.totalPages) {
+            break;
+          }
+  
+          page += 1;
         }
-
-        const result = await response.json();
-        setData(result);
+  
+        setData(allItems);
       } catch (error) {
         console.error('Error fetching data:', error);
       } finally {
         setLoading(false);
       }
     };
-
+  
     fetchDataRef.current = fetchData;
     fetchData();
   }, [authHeader]);
+  
 
-  const filteredData = data.items
+  const filteredData = data
     // .filter(item =>  item.creator?.id === currentUserId)
     // .filter(item =>  item.email === currentUserId)
     // .filter(item => item.status?.label === activeTab)

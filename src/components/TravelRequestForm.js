@@ -911,7 +911,7 @@ function TravelRequestForm() {
                     <div className="bg-color px-3 py-1 rounded-top-2 d-flex justify-content-between align-items-center w-100">
                         <div className="align-items-start"><h5 className="text-white text-left mt-2">Travel Request</h5></div>
                         <div className="align-items-end">
-                            <HelpIcon onClick={() => setVisible(true)} sx={{ color: primary }} />
+                            {/* <HelpIcon onClick={() => setVisible(true)} sx={{ color: primary }} />
                             <Dialog header="Helps" visible={visible} style={{ width: '50vw' }} onHide={() => { if (!visible) return; setVisible(false); }}>
                                 <p className="m-0">
                                     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
@@ -919,7 +919,7 @@ function TravelRequestForm() {
                                     consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
                                     Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
                                 </p>
-                            </Dialog>
+                            </Dialog> */}
                         </div>
                     </div>
                     <div className="d-flex justify-content-between gap-3 px-3 pt-3">
@@ -965,7 +965,7 @@ function TravelRequestForm() {
                                 />
                                 <label htmlFor="number-input" className="small">Telephone Number<span className="text-danger px-1">*</span></label>
                             </FloatLabel>
-                            {(!isTelephoneNumberValid && formData.issuerNumber !== null) && <span htmlFor="number-input" className="mt-1" style={{ color: 'red' }}>Invalid Number</span>}
+                            {(!isTelephoneNumberValid && formData.issuerNumber !== null) && <span htmlFor="number-input" className="mt-1" style={{ color: 'red' }}>Number must be between 9 and 15 digits</span>}
                             {errors.issuerNumber && !formData.issuerNumber && <span style={{ color: 'red' }}>{errors.issuerNumber}</span>}
                         </div>
                     </div>
