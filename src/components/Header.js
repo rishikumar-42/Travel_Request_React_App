@@ -11,10 +11,14 @@ function Header() {
     const location = useLocation();
 
     const items = [
+        // {
+        //     label: 'Home',
+        //     command: () => navigate('/')
+        // },
         {
             label: 'Home',
-            command: () => navigate('/')
-        },
+            command: () => (window.location.href = 'https://eformstst.fciconnect.com/home')
+        },        
         {
             label: 'Create Travel Request',
             command: () => navigate('/TravelRequestForm')

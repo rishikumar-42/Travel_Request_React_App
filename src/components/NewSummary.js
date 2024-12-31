@@ -29,7 +29,7 @@ const NewSummary = ({
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [dialogType, setDialogType] = useState(""); // 'approve' or 'reject'
   const [comment, setComment] = useState("");
-  const [loading, setLoading] = useState(true);
+  // const [loading, setLoading] = useState(true);
   const [loadingNew, setLoadingNew] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [currentEmailAddress, setEmailAddress] = useState(null);
@@ -84,39 +84,192 @@ const NewSummary = ({
     fetchUserId();
   }, [authHeader]);
 
-  useEffect(() => {
-    const fetchWorkflowTasks = async () => {
-      setLoading(true);
-      try {
-        const response = await fetch(
-          `${process.env.REACT_APP_API_LIFERAY_BASE_URL}/o/headless-admin-workflow/v1.0/workflow-tasks/assigned-to-me?page=1&pageSize=1000`,
-          {
-            method: "GET",
-            headers: {
-              Accept: "application/json",
-              'x-csrf-token': authHeader,
-            },
-          }
-        );
+  const fetchProcessId = async () => {
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_LIFERAY_BASE_URL}/o/portal-workflow-metrics/v1.0/processes/metrics`,
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            'x-csrf-token': authHeader,
+          },
+        }
+      );
+      if (response.ok) {
         const data = await response.json();
-        console.log("data : ", data);
-        const task = data.items.find(
-          (task) => task.objectReviewed.id === item.id
+        console.log("Process Metrics Response:", data);
+        const process = data.items.find(
+          (item) => item.process.title === "Travel Request"
         );
-        console.log("task", task);
-        setCurrentTask(task);
-        setWorkflowTasks(data.items || []);
-        setIsTaskCompleted(!!task && task.completed);
-        return task;
-      } catch (err) {
-        console.error("Failed to fetch workflow tasks:", err);
-      } finally {
-        setLoading(false); // Set loading to false after fetch completes
+        console.log("Process Metrics Response:", process?.process.id || null);
+        return process?.process.id || null;
+      } else {
+        console.error("Failed to fetch process metrics");
+        return null;
+      }
+    } catch (error) {
+      console.error("Error fetching process ID:", error);
+      return null;
+    }
+  };
+
+  const fetchPendingInstances = async (processId, userId, travelId) => {
+    try {
+      // Construct the URL with `classPK` as a query parameter
+      const url = `/o/portal-workflow-metrics/v1.0/processes/${processId}/instances?assigneeIds=${userId}&classPKs=${travelId}`;
+      console.log("Constructed URL:", url);
+
+      const response = await fetch(`${process.env.REACT_APP_API_LIFERAY_BASE_URL}${url}`,
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            'x-csrf-token': authHeader,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        console.error(
+          "Failed to fetch pending instances. Status:",
+          response.status
+        );
+        return null;
+      }
+
+      const data = await response.json();
+      console.log("Pending Instances Response:", data.items);
+
+      // Check if items exist and log the response
+      if (!data.items || data.items.length === 0) {
+        console.warn("No items found in the response for the given filters.");
+        return null;
+      }
+
+      // Since we are filtering directly in the API query, we can assume the first item matches
+      const matchingItem = data.items[0]; // Assuming one item per `classPK`
+      if (matchingItem) {
+        console.log("Matching Workflow Instance ID:", matchingItem.id);
+        return matchingItem.id; // Return the workflow instance ID
+      } else {
+        console.warn("No matching item found after filtering.");
+        return null;
+      }
+    } catch (error) {
+      console.error("Error fetching pending instances:", error);
+      return null;
+    }
+  };
+
+
+  const fetchWorkflowTaskId = async (workflowInstanceId) => {
+    try {
+      // Log the workflow instance ID being used
+      console.log(
+        `Fetching workflow tasks for Workflow Instance ID: ${workflowInstanceId}`
+      );
+
+      const response = await fetch(
+        `${process.env.REACT_APP_API_LIFERAY_BASE_URL}/o/headless-admin-workflow/v1.0/workflow-instances/${workflowInstanceId}/workflow-tasks?completed=false`,
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            'x-csrf-token': authHeader,
+          },
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Workflow Tasks Response:", data);
+
+        if (data.items?.length > 0) {
+          const workflowTaskId = data.items[0]?.id;
+          console.log(`Fetched Workflow Task ID: ${workflowTaskId}`);
+          return workflowTaskId;
+        } else {
+          console.warn(
+            `No workflow tasks found for Workflow Instance ID: ${workflowInstanceId}`
+          );
+          return null;
+        }
+      } else {
+        console.error(
+          "Failed to fetch workflow task ID. Response status:",
+          response.status
+        );
+        return null;
+      }
+    } catch (error) {
+      console.error("Error fetching workflow task ID:", error);
+      return null;
+    }
+  };
+
+  useEffect(() => {
+    const initializeWorkflow = async () => {
+      const processId = await fetchProcessId();
+      if (!processId) {
+        console.error("No process ID found for TR");
+        return;
+      }
+
+      const userId = window?.themeDisplay?.getUserId(); // Fetch user ID dynamically
+      const workflowInstanceId = await fetchPendingInstances(
+        processId,
+        userId,
+        item.id
+      );
+
+      if (workflowInstanceId) {
+        const workflowTaskId = await fetchWorkflowTaskId(workflowInstanceId);
+        setCurrentTask(workflowTaskId);
+        setIsTaskCompleted(!!workflowTaskId && workflowTaskId.completed);
+      } else {
+        console.warn("No workflow instance found for the given travel Id.");
       }
     };
 
-    fetchWorkflowTasks();
-  }, [authHeader, item.id]);
+    initializeWorkflow();
+  }, [item.id]);
+
+  
+
+  // useEffect(() => {
+  //   const fetchWorkflowTasks = async () => {
+  //     setLoading(true);
+  //     try {
+  //       const response = await fetch(
+  //         `${process.env.REACT_APP_API_LIFERAY_BASE_URL}/o/headless-admin-workflow/v1.0/workflow-tasks/assigned-to-me?page=1&pageSize=1000`,
+  //         {
+  //           method: "GET",
+  //           headers: {
+  //             Accept: "application/json",
+  //             'x-csrf-token': authHeader,
+  //           },
+  //         }
+  //       );
+  //       const data = await response.json();
+  //       console.log("data : ", data);
+  //       const task = data.items.find(
+  //         (task) => task.objectReviewed.id === item.id
+  //       );
+  //       console.log("task", task);
+  //       setCurrentTask(task);
+  //       setWorkflowTasks(data.items || []);
+  //       setIsTaskCompleted(!!task && task.completed);
+  //       return task;
+  //     } catch (err) {
+  //       console.error("Failed to fetch workflow tasks:", err);
+  //     } finally {
+  //       setLoading(false); // Set loading to false after fetch completes
+  //     }
+  //   };
+
+  //   fetchWorkflowTasks();
+  // }, [authHeader, item.id]);
 
   const fetchWorkflowInstances = async () => {
     try {
@@ -310,18 +463,18 @@ const NewSummary = ({
     return data.name;
   };
 
-  if (loading) {
-    return (
-      <div className="loading-container">
-        <div className="loading">
-          Loading
-          <span className="dot">.</span>
-          <span className="dot">.</span>
-          <span className="dot">.</span>
-        </div>
-      </div>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <div className="loading-container">
+  //       <div className="loading">
+  //         Loading
+  //         <span className="dot">.</span>
+  //         <span className="dot">.</span>
+  //         <span className="dot">.</span>
+  //       </div>
+  //     </div>
+  //   );
+  // }
   const formatDate = (dateString) => {
     if (!dateString) return "N/A";
     const options = { year: "numeric", month: "short", day: "2-digit" };
@@ -357,7 +510,7 @@ const NewSummary = ({
       return;
     }
 
-    const { id: workflowTaskId } = currentTask;
+    const workflowTaskId = currentTask;
     const payload = {
       comment: transitionName.charAt(0).toUpperCase() + transitionName.slice(1),
       transitionName,

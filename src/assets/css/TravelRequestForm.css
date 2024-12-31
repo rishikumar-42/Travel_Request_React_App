@@ -474,7 +474,7 @@ input:checked+.slider:before {
 
 
 /* Media Query for smaller laptop screens or tablets */
-@media (max-width: 1024px) {
+@media only screen and (max-width: 1023px){
     .form-container {
         max-width: 90%;
         /* Ensure it still fits well on smaller screens */

@@ -93,3 +93,63 @@ tbody, td, tfoot, th, thead, tr {
 .p-dialog {
 width: 1200px !important;
 }
+
+
+@media (max-width: 768px) {
+  .preview-summary-container {
+    padding: 10px;
+  }
+
+  .preview-toolbar {
+    height: auto; /* Adjust toolbar height */
+    padding: 8px;
+    font-size: 14px;
+  }
+
+  .preview-details-grid {
+    grid-template-columns: repeat(2, 1fr); /* 2 columns */
+    gap: 10px; /* Reduce gap */
+  }
+
+  .preview-title {
+    font-size: 16px; /* Smaller font for the title */
+  }
+
+  .preview-label {
+    font-size: 14px;
+  }
+
+  .preview-value {
+    font-size: 14px;
+  }
+
+  .p-dialog {
+    width: 100% !important; /* Full width for dialog on small screens */
+  }
+
+  .previewDataTable td,
+  .previewDataTable th {
+    font-size: 10px !important;
+    padding: 2px;
+  }
+
+  .preview-train-type {
+    padding-left: 50px; /* Adjust padding */
+  }
+}
+
+
+@media (max-width: 1024px) {
+  .preview-details-grid {
+    grid-template-columns: repeat(3, 1fr); /* 3 columns */
+    gap: 15px; /* Moderate gap */
+  }
+
+  .p-dialog {
+    width: 90% !important; /* Reduce dialog width */
+  }
+
+  .preview-summary-container {
+    padding: 15px;
+  }
+}

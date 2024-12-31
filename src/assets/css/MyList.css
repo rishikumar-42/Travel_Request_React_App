@@ -217,3 +217,77 @@ div.dt-container.no-data-footer tbody > tr:last-child > * {
 .td-mylist {
   padding-left: 4px;
 }
+
+/* Responsive Styles for Tabs in a Row */
+
+/* For screens less than 1200px (large tablets and small desktops) */
+@media (max-width: 1200px) {
+  .tabs {
+    font-size: 14px;
+    padding: 8px;
+  }
+
+  .tab-button {
+    font-size: 14px;
+    padding: 10px 0;
+    margin: 0 3px; /* Reduce spacing between tabs */
+  }
+
+  .tab-content {
+    padding: 15px;
+  }
+}
+
+/* For screens less than 992px (tablets landscape) */
+@media (max-width: 992px) {
+  .tabs {
+    font-size: 13px;
+    padding: 6px;
+  }
+
+  .tab-button {
+    font-size: 13px;
+    padding: 8px 0;
+    margin: 0 2px; /* Further reduce spacing between tabs */
+  }
+
+  .tab-content {
+    padding: 10px;
+  }
+}
+
+/* For screens less than 768px (tablets portrait and large phones) */
+@media (max-width: 768px) {
+  .tabs {
+    font-size: 12px;
+    padding: 5px;
+  }
+
+  .tab-button {
+    font-size: 12px;
+    padding: 6px 0;
+    margin: 0 2px; /* Keep tabs in a row but compact */
+  }
+
+  .tab-content {
+    padding: 8px;
+  }
+}
+
+/* For screens less than 576px (mobile devices) */
+@media (max-width: 576px) {
+  .tabs {
+    font-size: 11px;
+    padding: 5px;
+  }
+
+  .tab-button {
+    font-size: 11px;
+    padding: 5px 0;
+    margin: 0 1px; /* Minimal spacing for very small screens */
+  }
+
+  .tab-content {
+    padding: 5px;
+  }
+}

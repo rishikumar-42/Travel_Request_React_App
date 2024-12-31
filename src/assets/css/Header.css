@@ -73,17 +73,6 @@
     padding: 0px;
 }
 
-..p-menuitem-content {
-    color: black; /* Initial font color */
-    background-color: white; /* Initial background color */
-    transition: color 0.3s, background-color 0.3s; /* Smooth transition */
-    padding: 10px; /* Add some padding for better click area */
-}
-
-..p-menuitem-content:hover {
-    color: white; /* Font color on hover */
-    background-color: #003D71; /* Background color on hover */
-}
 .view-my-travel-request {
     background-color: white; /* Default background */
     color: black; /* Default text color */
@@ -104,4 +93,85 @@
     color: white; /* Hover text color */
 }
 
+/* Responsive styles */
 
+/* For screens less than 1200px */
+@media (max-width: 1200px) {
+    .travel-request-header {
+        margin-left: 15rem;
+    }
+    .p-menubar {
+        font-size: 0.8rem;
+        margin-left: 20px;
+        margin-top: 10px;
+    }
+    .p-menubar.p-menubar-mobile-active .p-menubar-root-list {
+        display: grid;
+        flex-direction: column;
+        left: 0;
+        top: 100%;
+        z-index: 1;
+        background: transparent;
+        padding: 0px !important;
+    }
+    .header-travelform {
+        font-size: 12px;
+        height: 55px;
+        line-height: 45px;
+        padding-left: 8px;
+    }
+}
+
+/* For screens less than 992px (tablet landscape) */
+@media (max-width: 992px) {
+    .travel-request-header {
+        margin-left: 10rem;
+    }
+    .p-menubar {
+        font-size: 0.75rem;
+        margin-left: 15px;
+        margin-top: 5px;
+    }
+    .header-travelform {
+        font-size: 11px;
+        height: 50px;
+        line-height: 40px;
+        padding-left: 5px;
+    }
+}
+
+/* For screens less than 768px (tablet portrait) */
+@media (max-width: 768px) {
+    .travel-request-header {
+        margin-left: 5rem;
+    }
+    .p-menubar {
+        font-size: 0.7rem;
+        margin-left: 10px;
+        margin-top: 5px;
+    }
+    .header-travelform {
+        font-size: 10px;
+        height: 45px;
+        line-height: 35px;
+        padding-left: 5px;
+    }
+}
+
+/* For screens less than 576px (mobile) */
+@media (max-width: 576px) {
+    .travel-request-header {
+        margin-left: 1rem;
+    }
+    .p-menubar {
+        font-size: 0.65rem;
+        margin-left: 5px;
+        margin-top: 5px;
+    }
+    .header-travelform {
+        font-size: 9px;
+        height: 40px;
+        line-height: 30px;
+        padding-left: 5px;
+    }
+}
