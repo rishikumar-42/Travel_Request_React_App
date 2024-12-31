@@ -424,13 +424,17 @@ function TravelRequestForm() {
 
     useEffect(() => {
         const getAllTrainTypes = async () => {
+            setLoading(true);
             try {
                 const trainTypes = await TravelRequestFormService.fetchTrainTicketTypePicklist();
                 setTrainTypeList(trainTypes);
                 console.log("train types :", trainTypes);
             } catch (error) {
                 console.error("Error fetching train ", error);
+            }finally{
+                setLoading(false);
             }
+            
         };
 
         getAllTrainTypes();
@@ -522,9 +526,6 @@ function TravelRequestForm() {
         }
     };
 
-    useEffect(() => {
-
-    }, [])
 
     const initialFlightTicket = () => {
         console.log("trainTypeList data : ", trainTypeList);

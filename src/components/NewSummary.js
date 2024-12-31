@@ -481,6 +481,9 @@ const NewSummary = ({
         `Successfully Cancelled ${item.travelRequestId}`
       );
       setCancelFlag(false);
+      setTimeout(() => {
+        onBack();
+      }, 3000);
     } catch (error) {
       console.log("error while deleting : ", error);
       showMessage(
