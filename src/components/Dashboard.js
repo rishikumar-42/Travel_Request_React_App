@@ -175,11 +175,17 @@ const Dashboard = () => {
       }
       if (activeTab === 'approved') {
         if(item.manager === currentUseremail){
-        return item.approveStatus?.key === 'approved' || item.approveStatus?.key === 'pendingAtApprover2';
+        return item.approveStatus?.key === 'approved' || item.approveStatus?.key === 'pendingAtApprover2' || (item.approveStatus?.key === 'rejected' && item.hodActionTime != null && item.hodActionTime != undefined);
         }
         if(item.hod === currentUseremail){
           return item.approveStatus?.key === 'approved';
           }
+      }
+      if (activeTab === 'rejected' && item.hod === currentUseremail){
+        return item.approveStatus?.key === activeTab && item.hodActionTime != null && item.hodActionTime != undefined;
+      }
+      if (activeTab === 'rejected' && item.manager === currentUseremail){
+        return item.approveStatus?.key === activeTab && (item.hodActionTime === null || item.hodActionTime === undefined );
       }
       return item.approveStatus?.key === activeTab;
     })

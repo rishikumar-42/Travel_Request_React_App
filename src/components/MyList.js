@@ -291,6 +291,10 @@ const MyList = () => {
         return item.email === currentEmailAddress && item.creator?.id === currentUserId &&
           (item.approveStatus?.key === 'pendingAtApprover1' || item.approveStatus?.key === 'pendingAtApprover2');
       }
+      else if (activeTab === 'draft') {
+        return item.email === currentEmailAddress &&
+          item.approveStatus?.key === activeTab;
+      }
       else {
         return item.email === currentEmailAddress && item.creator?.id === currentUserId &&
           item.approveStatus?.key === activeTab;
