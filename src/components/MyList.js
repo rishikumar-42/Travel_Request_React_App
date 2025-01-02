@@ -82,7 +82,7 @@ const MyList = () => {
 
   useEffect(() => {
     fetchUserId();
-  },[authHeader]);
+  }, [authHeader]);
 
   // useEffect(() => {
   //   if (username && password) {
@@ -285,7 +285,7 @@ const MyList = () => {
       let allItems = [];
       let page = 1;
       const pageSize = 100;
-  
+
       try {
         while (true) {
           const response = await fetch(
@@ -298,32 +298,32 @@ const MyList = () => {
               },
             }
           );
-  
+
           if (!response.ok) {
             console.error(`Error fetching page ${page}, Status Code: ${response.status}`);
             break;
           }
-  
+
           const data = await response.json();
-  
+
           // Log for debugging
           console.log(`Page ${page} Response:`, data);
-  
+
           // Break if no more items
           if (!Array.isArray(data.items) || data.items.length === 0) {
             console.warn(`No items found on page ${page}. Ending fetch.`);
             break;
           }
-  
+
           allItems = [...allItems, ...data.items];
-  
+
           if (page >= data.totalPages) {
             break;
           }
-  
+
           page += 1;
         }
-  
+
         setData(allItems);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -331,11 +331,11 @@ const MyList = () => {
         setLoading(false);
       }
     };
-  
+
     fetchDataRef.current = fetchData;
     fetchData();
   }, [authHeader]);
-  
+
 
   const filteredData = data
     // .filter(item =>  item.creator?.id === currentUserId)
@@ -351,7 +351,7 @@ const MyList = () => {
           (item.approveStatus?.key === activeTab || activeTab === 'all');
       }
       else if (activeTab === 'pendingAtApprover1 || pendingAtApprover2') {
-        return item.email === currentEmailAddress && item.creator?.id === currentUserId &&
+        return item.email === currentEmailAddress &&
           (item.approveStatus?.key === 'pendingAtApprover1' || item.approveStatus?.key === 'pendingAtApprover2');
       }
       else if (activeTab === 'draft') {
@@ -359,20 +359,23 @@ const MyList = () => {
           item.approveStatus?.key === activeTab;
       }
       else {
-        return item.email === currentEmailAddress && item.creator?.id === currentUserId &&
+        return item.email === currentEmailAddress &&
           item.approveStatus?.key === activeTab;
       }
     })
 
-    .filter(item => item.firstName.toLowerCase().includes(searchTerm.toLowerCase()) || item.lastName.toLowerCase().includes(searchTerm.toLowerCase())
-  || item.travelRequestId.toLowerCase().includes(searchTerm.toLowerCase())
-  || item.approveStatus?.name.toLowerCase().includes(searchTerm.toLowerCase()))
-  .sort((a, b) => b.travelRequestId.localeCompare(a.travelRequestId));
-    // .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+    .filter(item => item.name.toLowerCase().includes(searchTerm.toLowerCase())
+      || item.travelRequestId.toLowerCase().includes(searchTerm.toLowerCase())
+      || item.approveStatus?.name.toLowerCase().includes(searchTerm.toLowerCase()))
+    //   .filter(item => item.firstName.toLowerCase().includes(searchTerm.toLowerCase()) || item.lastName.toLowerCase().includes(searchTerm.toLowerCase())
+    // || item.travelRequestId.toLowerCase().includes(searchTerm.toLowerCase())
+    // || item.approveStatus?.name.toLowerCase().includes(searchTerm.toLowerCase()))
+    .sort((a, b) => b.travelRequestId.localeCompare(a.travelRequestId));
+  // .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
-  const paginatedData = filteredData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage); 
+  const paginatedData = filteredData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
 
   return (
@@ -427,28 +430,28 @@ const MyList = () => {
           </div>
 
           <div>
-          <div className="toolbar2">
-            <div className="toolbar2-content">
-              <span>
-                {activeTab === 'pendingAtApprover1 || pendingAtApprover2' && 'My In-Progress Requests'}
-                {activeTab === 'draft' && 'My Draft Requests'}
-                {activeTab === 'approved' && 'My Approved Requests'}
-                {activeTab === 'cancelled' && 'My Cancelled Requests'}
-                {activeTab === 'rejected' && 'My Rejected Requests'}
-                {activeTab === 'all' && 'Others Requests'}
-              </span>
+            <div className="toolbar2">
+              <div className="toolbar2-content">
+                <span>
+                  {activeTab === 'pendingAtApprover1 || pendingAtApprover2' && 'My In-Progress Requests'}
+                  {activeTab === 'draft' && 'My Draft Requests'}
+                  {activeTab === 'approved' && 'My Approved Requests'}
+                  {activeTab === 'cancelled' && 'My Cancelled Requests'}
+                  {activeTab === 'rejected' && 'My Rejected Requests'}
+                  {activeTab === 'all' && 'Others Requests'}
+                </span>
+              </div>
             </div>
-          </div>
 
-          <div className="search-box-container">
-            <input
-              type="text"
-              placeholder="Search..."
-              value={searchTerm}
-              onChange={handleSearchChange}
-              className="search-box"
-            />
-          </div>
+            <div className="search-box-container">
+              <input
+                type="text"
+                placeholder="Search..."
+                value={searchTerm}
+                onChange={handleSearchChange}
+                className="search-box"
+              />
+            </div>
 
           </div>
 
@@ -483,7 +486,8 @@ const MyList = () => {
                               {item.travelRequestId || 'N/A'}
                             </span>
                           </td>
-                          <td className="td-mylist">{`${item.firstName || 'N/A'} ${item.lastName || 'N/A'}`}</td>
+                          {/* <td className="td-mylist">{`${item.firstName || 'N/A'} ${item.lastName || 'N/A'}`}</td> */}
+                          <td className="td-mylist">{`${item.name || 'N/A'}`}</td>
                           <td className="td-mylist">{item.travelPurpose || 'N/A'}</td>
                           <td className="td-mylist">{item.manager || 'N/A'}</td>
                           <td className="td-mylist">{item.hod || 'N/A'}</td>
@@ -520,15 +524,15 @@ const MyList = () => {
                                   style={{ cursor: 'pointer' }}
                                 /> */}
                                 <DeleteIcon
-        onClick={() => handleDeleteClick(item.id)}
-        style={{ cursor: 'pointer' }}
-      />
+                                  onClick={() => handleDeleteClick(item.id)}
+                                  style={{ cursor: 'pointer' }}
+                                />
 
-      <ConfirmationDialog
-        open={isDialogOpen}
-        onClose={handleDialogClose}
-        onConfirm={handleConfirmDelete}
-      />
+                                <ConfirmationDialog
+                                  open={isDialogOpen}
+                                  onClose={handleDialogClose}
+                                  onConfirm={handleConfirmDelete}
+                                />
                               </>
                             )}
                             {activeTab === 'all' && item.approveStatus?.key === 'pendingAtApprover1' && (
@@ -548,9 +552,9 @@ const MyList = () => {
                                   style={{ cursor: 'pointer' }}
                                 /> */}
                                 <DeleteIcon
-        onClick={() => handleDeleteClick(item.id)}
-        style={{ cursor: 'pointer' }}
-      />
+                                  onClick={() => handleDeleteClick(item.id)}
+                                  style={{ cursor: 'pointer' }}
+                                />
 
                               </>
                             )}
@@ -564,10 +568,10 @@ const MyList = () => {
                     )}
                   </tbody>
                   <ConfirmationDialog
-        open={isDialogOpen}
-        onClose={handleDialogClose}
-        onConfirm={handleConfirmDelete}
-      />
+                    open={isDialogOpen}
+                    onClose={handleDialogClose}
+                    onConfirm={handleConfirmDelete}
+                  />
                 </table>
                 <div
                   className=

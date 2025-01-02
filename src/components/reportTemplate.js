@@ -65,28 +65,32 @@ const ReportTemplate = ({
       {/* Part 1 */}
       <div className="section">
         <div className="section-header">Traveler Identification</div>
-        <div className="field-row">
+        <div className="d-flex field-row justify-content-between gap-2">
           <div className="field-group">
             <label className="field-label">Email</label>
             <span className="field-value" id="field1">{item.email}</span>
           </div>
-          <div className="field-group">
+          {/* <div className="field-group">
             <label className="field-label">First Name</label>
             <span className="field-value" id="field2">{item.firstName}</span>
           </div>
           <div className="field-group">
             <label className="field-label">Last Name</label>
             <span className="field-value" id="field3">{item.lastName}</span>
+          </div> */}
+          <div className="field-group">
+            <label className="field-label">Name</label>
+            <span className="field-value" id="field3">{item.name}</span>
           </div>
           <div className="field-group">
             <label className="field-label">Emp No.</label>
             <span className="field-value" id="field4">{item.employeeNumber}</span>
           </div>
         </div>
-        <div className="field-row">
+        <div className="d-flex field-row justify-content-between gap-2">
           <div className="field-group">
             <label className="field-label">Position Titlte</label>
-            <span className="field-value" id="field1">{item.positionTitle}</span>
+            <span className="field-value" id="field1">{item.positionTitle || "N/A"}</span>
           </div>
           <div className="field-group">
             <label className="field-label">Entity</label>

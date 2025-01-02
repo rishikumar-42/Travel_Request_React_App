@@ -22,8 +22,27 @@ const TravelRequestFormServiceLayer = {
     fetchUsers: async () => {
         try {
             await setAxios();
-            const response = await axios.get(`o/c/userlists/`);
-            const users = response.data.items || [];
+            // const response = await axios.get(`o/c/userlists/`);
+            const username = "ravikumara.ss@digitusbiz.com";
+            const password = "root";
+            const token = btoa(`${username}:${password}`);
+
+            const response = await await axios.get(
+                `https://eformstst.fciconnect.com/api/jsonws/afci.employee/search-employees?title=`,
+                {
+                    headers: {
+                        Authorization: `Basic ${token}`
+                    },
+                }
+            );
+            // let users = response.data.items || [];
+            let users = response.data || [];
+            console.log("Fetched users test:", users);
+            users.forEach(user => {
+                user.email = user.empEmail;
+                user.employeeNumber = user.empNumber;
+                user.name = user.title;
+            });
             console.log("Fetched users:", users);
             return users;
 

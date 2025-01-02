@@ -248,10 +248,11 @@ const Dashboard = () => {
       }
       return item.approveStatus?.key === activeTab;
     })
-    .filter(item => item.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                    item.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    .filter(item => item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                     item.travelRequestId.toLowerCase().includes(searchTerm.toLowerCase()) ||
                     item.approveStatus?.name.toLowerCase().includes(searchTerm.toLowerCase()))
+                    // item.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    // item.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
     // .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
@@ -341,7 +342,8 @@ const Dashboard = () => {
                               {item.travelRequestId || 'N/A'}
                             </span>
                           </td>
-                          <td className="td">{`${item.firstName || 'N/A'} ${item.lastName || 'N/A'}`}</td>
+                          {/* <td className="td">{`${item.firstName || 'N/A'} ${item.lastName || 'N/A'}`}</td> */}
+                          <td className="td">{`${item.name || 'N/A'}`}</td>
                           <td className="td">{item.travelPurpose || 'N/A'}</td>
                           <td className="td">{item.manager || 'N/A'}</td>
                           <td className="td">{item.hod || 'N/A'}</td>

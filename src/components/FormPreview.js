@@ -76,13 +76,17 @@ const FormPreview = ({ item, travelInfo, attachments }) => {
                             <span className="preview-label">Email:</span>
                             <span className="preview-value">{item.email || 'N/A'}</span>
                         </div>
-                        <div className="preview-detail-item">
+                        {/* <div className="preview-detail-item">
                             <span className="preview-label">First Name:</span>
                             <span className="preview-value">{item.firstName || 'N/A'}</span>
                         </div>
                         <div className="preview-detail-item">
                             <span className="preview-label">Last Name:</span>
                             <span className="preview-value">{item.lastName || 'N/A'}</span>
+                        </div> */}
+                        <div className="preview-detail-item">
+                            <span className="preview-label">Name:</span>
+                            <span className="preview-value">{item.name || 'N/A'}</span>
                         </div>
                         <div className="preview-detail-item">
                             <span className="preview-label">Employee Number:</span>

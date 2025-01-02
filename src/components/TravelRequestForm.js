@@ -63,6 +63,7 @@ function TravelRequestForm() {
     const [isTelephoneNumberValid, setIsTelephoneNumberValid] = useState(false);
     const [isManagerEmailValid, setIsManagerEmailValid] = useState(true);
     const [isHODEmailValid, setIsHODEmailValid] = useState(true);
+    const [isFormSubmit, setIsFormSubmit] = useState(false);
     // const [isEmailValidSubmit, setIsEmailValidSubmit] = useState(true);
     const [newItinerary, setNewItinerary] = useState({
         onwardJourney: '',
@@ -431,10 +432,10 @@ function TravelRequestForm() {
                 console.log("train types :", trainTypes);
             } catch (error) {
                 console.error("Error fetching train ", error);
-            }finally{
+            } finally {
                 setLoading(false);
             }
-            
+
         };
 
         getAllTrainTypes();
@@ -582,12 +583,12 @@ function TravelRequestForm() {
 
     const setTimeZone = (dateString) => {
         const date = new Date(dateString);
-    
+
         const currentDate = new Date();
         const offsetInMinutes = currentDate.getTimezoneOffset();
         const offsetInHours = Math.floor(offsetInMinutes / 60);
         const offsetInMinutesOnly = Math.abs(offsetInMinutes % 60);
-    
+
         // Adjust the time by the offset
         date.setMinutes(date.getMinutes() - offsetInMinutesOnly);
         date.setHours(date.getHours() - offsetInHours);
@@ -601,8 +602,9 @@ function TravelRequestForm() {
         issuerDate: null,
         issuerNumber: null,
         email: "",
-        firstName: "",
-        lastName: "",
+        // firstName: "",
+        // lastName: "",
+        name: "",
         employeeNumber: "",
         costCenter: "",
         entity: "",
@@ -776,6 +778,7 @@ function TravelRequestForm() {
     // Handle form submission
     const handleFormSubmit = async (e) => {
         e.preventDefault();
+        setIsFormSubmit(true)
         setPreviewVisible(false)
         if (validateForm()) {
             setErrors({});
@@ -831,12 +834,13 @@ function TravelRequestForm() {
                 setFormData({
                     ...formData, // Spread the existing formData
                     email: user.email,
-                    firstName: user.firstName, // Update only the firstName property
-                    lastName: user.lastName,
+                    // firstName: user.firstName,
+                    // lastName: user.lastName,
+                    name: user.name,
                     employeeNumber: user.employeeNumber,
                     costCenter: user.costCenter,
                     entity: user.entity,
-                    positionTitle: user.positionTitle
+                    // positionTitle: user.positionTitle
                 });
                 return true;
             }
@@ -856,10 +860,7 @@ function TravelRequestForm() {
         return userList.some(user => {
             if (user.email.toLowerCase() === (typeof value === 'object' ? value.email.toLowerCase() : value.toLowerCase())) {
                 setFormData({
-                    ...formData, // Spread the existing formData
-                    // approver1: {
-                    //     key : user.firstName
-                    // }
+                    ...formData,
                     manager: user.email
                 });
                 return true;
@@ -879,10 +880,7 @@ function TravelRequestForm() {
         return userList.some(user => {
             if (user.email.toLowerCase() === (typeof value === 'object' ? value.email.toLowerCase() : value.toLowerCase())) {
                 setFormData({
-                    ...formData, // Spread the existing formData
-                    // approver2: {
-                    //     key : user.firstName
-                    // }
+                    ...formData,
                     hod: user.email
                 });
                 return true;
@@ -992,8 +990,9 @@ function TravelRequestForm() {
                                                 setFormData({
                                                     ...formData, // Spread the existing formData
                                                     email: '',
-                                                    firstName: '', // Update only the firstName property
-                                                    lastName: '',
+                                                    // firstName: '',
+                                                    // lastName: '',
+                                                    name: '',
                                                     employeeNumber: '',
                                                     costCenter: '',
                                                     entity: '',
@@ -1010,12 +1009,13 @@ function TravelRequestForm() {
                                                 setFormData({
                                                     ...formData, // Spread the existing formData
                                                     email: e.value.email,
-                                                    firstName: e.value.firstName, // Update only the firstName property
-                                                    lastName: e.value.lastName,
+                                                    // firstName: e.value.firstName,
+                                                    // lastName: e.value.lastName,
+                                                    name: e.value.name,
                                                     employeeNumber: e.value.employeeNumber,
                                                     costCenter: e.value.costCenter,
                                                     entity: e.value.entity,
-                                                    positionTitle: e.value.positionTitle
+                                                    // positionTitle: e.value.positionTitle
                                                 });
                                                 console.log("value : " + JSON.stringify(formData));
                                             }}
@@ -1030,6 +1030,12 @@ function TravelRequestForm() {
                                 </div>
                                 <div className="form-single">
                                     <FloatLabel>
+                                        <InputText type="text" maxLength={250} id="name" name="name" value={formData.name} readOnly />
+                                        <label htmlFor="name" className="small">Name<span className="text-danger px-1">*</span></label>
+                                    </FloatLabel>
+                                </div>
+                                {/* <div className="form-single">
+                                    <FloatLabel>
                                         <InputText type="text" maxLength={250} id="firstName" name="firstName" value={formData.firstName} readOnly />
                                         <label htmlFor="firstName" className="small">First Name<span className="text-danger px-1">*</span></label>
                                     </FloatLabel>
@@ -1039,7 +1045,7 @@ function TravelRequestForm() {
                                         <InputText type="text" maxLength={250} id="lastName" name="lastName" value={formData.lastName} readOnly />
                                         <label htmlFor="lastName" className="small">Last Name<span className="text-danger px-1">*</span></label>
                                     </FloatLabel>
-                                </div>
+                                </div> */}
                                 <div className="form-single">
                                     <FloatLabel>
                                         <InputText type="text" maxLength={250} id="employeeNumber" name="employeeNumber" value={formData.employeeNumber} readOnly />
@@ -1049,7 +1055,7 @@ function TravelRequestForm() {
                             </div>
                         </div>
                     </div>
-                    <div className="d-flex justify-content-between align-items-stretch gap-3 mt-3">
+                    <div className="d-flex justify-content-between align-items-stretch gap-3 mt-3 px-3">
                         <div className="form-single-special">
                             <FloatLabel>
                                 <InputText type="text" maxLength={250} id="costCenter" name="costCenter" value={formData.costCenter} readOnly />
@@ -1064,8 +1070,12 @@ function TravelRequestForm() {
                         </div>
                         <div className="form-single-special">
                             <FloatLabel>
-                                <InputText type="text" maxLength={250} id="positionTitle" name="positionTitle" value={formData.positionTitle} readOnly />
-                                <label htmlFor="positionTitle" className="small">Position Title<span className="text-danger px-1">*</span></label>
+                                <InputText type="text" maxLength={250} id="positionTitle" name="positionTitle" value={formData.positionTitle}
+                                    onChange={(e) => setFormData({
+                                        ...formData,
+                                        positionTitle: e.target.value
+                                    })} />
+                                <label htmlFor="positionTitle" className="small">Position Title</label>
                             </FloatLabel>
                         </div>
                     </div>
@@ -1238,10 +1248,7 @@ function TravelRequestForm() {
                                         onSelect={(e) => {
                                             setSelectedItem(e.value);
                                             setFormData({
-                                                ...formData, // Spread the existing formData
-                                                // approver1: {
-                                                //     key: e.value.firstName,
-                                                // }
+                                                ...formData,
                                                 manager: e.value.email
                                             });
                                             console.log("value : " + JSON.stringify(e.value.email));
@@ -1320,7 +1327,7 @@ function TravelRequestForm() {
                                             value={formData.hotelLocation}
                                             onChange={(e) => setFormData({
                                                 ...formData, // Spread the existing formData
-                                                hotelLocation: e.target.value // Update only the firstName property
+                                                hotelLocation: e.target.value
                                             })} />
                                     </FloatLabel>
                                     {errors.hotelLocation && !formData.hotelLocation && <span style={{ color: 'red' }}>{errors.hotelLocation}</span>}
@@ -1399,7 +1406,7 @@ function TravelRequestForm() {
                                             value={formData.hotelNote}
                                             onChange={(e) => setFormData({
                                                 ...formData, // Spread the existing formData
-                                                hotelNote: e.target.value // Update only the firstName property
+                                                hotelNote: e.target.value
                                             })} />
                                     </FloatLabel>
                                 </div>
@@ -1555,7 +1562,7 @@ function TravelRequestForm() {
                                             value={formData.personalCarRegistrationNumber}
                                             onChange={(e) => setFormData({
                                                 ...formData, // Spread the existing formData
-                                                personalCarRegistrationNumber: e.target.value // Update only the firstName property
+                                                personalCarRegistrationNumber: e.target.value
                                             })}
                                         />
                                     </FloatLabel>
@@ -1568,7 +1575,7 @@ function TravelRequestForm() {
                                             value={formData.personalCarDrivingLicenseNumber}
                                             onChange={(e) => setFormData({
                                                 ...formData, // Spread the existing formData
-                                                personalCarDrivingLicenseNumber: e.target.value // Update only the firstName property
+                                                personalCarDrivingLicenseNumber: e.target.value
                                             })}
                                         />
                                     </FloatLabel>
@@ -1647,7 +1654,6 @@ function TravelRequestForm() {
                                                                 trainTicketType: {
                                                                     key: e.value.key,
                                                                     name: e.value.name,
-                                                                    // name: e.value.name // Update only the firstName property
                                                                 }
                                                             });
                                                             console.log("radio : ", formData)
@@ -1865,7 +1871,6 @@ function TravelRequestForm() {
                                                 flightTicketReason: {
                                                     key: e.value.key,
                                                     name: e.value.name,
-                                                    // name: e.value.name // Update only the firstName property
                                                 }
                                             });
                                         }} options={reasonList} optionLabel="name" className="w-full" />
@@ -1882,19 +1887,19 @@ function TravelRequestForm() {
                     {/* <button type="submit">Submit</button> */}
                     <div className="gap-3" style={{ display: 'flex', justifyContent: 'end' }}>
                         <Button type="button" className="back-button-travel mb-3" label="Back" rounded onClick={handleBack} icon={<KeyboardDoubleArrowLeftIcon />} />
-                        <div className="d-block">
+                        { !isFormSubmit && (<><div className="d-block">
                             <Button className="mb-3" style={{ height: '41px' }}
                                 onClick={() => setFormData(prevFormData => ({
                                     ...prevFormData, // Spread the existing formData
                                     status: { code: 2 },
                                     approveStatus: { key: 'draft' }
-                                }))}
+                                }))
+                            }
                                 type="submit"
                                 label="Save As Draft"
                                 disabled={loading} //|| isEmailValidSubmit
                             />
-                        </div>
-                        <Button className="mb-3" type="button" icon={<KeyboardDoubleArrowRightIcon />} label="Next" rounded
+                        </div><Button className="mb-3" type="button" icon={<KeyboardDoubleArrowRightIcon />} label="Next" rounded
                             onClick={() => {
                                 if (validateForm()) {
                                     setErrors({});
@@ -1903,14 +1908,14 @@ function TravelRequestForm() {
                                     showMessage('error', 'Error', `Fill all the required fields`);
                                     return;
                                 }
-                            }} />
-                        <Button
-                            type="submit"
-                            ref={submitButtonRef} // Set the ref
-                            style={{ display: 'none' }} // Hide the button if desired
-                        >
-                            Submit
-                        </Button>
+                            } } /><Button
+                                type="submit"
+                                ref={submitButtonRef} // Set the ref
+                                style={{ display: 'none' }} // Hide the button if desired
+                            >
+                                Submit
+                            </Button></>
+                        )}
                         <div>
 
                             <Dialog header="Preview" visible={previewVisible} style={{ width: '80vw' }} onHide={() => { if (!previewVisible) return; setPreviewVisible(false); }}>

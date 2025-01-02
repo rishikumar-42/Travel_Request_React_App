@@ -679,8 +679,9 @@ function EditTravelRequestForm() {
         issuerDate: new Date(item.issuerDate) || null,
         issuerNumber: item.issuerNumber || null,
         email: item.email || "",
-        firstName: item.firstName || "",
-        lastName: item.lastName || "",
+        // firstName: item.firstName || "",
+        // lastName: item.lastName || "",
+        name: item.name || "",
         employeeNumber: item.employeeNumber || "",
         costCenter: item.costCenter || "",
         entity: item.entity || "",
@@ -978,12 +979,13 @@ function EditTravelRequestForm() {
                 setFormData({
                     ...formData, // Spread the existing formData
                     email: user.email,
-                    firstName: user.firstName, // Update only the firstName property
-                    lastName: user.lastName,
+                    // firstName: user.firstName,
+                    // lastName: user.lastName,
+                    name: user.name,
                     employeeNumber: user.employeeNumber,
                     costCenter: user.costCenter,
                     entity: user.entity,
-                    positionTitle: user.positionTitle
+                    // positionTitle: user.positionTitle
                 });
                 return true;
             }
@@ -1010,10 +1012,7 @@ function EditTravelRequestForm() {
         return userList.some(user => {
             if (user.email.toLowerCase() === (typeof value === 'object' ? value.email.toLowerCase() : value.toLowerCase())) {
                 setFormData({
-                    ...formData, // Spread the existing formData
-                    // approver1: {
-                    //     key : user.firstName
-                    // }
+                    ...formData,
                     manager: user.email
                 });
                 return true;
@@ -1033,10 +1032,7 @@ function EditTravelRequestForm() {
         return userList.some(user => {
             if (user.email.toLowerCase() === (typeof value === 'object' ? value.email.toLowerCase() : value.toLowerCase())) {
                 setFormData({
-                    ...formData, // Spread the existing formData
-                    // approver2: {
-                    //     key : user.firstName
-                    // }
+                    ...formData,
                     hod: user.email
                 });
                 return true;
@@ -1152,8 +1148,9 @@ function EditTravelRequestForm() {
                                                 setFormData({
                                                     ...formData, // Spread the existing formData
                                                     email: '',
-                                                    firstName: '', // Update only the firstName property
-                                                    lastName: '',
+                                                    // firstName: '',
+                                                    // lastName: '',
+                                                    name: '',
                                                     employeeNumber: '',
                                                     costCenter: '',
                                                     entity: '',
@@ -1170,12 +1167,13 @@ function EditTravelRequestForm() {
                                                 setFormData({
                                                     ...formData, // Spread the existing formData
                                                     email: e.value.email,
-                                                    firstName: e.value.firstName, // Update only the firstName property
-                                                    lastName: e.value.lastName,
+                                                    // firstName: e.value.firstName,
+                                                    // lastName: e.value.lastName,
+                                                    name: e.value.name,
                                                     employeeNumber: e.value.employeeNumber,
                                                     costCenter: e.value.costCenter,
                                                     entity: e.value.entity,
-                                                    positionTitle: e.value.positionTitle
+                                                    // positionTitle: e.value.positionTitle
                                                 });
                                                 console.log("value : " + JSON.stringify(formData));
                                             }}
@@ -1191,6 +1189,12 @@ function EditTravelRequestForm() {
                                 </div>
                                 <div className="form-single">
                                     <FloatLabel>
+                                        <InputText type="text" id="name" name="name" value={formData.name} readOnly />
+                                        <label htmlFor="name" className="small">Name<span className="text-danger px-1">*</span></label>
+                                    </FloatLabel>
+                                </div>
+                                {/* <div className="form-single">
+                                    <FloatLabel>
                                         <InputText type="text" id="firstName" name="firstName" value={formData.firstName} readOnly />
                                         <label htmlFor="firstName" className="small">First Name<span className="text-danger px-1">*</span></label>
                                     </FloatLabel>
@@ -1200,7 +1204,7 @@ function EditTravelRequestForm() {
                                         <InputText type="text" id="lastName" name="lastName" value={formData.lastName} readOnly />
                                         <label htmlFor="lastName" className="small">Last Name<span className="text-danger px-1">*</span></label>
                                     </FloatLabel>
-                                </div>
+                                </div> */}
                                 <div className="form-single">
                                     <FloatLabel>
                                         <InputText type="text" id="employeeNumber" name="employeeNumber" value={item.employeeNumber} readOnly />
@@ -1225,8 +1229,12 @@ function EditTravelRequestForm() {
                         </div>
                         <div className="form-single-special">
                             <FloatLabel>
-                                <InputText type="text" id="positionTitle" name="positionTitle" value={formData.positionTitle} readOnly />
-                                <label htmlFor="positionTitle" className="small">Position Title<span className="text-danger px-1">*</span></label>
+                                <InputText type="text" id="positionTitle" name="positionTitle" value={formData.positionTitle} 
+                                onChange={(e) => setFormData({
+                                    ...formData,
+                                    positionTitle: e.target.value
+                                })} />
+                                <label htmlFor="positionTitle" className="small">Position Title</label>
                             </FloatLabel>
                         </div>
                     </div>
@@ -1400,10 +1408,7 @@ function EditTravelRequestForm() {
                                         onSelect={(e) => {
                                             setSelectedItem(e.value);
                                             setFormData({
-                                                ...formData, // Spread the existing formData
-                                                // approver1: {
-                                                //     key: e.value.firstName,
-                                                // }
+                                                ...formData,
                                                 manager: e.value.email
                                             });
                                             console.log("value : " + JSON.stringify(e.value.email));
@@ -1483,7 +1488,7 @@ function EditTravelRequestForm() {
                                             value={formData.hotelLocation}
                                             onChange={(e) => setFormData({
                                                 ...formData, // Spread the existing formData
-                                                hotelLocation: e.target.value // Update only the firstName property
+                                                hotelLocation: e.target.value
                                             })} />
                                     </FloatLabel>
                                     {errors.hotelLocation && !formData.hotelLocation && <span style={{ color: 'red' }}>{errors.hotelLocation}</span>}
@@ -1543,7 +1548,7 @@ function EditTravelRequestForm() {
                                             value={formData.hotelNote}
                                             onChange={(e) => setFormData({
                                                 ...formData, // Spread the existing formData
-                                                hotelNote: e.target.value // Update only the firstName property
+                                                hotelNote: e.target.value 
                                             })} />
                                     </FloatLabel>
                                 </div>
@@ -1701,7 +1706,7 @@ function EditTravelRequestForm() {
                                             value={formData.personalCarRegistrationNumber}
                                             onChange={(e) => setFormData({
                                                 ...formData, // Spread the existing formData
-                                                personalCarRegistrationNumber: e.target.value // Update only the firstName property
+                                                personalCarRegistrationNumber: e.target.value
                                             })}
                                         />
                                     </FloatLabel>
@@ -1714,7 +1719,7 @@ function EditTravelRequestForm() {
                                             value={formData.personalCarDrivingLicenseNumber}
                                             onChange={(e) => setFormData({
                                                 ...formData, // Spread the existing formData
-                                                personalCarDrivingLicenseNumber: e.target.value // Update only the firstName property
+                                                personalCarDrivingLicenseNumber: e.target.value
                                             })}
                                         />
                                     </FloatLabel>
@@ -1792,7 +1797,7 @@ function EditTravelRequestForm() {
                                                                 ...formData, // Spread the existing formData
                                                                 trainTicketType: {
                                                                     key: e.value.key,
-                                                                    name: e.value.name // Update only the firstName property
+                                                                    name: e.value.name
                                                                 }
                                                             });
                                                             console.log("radio : ", formData)
@@ -1996,7 +2001,6 @@ function EditTravelRequestForm() {
                                             flightTicketReason: {
                                                 key: selectedReason.key,
                                                 name: selectedReason.name,
-                                                // name: e.value.name // Update only the firstName property
                                             }
                                         }));
                                     }} options={reasonList} optionLabel="name" optionValue="name" className="w-full" />

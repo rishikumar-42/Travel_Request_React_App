@@ -314,8 +314,9 @@ const NewSummary = ({
     issuerDate: new Date(item.issuerDate) || null,
     issuerNumber: item.issuerNumber || null,
     email: item.email || "",
-    firstName: item.firstName || "",
-    lastName: item.lastName || "",
+    // firstName: item.firstName || "",
+    // lastName: item.lastName || "",
+    name: item.name || "",
     employeeNumber: item.employeeNumber || "",
     costCenter: item.costCenter || "",
     entity: item.entity || "",
@@ -690,13 +691,17 @@ const NewSummary = ({
                 <span className="summary-label">Email:</span>
                 <span className="value">{item.email || "N/A"}</span>
               </div>
-              <div className="detail-item">
+              {/* <div className="detail-item">
                 <span className="summary-label">First Name:</span>
                 <span className="value">{item.firstName || "N/A"}</span>
               </div>
               <div className="detail-item">
                 <span className="summary-label">Last Name:</span>
                 <span className="value">{item.lastName || "N/A"}</span>
+              </div> */}
+              <div className="detail-item">
+                <span className="summary-label">Name:</span>
+                <span className="value">{item.name || "N/A"}</span>
               </div>
               <div className="detail-item">
                 <span className="summary-label">Employee Number:</span>
