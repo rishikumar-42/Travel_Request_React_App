@@ -14,6 +14,7 @@ import TravelRequestFormService from "../service/TravelRequestFormService.js";
 import { useNavigate } from "react-router-dom";
 import html2pdf from "html2pdf.js";
 import ReportTemplate from "./reportTemplate.js";
+import { generatePDF } from "./PdfMakeTemplate.js";
 
 const NewSummary = ({
   item = {},
@@ -1108,18 +1109,19 @@ const NewSummary = ({
                 disabled={loadingNew}
                 onClick={() => {
                   console.log("exporting....")
-                  const element = document.getElementById('report');
+                  // const element = document.getElementById('report');
 
-                  var opt = {
-                    margin: 4,
-                    filename: `${item.travelRequestId}`,
-                    image: { type: 'jpeg', quality: 0.98 },
-                    html2canvas: { scale: 2, dpi: 192, letterRendering: true },
-                    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-                  };
+                  // var opt = {
+                  //   margin: 4,
+                  //   filename: `${item.travelRequestId}`,
+                  //   image: { type: 'jpeg', quality: 0.98 },
+                  //   html2canvas: { scale: 2, dpi: 192, letterRendering: true },
+                  //   jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                  // };
 
-                  // New Promise-based usage:
-                  html2pdf().set(opt).from(element).save();
+                  // // New Promise-based usage:
+                  // html2pdf().set(opt).from(element).save();
+                  generatePDF(item,travelInfo,attachmentInfo);
                 }}
                 label="Export"
               />
