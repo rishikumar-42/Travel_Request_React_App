@@ -611,7 +611,7 @@ function TravelRequestForm() {
         positionTitle: "",
         travelType: "",
         travelPurpose: "",
-        participants: "",
+        participants: " ",
         destination: "",
         travelDepartureDate: null,
         travelArrivalDate: null,
@@ -1117,7 +1117,7 @@ function TravelRequestForm() {
                                 {errors.travelPurpose && !formData.travelPurpose && <span style={{ color: 'red' }}>{errors.travelPurpose}</span>}
                             </FloatLabel>
                             <FloatLabel className="w-50">
-                                <InputTextarea id="participants" maxLength={2000} className="full-width-textarea" value={formData.participants}
+                                <InputTextarea id="participants" maxLength={2000} className="full-width-textarea" value={formData.participants || " "}
                                     onChange={(e) => setFormData({
                                         ...formData,
                                         participants: e.target.value

@@ -82,7 +82,7 @@ const TravelRequestFormServiceLayer = {
 
     fetchReasonPicklist: async () => {
         try {
-            const response = await axios.get(`o/headless-admin-list-type/v1.0/list-type-definitions/by-external-reference-code/${process.env.REACT_APP_API_REASON_PICKLIST}`);
+            const response = await axios.get(`${process.env.REACT_APP_API_LIFERAY_BASE_URL}/o/headless-admin-list-type/v1.0/list-type-definitions/by-external-reference-code/${process.env.REACT_APP_API_REASON_PICKLIST}`);
             const reasonList = response.data.listTypeEntries || [];
             console.log("reason list : ", response.data);
             return reasonList;
@@ -94,7 +94,7 @@ const TravelRequestFormServiceLayer = {
     },
     fetchCurrencyPicklist: async () => {
         try {
-            const response = await axios.get(`o/headless-admin-list-type/v1.0/list-type-definitions/by-external-reference-code/${process.env.REACT_APP_API_CURRENCY_PICKLIST}`);
+            const response = await axios.get(`${process.env.REACT_APP_API_LIFERAY_BASE_URL}/o/headless-admin-list-type/v1.0/list-type-definitions/by-external-reference-code/${process.env.REACT_APP_API_CURRENCY_PICKLIST}`);
             const currencyList = response.data.listTypeEntries || [];
             console.log("currency list : ", response.data);
             return currencyList;
@@ -105,7 +105,7 @@ const TravelRequestFormServiceLayer = {
     },
     fetchPreferredTimePicklist: async () => {
         try {
-            const response = await axios.get(`o/headless-admin-list-type/v1.0/list-type-definitions/by-external-reference-code/${process.env.REACT_APP_API_PREFERRED_TIME_PICKLIST}`);
+            const response = await axios.get(`${process.env.REACT_APP_API_LIFERAY_BASE_URL}/o/headless-admin-list-type/v1.0/list-type-definitions/by-external-reference-code/${process.env.REACT_APP_API_PREFERRED_TIME_PICKLIST}`);
             const prefferedTimeList = response.data.listTypeEntries || [];
             console.log("currency list : ", response.data);
             return prefferedTimeList;
@@ -116,7 +116,7 @@ const TravelRequestFormServiceLayer = {
     },
     fetchFlightTypePicklist: async () => {
         try {
-            const response = await axios.get(`o/headless-admin-list-type/v1.0/list-type-definitions/by-external-reference-code/${process.env.REACT_APP_API_FLIGHT_TYPE_PICKLIST}`);
+            const response = await axios.get(`${process.env.REACT_APP_API_LIFERAY_BASE_URL}/o/headless-admin-list-type/v1.0/list-type-definitions/by-external-reference-code/${process.env.REACT_APP_API_FLIGHT_TYPE_PICKLIST}`);
             const reasonList = response.data.listTypeEntries || [];
             console.log("type list : ", response.data);
             return reasonList;
@@ -128,7 +128,7 @@ const TravelRequestFormServiceLayer = {
     },
     fetchTrainTicketTypePicklist: async () => {
         try {
-            const response = await axios.get(`o/headless-admin-list-type/v1.0/list-type-definitions/by-external-reference-code/${process.env.REACT_APP_API_TRAIN_TICKET_PICKLIST}`);
+            const response = await axios.get(`${process.env.REACT_APP_API_LIFERAY_BASE_URL}/o/headless-admin-list-type/v1.0/list-type-definitions/by-external-reference-code/${process.env.REACT_APP_API_TRAIN_TICKET_PICKLIST}`);
             const reasonList = response.data.listTypeEntries || [];
             console.log("tain ticket type list : ", response.data);
             return reasonList;

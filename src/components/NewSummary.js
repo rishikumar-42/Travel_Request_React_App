@@ -41,6 +41,19 @@ const NewSummary = ({
     Array.isArray(attachmentInfo) ? attachmentInfo : []
   );
 
+
+  useEffect(() => {
+    console.log("Initializing itineraries with:", travelInfo);
+    setItineraries(Array.isArray(travelInfo) ? travelInfo : []);
+  }, [travelInfo]);
+  
+  useEffect(() => {
+    console.log("Initializing attachments with:", attachmentInfo);
+    setAttachments(Array.isArray(attachmentInfo) ? attachmentInfo : []);
+  }, [attachmentInfo]);
+
+  
+  
   // const { auth, login } = useAuth(); // Access auth from context
   // const { username, password } = auth;
   // const authHeader = "Basic " + btoa(username + ":" + password);
@@ -324,7 +337,7 @@ const NewSummary = ({
     positionTitle: item.positionTitle || "",
     travelType: item.travelType || "",
     travelPurpose: item.travelPurpose || "",
-    participants: item.participants || "",
+    participants: item.participants || " ",
     destination: item.destination || "",
     travelDepartureDate: new Date(item.travelDepartureDate) || null,
     travelArrivalDate: new Date(item.travelArrivalDate) || null,
@@ -357,6 +370,7 @@ const NewSummary = ({
     attachmentRelation: attachments,
     // itineraryRelation: Array.isArray(travelInfo) ? travelInfo : []
   });
+  
 
   const setTimeZone = (dateString) => {
     const date = new Date(dateString);
@@ -405,9 +419,17 @@ const NewSummary = ({
     };
   };
 
+
+
   const handleFormSubmit = async () => {
     console.log("Submitting formData:", formData);
-    const formattedData = formatFormData(formData);
+    // const formattedData = formatFormData(formData);
+    const formattedData = formatFormData({
+      ...formData,
+      itineraryRelation: itineraries,
+      attachmentRelation: attachments,
+    });
+    
     setLoadingNew(true);
     try {
       let response;

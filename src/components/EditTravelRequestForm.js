@@ -688,7 +688,7 @@ function EditTravelRequestForm() {
         positionTitle: item.positionTitle || "",
         travelType: item.travelType || "",
         travelPurpose: item.travelPurpose || "",
-        participants: item.participants || "",
+        participants: item.participants || " ",
         destination: item.destination || "",
         travelDepartureDate: new Date(item.travelDepartureDate) || null,
         travelArrivalDate: new Date(item.travelArrivalDate) || null,
@@ -1277,7 +1277,7 @@ function EditTravelRequestForm() {
                                 {errors.travelPurpose && !formData.travelPurpose && <span style={{ color: 'red' }}>{errors.travelPurpose}</span>}
                             </FloatLabel>
                             <FloatLabel className="w-50">
-                                <InputTextarea id="participants" className="full-width-textarea" value={formData.participants}
+                                <InputTextarea id="participants" className="full-width-textarea" value={formData.participants || " "}
                                     onChange={(e) => setFormData({
                                         ...formData,
                                         participants: e.target.value
