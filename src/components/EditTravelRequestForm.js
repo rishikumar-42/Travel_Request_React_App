@@ -1214,7 +1214,7 @@ function EditTravelRequestForm() {
                             </div>
                         </div>
                     </div>
-                    <div className="d-flex justify-content-between align-items-stretch gap-3 mt-3">
+                    <div className="d-flex justify-content-between align-items-stretch gap-3 mt-3 px-3">
                         <div className="form-single-special">
                             <FloatLabel>
                                 <InputText type="text" id="costCenter" name="costCenter" value={formData.costCenter} readOnly />
