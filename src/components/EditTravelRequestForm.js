@@ -716,7 +716,9 @@ function EditTravelRequestForm() {
         hotelCheckOut: item.hotelCheckOut ? new Date(item.hotelCheckOut) : null,
         hotelNote: item.hotelNote || "",
         manager: item.manager || '',
+        managerName: item.managerName || '',
         hod: item.hod || '',
+        hodName: item.hodName || '',
         itineraryRelation: itineraries,
         attachmentRelation: attachments
         // itineraryRelation: Array.isArray(travelInfo) ? travelInfo : []
@@ -1013,7 +1015,8 @@ function EditTravelRequestForm() {
             if (user.email.toLowerCase() === (typeof value === 'object' ? value.email.toLowerCase() : value.toLowerCase())) {
                 setFormData({
                     ...formData,
-                    manager: user.email
+                    manager: user.email,
+                    managerName: user.name,
                 });
                 return true;
             }
@@ -1033,7 +1036,8 @@ function EditTravelRequestForm() {
             if (user.email.toLowerCase() === (typeof value === 'object' ? value.email.toLowerCase() : value.toLowerCase())) {
                 setFormData({
                     ...formData,
-                    hod: user.email
+                    hod: user.email,
+                    hodName: user.name,
                 });
                 return true;
             }
@@ -1409,7 +1413,8 @@ function EditTravelRequestForm() {
                                             setSelectedItem(e.value);
                                             setFormData({
                                                 ...formData,
-                                                manager: e.value.email
+                                                manager: e.value.email,
+                                                managerName: e.value.name,
                                             });
                                             console.log("value : " + JSON.stringify(e.value.email));
                                         }}
@@ -1444,7 +1449,8 @@ function EditTravelRequestForm() {
                                             setSelectedItem2(e.value);
                                             setFormData({
                                                 ...formData, // Spread the existing formData
-                                                hod: e.value.email
+                                                hod: e.value.email,
+                                                hodName: e.value.name
                                             });
                                             console.log("value : " + JSON.stringify(e.value.email));
                                         }}

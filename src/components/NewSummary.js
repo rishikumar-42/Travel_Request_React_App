@@ -365,7 +365,9 @@ const NewSummary = ({
     hotelCheckOut: item.hotelCheckOut ? new Date(item.hotelCheckOut) : null,
     hotelNote: item.hotelNote || "",
     manager: item.manager || "",
+    managerName: item.managerName || "",
     hod: item.hod || "",
+    hodName: item.hodName || "",
     itineraryRelation: itineraries,
     attachmentRelation: attachments,
     // itineraryRelation: Array.isArray(travelInfo) ? travelInfo : []
