@@ -175,3 +175,42 @@
         padding-left: 5px;
     }
 }
+
+.user-icon {
+    font-size: 14px;
+}
+
+.lfr-layout-structure-item-row {
+    font-size: 10px !important;
+    margin-left: .875rem !important;
+    position: absolute;
+    top: 0 !important;
+    right: 4px;
+}
+
+div.personal-menu-dropdown .btn>span.sticker-user-icon {
+    height: 32px;
+    margin-top: 0;
+    width: 30px;
+}
+
+.user-icon-color-2 {
+    margin-left: -1px !important;
+    margin-top: -2px !important;
+}
+
+.sticker-lg {
+    font-size: 1.25rem;
+    height: 1.5rem;
+    line-height: 2.5rem;
+    width: 2.5rem;
+}
+
+body .user-avatar-link .panel-notifications-count {
+    display: none;
+    margin: 0;
+    max-width: none;
+    position: absolute;
+    right: calc(100% - 0.7rem);
+    top: -0.4rem;
+}

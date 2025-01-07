@@ -458,7 +458,7 @@ const NewSummary = ({
       showMessage(
         "error",
         "Error",
-        `Error response : ${error.response.data.title}`
+        // `Error response : ${error.response.data.title}`
       );
       // setOpen(true);
     } finally {
@@ -572,7 +572,7 @@ const NewSummary = ({
       showMessage(
         "error",
         "Error",
-        `Error response : ${err.response.data.title}`
+        // `Error response : ${err.response.data.title}`
       );
     } finally {
       setLoadingNew(false);
@@ -595,28 +595,32 @@ const NewSummary = ({
       item.approver1Comment = comment;
       TravelRequestFormServiceLayer.updatePatchFormData(item.id, {
         approver1Comment: comment,
-        managerActionTime: new Date()
+        managerActionTime: new Date(),
+        participants: item.participants || " ",
       });
     } else if (dialogType === "reject") {
       handleTransition("reject");
       item.approver1Comment = comment;
       TravelRequestFormServiceLayer.updatePatchFormData(item.id, {
         approver1Comment: comment,
-        managerActionTime: new Date()
+        managerActionTime: new Date(),
+        participants: item.participants || " ",
       });
     } else if (dialogType === "Approve") {
       handleTransition("Approve");
       item.approver1Comment = comment;
       TravelRequestFormServiceLayer.updatePatchFormData(item.id, {
         approver2Comment: comment,
-        hodActionTime: new Date()
+        hodActionTime: new Date(),
+        participants: item.participants || " ",
       });
     } else if (dialogType === "REJECT") {
       handleTransition("REJECT");
       item.approver1Comment = comment;
       TravelRequestFormServiceLayer.updatePatchFormData(item.id, {
         approver2Comment: comment,
-        hodActionTime: new Date()
+        hodActionTime: new Date(),
+        participants: item.participants || " ",
       });
     }
   };
@@ -633,11 +637,13 @@ const NewSummary = ({
         await TravelRequestFormServiceLayer.updatePatchFormData(item.id, {
           approveStatus: { key: "cancelled" },
           numericStatus: 5,
+          participants: item.participants || " ",
         });
       } else if (item.approveStatus?.key === "pendingAtApprover1") {
         await TravelRequestFormServiceLayer.updatePatchFormData(item.id, {
           approveStatus: { key: "cancelled" },
           numericStatus: 5,
+          participants: item.participants || " ",
         });
         const currentTask = await fetchWorkflowInstances();
         console.log(currentTask);
@@ -666,7 +672,7 @@ const NewSummary = ({
       showMessage(
         "error",
         "Error",
-        `Error response : ${error.response.data.title}`
+        // `Error response : ${error.response.data.title}`
       );
     } finally {
       setLoadingNew(false);
