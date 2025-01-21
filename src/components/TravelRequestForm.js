@@ -647,7 +647,9 @@ function TravelRequestForm() {
         hodName: '',
         itineraryRelation: [],
         attachmentRelation: [],
-        approveStatus: {}
+        approveStatus: {},
+        creationDate: new Date(),
+        submit: "yes",
     });
 
     const [errors, setErrors] = useState({});
@@ -780,7 +782,6 @@ function TravelRequestForm() {
     // Handle form submission
     const handleFormSubmit = async (e) => {
         e.preventDefault();
-        setIsFormSubmit(true)
         setPreviewVisible(false)
         if (validateForm()) {
             setErrors({});
@@ -789,6 +790,7 @@ function TravelRequestForm() {
             return;
         }
         console.log("Form submission started");
+        setIsFormSubmit(true)
         setLoading(true);
         const uniqId = await createUniqueId();
         console.log("unique Id : ", uniqId);
@@ -931,7 +933,7 @@ function TravelRequestForm() {
                                 <InputText id="issuer" value={formData.issuer}
                                     maxLength={250}
                                     // required
-                                    tooltip="Enter your issuer" tooltipOptions={{ position: 'bottom' }}
+                                    // tooltip="Enter your issuer" tooltipOptions={{ position: 'bottom' }}
                                     onChange={(e) => setFormData({
                                         ...formData,
                                         issuer: e.target.value

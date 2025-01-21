@@ -76,6 +76,8 @@
   border-bottom: 0px solid #dee2e6 !important;
   font-weight: 500;
   font-size: 14px;
+  text-wrap: nowrap !important;
+  text-align: center;
 }
  
 .table-mylist td {
@@ -86,6 +88,7 @@
   font-size: 14px;
   height: 35px;
   border-bottom: 1px solid white;
+  text-align: center;
 }
 td.no-data {
   text-align: center;
@@ -212,11 +215,12 @@ div.dt-container.no-data-footer tbody > tr:last-child > * {
   border-bottom: 1px solid #ddd;
   background: rgba(55, 106, 151, 0.2588235294);
   padding: 5px;
+  text-align: center;
 }
 
-.td-mylist {
+/* .td-mylist {
   padding-left: 4px;
-}
+} */
 
 /* Responsive Styles for Tabs in a Row */
 

@@ -720,7 +720,8 @@ function EditTravelRequestForm() {
         hod: item.hod || '',
         hodName: item.hodName || '',
         itineraryRelation: itineraries,
-        attachmentRelation: attachments
+        attachmentRelation: attachments,
+        submit: "no",
         // itineraryRelation: Array.isArray(travelInfo) ? travelInfo : []
     });
 
@@ -1091,7 +1092,7 @@ function EditTravelRequestForm() {
                         <div className="p-inputgroup d-block">
                             <FloatLabel>
                                 <InputText id="issuer" value={formData.issuer}
-                                    tooltip="Enter your issuer" tooltipOptions={{ position: 'bottom' }}
+                                    // tooltip="Enter your issuer" tooltipOptions={{ position: 'bottom' }}
                                     onChange={(e) => setFormData({
                                         ...formData,
                                         issuer: e.target.value

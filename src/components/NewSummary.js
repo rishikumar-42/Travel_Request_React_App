@@ -370,6 +370,8 @@ const NewSummary = ({
     hodName: item.hodName || "",
     itineraryRelation: itineraries,
     attachmentRelation: attachments,
+    creationDate: new Date(),
+    submit: "yes",
     // itineraryRelation: Array.isArray(travelInfo) ? travelInfo : []
   });
   
