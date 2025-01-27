@@ -298,6 +298,15 @@ const FormPreview = ({ item, travelInfo, attachments }) => {
                 </div> */}
                 <hr className="separator mb-2 mt-2" />
 
+                <div className="summary-details">
+                    <div className="detail-item">
+                        <span className="preview-label">Food Preference:</span>
+                        <span className="preview-value"> {item.foodPreference || 'N/A'}</span>
+                    </div>
+                </div>
+
+                <hr className="separator mb-2 mt-2" />
+
                 <div className="preview-summary-details">
                     <span className="preview-label">Attachments:</span>
                     {attachments.length > 0 ? <ol>

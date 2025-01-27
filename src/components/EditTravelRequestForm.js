@@ -698,6 +698,7 @@ function EditTravelRequestForm() {
         travelBudget: item.travelBudget || null,
         flightTicketReason: item.flightTicketReason,
         flightTicketType: item.flightTicketType,
+        foodPreference: item.foodPreference || "",
         carRentalFrom: item.carRentalFrom || "",
         carRentalTo: item.carRentalTo || "",
         carRentalOn: new Date(item.carRentalOn) || null,
@@ -742,7 +743,7 @@ function EditTravelRequestForm() {
         if (!formData.travelDepartureDate) newErrors.travelDepartureDate = "Departure date is required.";
         if (!formData.travelArrivalDate) newErrors.travelArrivalDate = "Arrival date is required.";
         if (formData.travelCurrency.key === undefined) newErrors.travelCurrency = "Travel Currency is required.";
-        if (!formData.travelBudget) newErrors.travelBudget = "Travel Budget is required.";
+        // if (!formData.travelBudget) newErrors.travelBudget = "Travel Budget is required.";
 
         if (!isEmployeeEmailValid) newErrors.email = "Email not valid.";
         if (!isManagerEmailValid) newErrors.manager = "Email not valid.";
@@ -1138,10 +1139,10 @@ function EditTravelRequestForm() {
                         <div className="tr_identification">
                             <div className="d-flex justify-content-between align-items-stretch gap-3 mt-4">
                                 <div className="form-single">
-                                    <FloatLabel>
+                                    <FloatLabel className="w-100">
                                         <AutoComplete
                                             id="employeeEmail"
-                                            className="d-flex"
+                                            className="w-100"
                                             value={selectedEmployee}
                                             suggestions={employeeDropDownSuggestions}
                                             completeMethod={searchEmployee}
@@ -1234,11 +1235,11 @@ function EditTravelRequestForm() {
                         </div>
                         <div className="form-single-special">
                             <FloatLabel>
-                                <InputText type="text" id="positionTitle" name="positionTitle" value={formData.positionTitle} 
-                                onChange={(e) => setFormData({
-                                    ...formData,
-                                    positionTitle: e.target.value
-                                })} />
+                                <InputText type="text" id="positionTitle" name="positionTitle" value={formData.positionTitle}
+                                    onChange={(e) => setFormData({
+                                        ...formData,
+                                        positionTitle: e.target.value
+                                    })} />
                                 <label htmlFor="positionTitle" className="small">Position Title</label>
                             </FloatLabel>
                         </div>
@@ -1336,7 +1337,7 @@ function EditTravelRequestForm() {
                             <div className="w-25">
                                 <FloatLabel>
                                     <label htmlFor="estimatedduration" className="mr-2 small">Estimated Duration<span className="text-danger px-1">*</span></label>
-                                    <InputText id="estimatedduration" className="w-100" value={formData.travelEstimatedDuration} readOnly />
+                                    <InputNumber id="estimatedduration" className="w-100" value={formData.travelEstimatedDuration} readOnly />
                                 </FloatLabel>
                             </div>
                         </div>
@@ -1367,9 +1368,9 @@ function EditTravelRequestForm() {
                                             ...formData,
                                             travelBudget: e.target.value
                                         })} />
-                                    <label htmlFor="budgetAmount" className="small">Budget Amount<span className="text-danger px-1">*</span></label>
+                                    <label htmlFor="budgetAmount" className="small">Budget Amount</label>
                                 </FloatLabel>
-                                {errors.travelBudget && !formData.travelBudget && <span style={{ color: 'red' }}>{errors.travelBudget}</span>}
+                                {/* {errors.travelBudget && !formData.travelBudget && <span style={{ color: 'red' }}>{errors.travelBudget}</span>} */}
                             </div>
                             <div className="flex-grow-1">
                                 <FloatLabel >
@@ -1397,7 +1398,7 @@ function EditTravelRequestForm() {
                                         suggestions={dropDownSuggestions}
                                         completeMethod={searchItem}
                                         field="email"
-                                        className="w-100 d-flex"
+                                        className="w-100"
                                         // onBlur={handleBlur2}
                                         onChange={(e) => {
                                             setSelectedItem(e.value);
@@ -1516,6 +1517,13 @@ function EditTravelRequestForm() {
                                         }}
                                         placeholder="CheckIn"
                                         hideMinutes={(e) => e % 10 !== 0}
+                                        shouldDisableDate={(date) => {
+                                            const travelArrivalDate = formData.travelArrivalDate ? new Date(formData.travelArrivalDate).setHours(0, 0, 0, 0) : null;
+                                            const travelDepartureDate = formData.travelDepartureDate ? new Date(formData.travelDepartureDate).setHours(0, 0, 0, 0) : null;
+                                            // console.log("test : ", travelArrivalDate , " , ", travelDepartureDate    )
+                                            return (date > travelArrivalDate) || ( date < travelDepartureDate );// Disable dates before check-in
+                                            }
+                                        }
                                     />
                                     {errors.hotelCheckIn && !formData.hotelCheckIn && <span style={{ color: 'red' }}>{errors.hotelCheckIn}</span>}
                                 </div>
@@ -1532,9 +1540,14 @@ function EditTravelRequestForm() {
                                         }}
                                         placeholder="CheckOut"
                                         hideMinutes={(e) => e % 10 !== 0}
+                                        // shouldDisableDate={(date) => {
+                                        //     const checkInDate = formData.hotelCheckIn ? new Date(formData.hotelCheckIn) : null;
+                                        //     return checkInDate && date < checkInDate; // Disable dates before check-in
+                                        // }}
                                         shouldDisableDate={(date) => {
-                                            const checkInDate = formData.hotelCheckIn ? new Date(formData.hotelCheckIn) : null;
-                                            return checkInDate && date < checkInDate; // Disable dates before check-in
+                                            const checkInDate = formData.hotelCheckIn ? new Date(formData.hotelCheckIn) : (formData.travelDepartureDate ? new Date(formData.travelDepartureDate) : null);
+                                            const travelArrivalDate = formData.travelArrivalDate ? new Date(formData.travelArrivalDate) : null;
+                                            return ( date <= checkInDate) || ( date > travelArrivalDate ); // Disable dates before check-in
                                         }}
                                     />
                                     {errors.hotelCheckOut && !formData.hotelCheckOut && <span style={{ color: 'red' }}>{errors.hotelCheckOut}</span>}
@@ -1555,7 +1568,7 @@ function EditTravelRequestForm() {
                                             value={formData.hotelNote}
                                             onChange={(e) => setFormData({
                                                 ...formData, // Spread the existing formData
-                                                hotelNote: e.target.value 
+                                                hotelNote: e.target.value
                                             })} />
                                     </FloatLabel>
                                 </div>
@@ -1625,7 +1638,7 @@ function EditTravelRequestForm() {
                                     </div>
                                     <div className="calendar-item">
                                         <FloatLabel>
-                                            <Calendar id="on" dateFormat="dd-M-yy" value={formData.carRentalOn}
+                                            <Calendar id="on" minDate={formData.travelDepartureDate} maxDate={formData.travelArrivalDate} dateFormat="dd-M-yy" value={formData.carRentalOn}
                                                 onChange={(e) => setFormData({
                                                     ...formData,
                                                     carRentalOn: setTimeZone(e.value),
@@ -1637,7 +1650,7 @@ function EditTravelRequestForm() {
                                     </div>
                                     <div className="calendar-item">
                                         <FloatLabel>
-                                            <Calendar id="until" minDate={formData.carRentalOn} dateFormat="dd-M-yy" value={formData.carRentalUntil}
+                                            <Calendar id="until" minDate={formData.carRentalOn ? formData.carRentalOn : formData.travelDepartureDate} maxDate={formData.travelArrivalDate} dateFormat="dd-M-yy" value={formData.carRentalUntil}
                                                 onChange={(e) => setFormData({
                                                     ...formData,
                                                     carRentalUntil: setTimeZone(e.value)
@@ -1820,6 +1833,15 @@ function EditTravelRequestForm() {
 
 
                                 <br></br>
+                                <div className="form-dropdown-container d-flex gap-3 mx-2 reason-dropdown align-items-center mt-1">
+                                    <label htmlFor="reason">Food Preference</label>
+                                    <InputText type="text" maxLength={250} id="foodPreference" name="foodPreference"
+                                        value={formData.foodPreference}
+                                        onChange={(e) => setFormData({
+                                            ...formData,
+                                            foodPreference: e.target.value
+                                        })} className="w-full" />
+                                </div>
                                 <div className="addbutton mx-2">
                                     <Button onClick={() => {
                                         setShowItinerary(!showItinerary);
@@ -1848,7 +1870,7 @@ function EditTravelRequestForm() {
                                                     </div>
                                                     <div className="calendar-item col-width">
                                                         <FloatLabel >
-                                                            <Calendar id="onwardDepartureDate" dateFormat="dd-M-yy" value={newItinerary.onwardDepartureDate} onChange={(e) => handleInputChange('onwardDepartureDate', e)} showIcon />
+                                                            <Calendar id="onwardDepartureDate" minDate={formData.travelDepartureDate} maxDate={formData.travelArrivalDate} dateFormat="dd-M-yy" value={newItinerary.onwardDepartureDate} onChange={(e) => handleInputChange('onwardDepartureDate', e)} showIcon />
                                                             <label htmlFor="onwardDepartureDate">Departure Date</label>
                                                         </FloatLabel>
                                                     </div>
@@ -1877,7 +1899,18 @@ function EditTravelRequestForm() {
                                                 <div className="form-row">
                                                     <div className="form-group SRT d-flex">
                                                         <label htmlFor="showReturnFields mr-2">Show Return Trip</label>
-                                                        <InputSwitch checked={showReturnFields} className="mx-2" onChange={(e) => setShowReturnFields(e.value)} />
+                                                        <InputSwitch checked={showReturnFields} className="mx-2" 
+                                                        onChange={(e) => {
+                                                            setShowReturnFields(e.value)
+                                                            if(newItinerary.onwardJourney.includes("-") && e.value){
+                                                                const tempJourney = newItinerary.onwardJourney.split("-").reverse().join("-");
+                                                                console.log("temp : ", tempJourney);
+                                                                setNewItinerary({
+                                                                    ...newItinerary,
+                                                                    returnJourney: tempJourney,
+                                                                });
+                                                            }
+                                                        }} />
                                                     </div>
                                                 </div>
 
@@ -1892,7 +1925,7 @@ function EditTravelRequestForm() {
                                                             </div>
                                                             <div className="col-width">
                                                                 <FloatLabel>
-                                                                    <Calendar id="returnArrivalDate" minDate={newItinerary.onwardDepartureDate} dateFormat="dd-M-yy" value={newItinerary.returnArrivalDate} onChange={(e) => handleInputChange('returnArrivalDate', e)} showIcon />
+                                                                    <Calendar id="returnArrivalDate" minDate={newItinerary.onwardDepartureDate ? newItinerary.onwardDepartureDate : formData.travelDepartureDate} maxDate={formData.travelArrivalDate} dateFormat="dd-M-yy" value={newItinerary.returnArrivalDate} onChange={(e) => handleInputChange('returnArrivalDate', e)} showIcon />
                                                                     <label htmlFor="returnArrivalDate">Arrival Date</label>
                                                                 </FloatLabel>
                                                             </div>

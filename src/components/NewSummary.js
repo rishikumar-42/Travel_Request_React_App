@@ -46,14 +46,14 @@ const NewSummary = ({
     console.log("Initializing itineraries with:", travelInfo);
     setItineraries(Array.isArray(travelInfo) ? travelInfo : []);
   }, [travelInfo]);
-  
+
   useEffect(() => {
     console.log("Initializing attachments with:", attachmentInfo);
     setAttachments(Array.isArray(attachmentInfo) ? attachmentInfo : []);
   }, [attachmentInfo]);
 
-  
-  
+
+
   // const { auth, login } = useAuth(); // Access auth from context
   // const { username, password } = auth;
   // const authHeader = "Basic " + btoa(username + ":" + password);
@@ -249,7 +249,7 @@ const NewSummary = ({
     initializeWorkflow();
   }, [item.id]);
 
-  
+
 
   // useEffect(() => {
   //   const fetchWorkflowTasks = async () => {
@@ -374,7 +374,7 @@ const NewSummary = ({
     submit: "yes",
     // itineraryRelation: Array.isArray(travelInfo) ? travelInfo : []
   });
-  
+
 
   const setTimeZone = (dateString) => {
     const date = new Date(dateString);
@@ -389,7 +389,7 @@ const NewSummary = ({
     date.setHours(date.getHours() - offsetInHours);
     // date.setHours(date.getHours() + 6);
     return date;
-}
+  }
 
   const formatFormData = (data) => {
     return {
@@ -433,7 +433,7 @@ const NewSummary = ({
       itineraryRelation: itineraries,
       attachmentRelation: attachments,
     });
-    
+
     setLoadingNew(true);
     try {
       let response;
@@ -557,12 +557,24 @@ const NewSummary = ({
           },
         }
       );
+
+      var msg = '';
+      var header = '';
+      if(transitionName == 'ok' || transitionName == 'Approve'){
+        msg = `Travel Request Id ${formData.travelRequestId} is Approved `;
+        header = 'Approved';
+      }
+      if(transitionName == 'reject' || transitionName == 'Reject'){
+        msg = `Travel Request Id ${formData.travelRequestId} is Rejected `;
+        header = 'Rejected';
+      }
       // alert(`${transitionName.charAt(0).toUpperCase() + transitionName.slice(1)} action successful.`);
       showMessage(
         "success",
-        "Success",
-        `${transitionName.charAt(0).toUpperCase() + transitionName.slice(1)
-        } action successful.`
+        header,
+        // `${transitionName.charAt(0).toUpperCase() + transitionName.slice(1)
+        // } action successful.`
+        msg
       );
       setIsTaskCompleted(true);
       setComment(""); // Clear comment after successful submission
@@ -990,6 +1002,17 @@ const NewSummary = ({
           <hr className="separator mb-2 mt-2" />
 
           <div className="summary-details">
+            <div className="detail-item">
+              <span className="summary-label">Food Preference :</span>
+              <span className="value">
+                {item.foodPreference || "N/A"}
+              </span>
+            </div>
+          </div>
+
+          <hr className="separator mb-2 mt-2" />
+
+          <div className="summary-details">
             <span className="summary-label">Attachments:</span>
             {attachmentInfo.length > 0 ? (
               <ol>
@@ -1137,7 +1160,7 @@ const NewSummary = ({
             {(item.approveStatus?.key === "approved" && (
               // <button className="back-button" onClick={handleCancel}>Cancel</button>
               <Button
-                className="back-buttons"
+                className="export-button"
                 disabled={loadingNew}
                 onClick={() => {
                   console.log("exporting....")
@@ -1153,9 +1176,9 @@ const NewSummary = ({
 
                   // // New Promise-based usage:
                   // html2pdf().set(opt).from(element).save();
-                  generatePDF(item,travelInfo,attachmentInfo);
+                  generatePDF(item, travelInfo, attachmentInfo);
                 }}
-                label="Export"
+                label="Download PDF"
               />
             ))}
             {loadingNew && (
@@ -1225,7 +1248,7 @@ const NewSummary = ({
               <h2>
                 {dialogType === "ok" || dialogType === "Approve"
                   ? "Approve"
-                  : "Reject"}
+                  : <>Reject<span className="text-danger px-1">*</span></>}
               </h2>
               <textarea
                 value={comment}
@@ -1238,7 +1261,7 @@ const NewSummary = ({
                 </button>
                 <button
                   className="done-dialog"
-                  disabled={loadingNew}
+                  disabled={loadingNew || ((dialogType === "ok" || dialogType === "Approve") ? false : !comment ) }
                   onClick={handleDialogSubmit}
                 >
                   Done
