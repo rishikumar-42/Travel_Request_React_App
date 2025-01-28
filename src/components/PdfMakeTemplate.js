@@ -1,12 +1,34 @@
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
+import amphenolLogo from './logo/amphenol_logo.png';  // Import the image
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
-export const generatePDF = (item = {}, travelInfo = [], attachmentInfo = [],) => {
+export const generatePDF = async (item = {}, travelInfo = [], attachmentInfo = [],) => {
 
-    const imageBase64 = 'iVBORw0KGgoAAAANSUhEUgAAAJYAAAAcCAYAAACDKkZcAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAS8SURBVHgB7ZvhVdswEIAPHv+bDeoNmk5QMwFsQJgAOgHpBIQJEiYgTGBvAJ3AZoKkE6i6Wqby+U46J7jhUX3v6VFL59PpdD5ZVgoQwBiTG55r+OBwY4cEC+er48g9F0L9GSQSAWKBdS7UY4R+hkRCQAwsGzgz+2cCMpeQSAiEMlZsubuCRELghKu02SqD/jJ4D913rgm+tB0dHZUg4PTkfp2VX7m2GTTB22bFZ1vubHvt3Z+7PjNXhW33Up9Mf1sru3ZtuOH4Rvp7DNkv4Wz/Rux6bPuK3Iv9z4gtKnsi45vtahOx64unQ2WXGjSS2QliIG1I3SKiJxf0PBmZC3fvTUBm6RwR66/CyYj0d6vUZZyuKqCr4HQ5fRPXV4wH0wSQxp+ViY+vkGxyOjPXZ4xqgF1G6owa2j4VC1K/iRjNTc7ShEGdqglQOv7pjXS1+mIUSp+GqAwziYYfX6HQJ9kUe1A4LhR2GakzykxSYJrlisXI38EweJ5M3NkoV5l+pmT7DvTn65K43kGX1q5bQcfSNNmiYtqLAf4cbJPTVwl6HgJ29XQZZWAtGUUTr50aXgwMrIromxqeByK3YGS0wbAguuaMzEapi/Y5D8kY/kHtjC2gJx/DJiczY2Q6fnJy14xcEbMLKKYfpWvSviLt4nJolBnO8Ok8IzITRmau6G8p2MYF6jSi61bQtZHsMvwEZko9yz3GJ9rk2ivSXoGA4QM16Ktjajh0dwTIOnLd7ia0cAN4Ide1vztE7PUWmp3OUO6Eem7jMYUw90L9c+CeM07WNJmsU6Dv2xzi3A21yfWVKfUgK6YuD8j3PjdwRzh0sKUtOMl+lkLnBXeIh8IG5LNQX1sH03FksIOuCDSbY/BWoCNTyGxgOBlTJ45tF1/RwDon17UtuMZCBEyFn60BL/C+qCPt1FkJGeqrTyHh18Ay/BFOZssN6MAjnjkkYtTQZP33xmRg+6+QsJ+xLmA/8P45vC/w3WXi3s86mGbDkZHqLbw93Pvjoc9Za6Yuk4TdO9lEoeOVY+/GHPYjM4FvWgdEeiE/Z+p2eYeKQXVOjbyLnrodVltim4mdcBujmlSHEovm3btDuyvMmbYftpwGCvfUcZN1aJam/+kCr+kSX7/JeVifFXQzIQbVA2NTbv882VJ4ZcyDfrrDxaDmfIU2zIlsSXftlHYp5Aaw4JYQr0N0EH7X8Z8+jOxreF9kthTWXnRkDY29V9BP/fcwAuhD2zdu5f1Azm3BU4cSmqDLoP9w19A83GOBu3j/gB+Z2XJu7WqzLGZMLrtGl/ITF6E05T6GggpxDnuEgb94OADtxIU2ITWM+7kEdeMnGd/POGGhDP89lhX2wc0frjyYGTPo2pUHbr3U2IVLIefwNegomTrtLvJfEXu6altOYw/SPqBuW75C+CNkS2nLV+3PXfbBBQgGlyZbl9DYtVLI/lkKj6AfINpBoRx9sduSf5ekndum1kSuBp5n0ibJvYIT5J5MDPgcurbhREtLPme7xE9yXQNvC34TXDg7/N9OYV+4e1xHsr3Wn0NswvqZO/LJofsbua3TU+5g18fBKA5DveOTxIicwH/GmO8tib/E/pdOIrETKbASo5ACKzEKKbASo/AbtFaslWUaRSgAAAAASUVORK5CYII=';
+    const convertToBase64 = (url) => {
+        return new Promise((resolve, reject) => {
+          fetch(url)
+            .then(response => response.blob())
+            .then(blob => {
+              const reader = new FileReader();
+      
+              reader.onloadend = () => {
+                resolve(reader.result); // Resolve with Base64 string
+              };
+      
+              reader.onerror = (error) => {
+                reject(error); // Reject on error
+              };
+      
+              reader.readAsDataURL(blob); // Start reading the file as Base64
+            })
+            .catch(error => reject(error)); // Reject if fetch fails
+        });
+      };
 
+    const base64 = await convertToBase64(amphenolLogo);
+    
     const OnwardJourneyLink = (rowData) => {
         console.log("url : ", rowData.contentUrl);
         let urlObj = new URL(rowData.contentUrl, `${process.env.REACT_APP_API_LIFERAY_BASE_URL}`);
@@ -77,37 +99,23 @@ export const generatePDF = (item = {}, travelInfo = [], attachmentInfo = [],) =>
                 ],
                 // absolutePosition: { x: 0, y: 10 }
             },
-            // {
-            //     image: `data:image/png;base64,${imageBase64}`,
-            //     width: 50,
-            //     height: 50
-            // },
-            // {
-            //     text: 'Travel Requisition',
-            //     style: 'mainHeader',
-            //     alignment: 'center',
-            //     absolutePosition: { x: 0, y: 48 },
-            //     lineHeight: 1.5
-            // },
             {
                 columns: [
                     {
-                        image: `data:image/png;base64,${imageBase64}`, // Your base64 image here
+                        image: `${base64}`, // Your base64 image here
                         width: 80,  // Set the width of the image
                         height: 16, // Set the height of the image
-                        alignment: 'left', // Align the image to the left (optional, as it's the default)
-                        // absolutePosition: { x: 0, y: 25 },
+                        alignment: 'left',
                         margin: [55, 0, 0, 0] // Add margin to the right of the image for spacing
                     },
                     {
                         text: 'Travel Requisition',
                         style: 'mainHeader',
-                        alignment: 'center', // Align text to the left
+                        margin: [140, 0, 0, 0],
                         lineHeight: 1.5,
                     }
                 ],
-                 // Position the entire row of image and text
-                 absolutePosition: { x: 0, y: 48 }
+                absolutePosition: { x: 0, y: 48 }
             },
             {
                 table: {
