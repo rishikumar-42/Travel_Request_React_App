@@ -77,9 +77,9 @@ function EditTravelRequestForm() {
         navigate('/MyList');
     };
 
-    const carRentalCategorySwitch = item.carRentalCategory !== '';
-    const HotelSwitch = item.hotelLocation !== '';
-    const personCarSwitch = item.personalCarDrivingLicenseNumber !== '';
+    const carRentalCategorySwitch = item.carRentalCategory !== '' && item.carRentalCategory != null;
+    const HotelSwitch = item.hotelLocation !== '' && item.hotelLocation != null;
+    const personCarSwitch = item.personalCarDrivingLicenseNumber !== '' && item.personalCarDrivingLicenseNumber != null;
     const flightticketSwitch = item.flightTicketType !== undefined;
     const trainTicketSwitch = item.trainTicketType !== undefined;
     console.log("train switch : ", item.trainTicketType !== undefined)
