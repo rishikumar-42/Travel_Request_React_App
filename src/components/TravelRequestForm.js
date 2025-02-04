@@ -33,7 +33,7 @@ import FormPreview from "./FormPreview.js";
 import { useNavigate } from 'react-router-dom';
 import { Divider } from "@mui/material";
 import { SpaceBar } from "@mui/icons-material";
-import { color } from "@mui/system";
+import { color, width } from "@mui/system";
 import ConfirmationDialog from './ConfirmationDialog';
 import { DatePicker, Stack } from 'rsuite';
 import 'rsuite/dist/rsuite.min.css'
@@ -71,6 +71,7 @@ function TravelRequestForm() {
         onwardPreferredTime: '',
         onwardJourneyNote: '',
         onwardTransportNumber: '',
+        budget: null,
         returnJourney: '',
         returnArrivalDate: null,
         returnPreferredTime: '',
@@ -454,19 +455,26 @@ function TravelRequestForm() {
     }
 
     const handleInputChange = (name, e) => {
-        const { value } = e.target;
-        console.log(name, " : ", value);
-        if (name === 'onwardDepartureDate') {
+        if (name === 'budget') {
             setNewItinerary({
                 ...newItinerary,
-                returnArrivalDate: null,
-                [name]: value,
+                [name]: e.value,
             });
         } else {
-            setNewItinerary({
-                ...newItinerary,
-                [name]: value,
-            });
+            const { value } = e.target;
+            console.log(name, " : ", value);
+            if (name === 'onwardDepartureDate') {
+                setNewItinerary({
+                    ...newItinerary,
+                    returnArrivalDate: null,
+                    [name]: value,
+                });
+            } else {
+                setNewItinerary({
+                    ...newItinerary,
+                    [name]: value,
+                });
+            }
         }
     };
 
@@ -559,6 +567,7 @@ function TravelRequestForm() {
             onwardPreferredTime: '',
             onwardJourneyNote: '',
             onwardTransportNumber: '',
+            budget: null,
             returnJourney: '',
             returnArrivalDate: null,
             returnPreferredTime: '',
@@ -756,9 +765,9 @@ function TravelRequestForm() {
     useEffect(() => {
         console.log("Itenarary : ", newItinerary);
         console.log("show ", showReturnFields);
-        if (newItinerary.onwardJourney !== '' && newItinerary.onwardDepartureDate !== null && newItinerary.onwardPreferredTime !== null && newItinerary.onwardTransportNumber !== '' && !showReturnFields) {
+        if (newItinerary.onwardJourney !== '' && newItinerary.onwardDepartureDate !== null && newItinerary.onwardPreferredTime !== null && newItinerary.onwardTransportNumber !== '' && newItinerary.budget > 0 && !showReturnFields) {
             setSaveItineraryFlag(false)
-        } else if (newItinerary.onwardJourney !== '' && newItinerary.onwardDepartureDate !== null && newItinerary.onwardPreferredTime !== null && newItinerary.onwardTransportNumber !== '' && showReturnFields && newItinerary.returnJourney !== '' && newItinerary.returnArrivalDate !== null && newItinerary.returnPreferredTime !== null && newItinerary.returnTransportNumber !== '') {
+        } else if (newItinerary.onwardJourney !== '' && newItinerary.onwardDepartureDate !== null && newItinerary.onwardPreferredTime !== null && newItinerary.onwardTransportNumber !== '' && newItinerary.budget > 0 && showReturnFields && newItinerary.returnJourney !== '' && newItinerary.returnArrivalDate !== null && newItinerary.returnPreferredTime !== null && newItinerary.returnTransportNumber !== '') {
             setSaveItineraryFlag(false)
         } else {
             setSaveItineraryFlag(true)
@@ -1347,8 +1356,8 @@ function TravelRequestForm() {
                                             const travelArrivalDate = formData.travelArrivalDate ? new Date(formData.travelArrivalDate).setHours(0, 0, 0, 0) : null;
                                             const travelDepartureDate = formData.travelDepartureDate ? new Date(formData.travelDepartureDate).setHours(0, 0, 0, 0) : null;
                                             // console.log("test : ", travelArrivalDate , " , ", travelDepartureDate    )
-                                            return (date > travelArrivalDate) || ( date < travelDepartureDate );// Disable dates before check-in
-                                            }
+                                            return (date > travelArrivalDate) || (date < travelDepartureDate);// Disable dates before check-in
+                                        }
                                         }
                                     />
                                     {errors.hotelCheckIn && !formData.hotelCheckIn && <span style={{ color: 'red' }}>{errors.hotelCheckIn}</span>}
@@ -1385,7 +1394,7 @@ function TravelRequestForm() {
                                         shouldDisableDate={(date) => {
                                             const checkInDate = formData.hotelCheckIn ? new Date(formData.hotelCheckIn) : (formData.travelDepartureDate ? new Date(formData.travelDepartureDate) : null);
                                             const travelArrivalDate = formData.travelArrivalDate ? new Date(formData.travelArrivalDate) : null;
-                                            return ( date <= checkInDate) || ( date > travelArrivalDate ); // Disable dates before check-in
+                                            return (date <= checkInDate) || (date > travelArrivalDate); // Disable dates before check-in
                                         }}
 
                                     />
@@ -1676,11 +1685,11 @@ function TravelRequestForm() {
                                     <div className="form-dropdown-container d-flex gap-3 mx-2 reason-dropdown align-items-center mt-1">
                                         <label htmlFor="reason">Food Preference</label>
                                         <InputText type="text" maxLength={250} id="foodPreference" name="foodPreference"
-                                                value={formData.foodPreference}
-                                                onChange={(e) => setFormData({
-                                                    ...formData,
-                                                    foodPreference: e.target.value
-                                                })} className="w-full" />
+                                            value={formData.foodPreference}
+                                            onChange={(e) => setFormData({
+                                                ...formData,
+                                                foodPreference: e.target.value
+                                            })} className="w-full" />
                                     </div>
                                     <div className="addbutton mx-2">
                                         {/* <button type="button" onClick={handleAddItineraryClick}>
@@ -1705,17 +1714,17 @@ function TravelRequestForm() {
                                                 <hr class="my-1" />
 
                                                 <div className="itinerary-form">
-                                                    <div className="form-row d-flex align-content-stretch gap-3">
-                                                        <div className="calendar-item">
-                                                            <FloatLabel>
-                                                                <InputText className="journeyField" id="onwardJourney" maxLength={250} value={newItinerary.onwardJourney} onChange={e => handleInputChange('onwardJourney', e)} />
-                                                                <label htmlFor="onwardJourney">Onward Journey (From - To)</label>
+                                                    <div className="form-row d-flex align-content-stretch gap-2">
+                                                        <div className="calendar-item flex-grow-1">
+                                                            <FloatLabel className="w-100">
+                                                                <InputText className="journeyField w-100" id="onwardJourney" maxLength={250} value={newItinerary.onwardJourney} onChange={e => handleInputChange('onwardJourney', e)} />
+                                                                <label htmlFor="onwardJourney">Onward Journey (From - To)<span className="text-danger px-1">*</span></label>
                                                             </FloatLabel>
                                                         </div>
                                                         <div className="calendar-item col-width">
                                                             <FloatLabel >
                                                                 <Calendar id="onwardDepartureDate" minDate={formData.travelDepartureDate} maxDate={formData.travelArrivalDate} dateFormat="dd-M-yy" value={newItinerary.onwardDepartureDate} onChange={(e) => handleInputChange('onwardDepartureDate', e)} showIcon />
-                                                                <label htmlFor="onwardDepartureDate">Departure Date</label>
+                                                                <label htmlFor="onwardDepartureDate">Departure Date<span className="text-danger px-1">*</span></label>
                                                             </FloatLabel>
                                                         </div>
                                                         <div className="calendar-item">
@@ -1724,13 +1733,19 @@ function TravelRequestForm() {
                                                                     value={newItinerary.onwardPreferredTime}
                                                                     style={{ width: '9vw' }}
                                                                     onChange={e => handleInputChange('onwardPreferredTime', e)} options={preferredTimeList} optionLabel="name" />
-                                                                <label htmlFor="onwardPreferredTime">Preferred Time</label>
+                                                                <label htmlFor="onwardPreferredTime">Preferred Time<span className="text-danger px-1">*</span></label>
                                                             </FloatLabel>
                                                         </div>
                                                         <div className="calendar-item">
                                                             <FloatLabel>
-                                                                <InputText id="onwardTransportNumber" maxLength={250} value={newItinerary.onwardTransportNumber} onChange={e => handleInputChange('onwardTransportNumber', e)} />
-                                                                <label htmlFor="onwardTransportNumber">Onward Flight/Train No</label>
+                                                                <InputText id="onwardTransportNumber" style={{width: '170px'}} maxLength={250} value={newItinerary.onwardTransportNumber} onChange={e => handleInputChange('onwardTransportNumber', e)} />
+                                                                <label htmlFor="onwardTransportNumber">Onward Flight/Train No<span className="text-danger px-1">*</span></label>
+                                                            </FloatLabel>
+                                                        </div>
+                                                        <div className="calendar-item">
+                                                            <FloatLabel>
+                                                                <InputNumber id="onwardBudget" inputStyle={{width: '100px'}} maxLength={250} value={newItinerary.budget} invalid={newItinerary.budget === 0} onChange={e => handleInputChange('budget', e)} />
+                                                                <label htmlFor="onwardBudget">Fare<span className="text-danger px-1">*</span></label>
                                                             </FloatLabel>
                                                         </div>
                                                         <div className="calendar-item flex-grow-1">
@@ -1744,50 +1759,50 @@ function TravelRequestForm() {
                                                     <div className="form-row">
                                                         <div className="form-group SRT d-flex">
                                                             <label htmlFor="showReturnFields mr-2">Show Return Trip</label>
-                                                            <InputSwitch checked={showReturnFields} className="mx-2" 
-                                                            onChange={(e) => {
-                                                                setShowReturnFields(e.value)
-                                                                if(newItinerary.onwardJourney.includes("-") && e.value){
-                                                                    const tempJourney = newItinerary.onwardJourney.split("-").reverse().join("-");
-                                                                    console.log("temp : ", tempJourney);
-                                                                    setNewItinerary({
-                                                                        ...newItinerary,
-                                                                        returnJourney: tempJourney,
-                                                                    });
-                                                                }
-                                                            }} 
+                                                            <InputSwitch checked={showReturnFields} className="mx-2"
+                                                                onChange={(e) => {
+                                                                    setShowReturnFields(e.value)
+                                                                    if (newItinerary.onwardJourney.includes("-") && e.value) {
+                                                                        const tempJourney = newItinerary.onwardJourney.split("-").reverse().join("-");
+                                                                        console.log("temp : ", tempJourney);
+                                                                        setNewItinerary({
+                                                                            ...newItinerary,
+                                                                            returnJourney: tempJourney,
+                                                                        });
+                                                                    }
+                                                                }}
                                                             />
                                                         </div>
                                                     </div>
 
                                                     {showReturnFields && (
                                                         <>
-                                                            <div className="form-row2 gap-3">
-                                                                <div >
+                                                            <div className="form-row2 gap-2">
+                                                                <div className="calendar-item">
                                                                     <FloatLabel>
-                                                                        <InputText className="journeyField" id="returnJourney" maxLength={250} value={newItinerary.returnJourney} onChange={e => handleInputChange('returnJourney', e)} />
-                                                                        <label htmlFor="returnJourney">Return Journey (From - To)</label>
+                                                                        <InputText className="journeyField" style={{width : '265px'}}  id="returnJourney" maxLength={250} value={newItinerary.returnJourney} onChange={e => handleInputChange('returnJourney', e)} />
+                                                                        <label htmlFor="returnJourney">Return Journey (From - To)<span className="text-danger px-1">*</span></label>
                                                                     </FloatLabel>
                                                                 </div>
-                                                                <div className="col-width">
+                                                                <div className="calendar-item col-width">
                                                                     <FloatLabel>
                                                                         <Calendar id="returnArrivalDate" minDate={newItinerary.onwardDepartureDate ? newItinerary.onwardDepartureDate : formData.travelDepartureDate} maxDate={formData.travelArrivalDate} dateFormat="dd-M-yy" value={newItinerary.returnArrivalDate} onChange={(e) => handleInputChange('returnArrivalDate', e)} showIcon />
-                                                                        <label htmlFor="returnArrivalDate">Arrival Date</label>
+                                                                        <label htmlFor="returnArrivalDate">Arrival Date<span className="text-danger px-1">*</span></label>
                                                                     </FloatLabel>
                                                                 </div>
-                                                                <div className="returnpreferredTime">
+                                                                <div className="calendar-item">
                                                                     <FloatLabel>
                                                                         <Dropdown id="returnpreferredTime" className="onwardPreferredTime"
                                                                             style={{ width: '9vw' }}
                                                                             value={newItinerary.returnPreferredTime}
                                                                             onChange={e => handleInputChange('returnPreferredTime', e)} options={preferredTimeList} optionLabel="name" />
-                                                                        <label htmlFor="returnpreferredTime">Preferred Time</label>
+                                                                        <label htmlFor="returnpreferredTime">Preferred Time<span className="text-danger px-1">*</span></label>
                                                                     </FloatLabel>
                                                                 </div>
-                                                                <div >
+                                                                <div className="calendar-item">
                                                                     <FloatLabel>
-                                                                        <InputText id="returnTransportNumber" maxLength={250} value={newItinerary.returnTransportNumber} onChange={e => handleInputChange('returnTransportNumber', e)} />
-                                                                        <label htmlFor="returnTransportNumber">Return Flight/Train No</label>
+                                                                        <InputText id="returnTransportNumber" style={{width: '170px'}} maxLength={250} value={newItinerary.returnTransportNumber} onChange={e => handleInputChange('returnTransportNumber', e)} />
+                                                                        <label htmlFor="returnTransportNumber">Return Flight/Train No<span className="text-danger px-1">*</span></label>
                                                                     </FloatLabel>
                                                                 </div>
                                                             </div>
@@ -1816,6 +1831,7 @@ function TravelRequestForm() {
                                                 <Column sortable field="returnArrivalDate" header="Arrival Date" body={(rowData) => formatDate(rowData.returnArrivalDate)} headerClassName="custom-header" />
                                                 <Column sortable field="returnPreferredTime" header="Return Preferred Time" body={(rowData) => formatPickList(rowData.returnPreferredTime)} headerClassName="custom-header" />
                                                 <Column sortable field="returnTransportNumber" header="Return Flight/Train No" headerClassName="custom-header" />
+                                                <Column sortable field="budget" header="Fare" headerClassName="custom-header" />
                                                 <Column sortable field="onwardJourneyNote" header="Remarks" headerClassName="custom-header" />
                                                 <Column header="Actions" headerClassName="custom-header"
                                                     body={(rowData, { rowIndex }) => (
@@ -1911,14 +1927,14 @@ function TravelRequestForm() {
                     {/* <button type="submit">Submit</button> */}
                     <div className="gap-3" style={{ display: 'flex', justifyContent: 'end' }}>
                         <Button type="button" className="back-button-travel mb-3" label="Back" rounded onClick={handleBack} icon={<KeyboardDoubleArrowLeftIcon />} />
-                        { !isFormSubmit && (<><div className="d-block">
+                        {!isFormSubmit && (<><div className="d-block">
                             <Button className="mb-3" style={{ height: '41px' }}
                                 onClick={() => setFormData(prevFormData => ({
                                     ...prevFormData, // Spread the existing formData
                                     status: { code: 2 },
                                     approveStatus: { key: 'draft' }
                                 }))
-                            }
+                                }
                                 type="submit"
                                 label="Save As Draft"
                                 disabled={loading} //|| isEmailValidSubmit
@@ -1932,7 +1948,7 @@ function TravelRequestForm() {
                                     showMessage('error', 'Error', `Fill all the required fields`);
                                     return;
                                 }
-                            } } /><Button
+                            }} /><Button
                                 type="submit"
                                 ref={submitButtonRef} // Set the ref
                                 style={{ display: 'none' }} // Hide the button if desired

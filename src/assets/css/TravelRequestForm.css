@@ -426,7 +426,7 @@ input:checked+.slider:before {
     margin: auto;
     padding: 20px;
     border: 1px solid #888;
-    width: 88%;
+    width: 99%;
     border-radius: 10px;
 }
 
@@ -730,7 +730,7 @@ input#checkOut {
 }
 
 .calendar-item.col-width {
-    width: 18%;
+    width: 16%;
 }
 label.small {
     font-size: 14px;

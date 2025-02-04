@@ -115,6 +115,7 @@ function EditTravelRequestForm() {
         onwardPreferredTime: '',
         onwardJourneyNote: '',
         onwardTransportNumber: '',
+        budget: null,
         returnJourney: '',
         returnArrivalDate: null,
         returnPreferredTime: '',
@@ -517,41 +518,48 @@ function EditTravelRequestForm() {
     // };
 
     const handleInputChange = (name, e) => {
-        const { value } = e.target;
-        console.log(name, " : ", value);
+        if (name === 'budget') {
+            setNewItinerary({
+                ...newItinerary,
+                [name]: e.value,
+            });
+        } else {
+            const { value } = e.target;
+            console.log(name, " : ", value);
 
-        if (name === 'onwardDepartureDate') {
-            setNewItinerary({
-                ...newItinerary,
-                [name]: value,
-                returnArrivalDate: null,
-            });
-        }
-        else if (name === 'onwardPreferredTime') {
-            // Find the selected option based on the name
-            const selectedOption = preferredTimeList.find(option => option.name === value);
-            if (selectedOption) {
+            if (name === 'onwardDepartureDate') {
                 setNewItinerary({
                     ...newItinerary,
-                    [name]: selectedOption // Set the entire selected object
+                    [name]: value,
+                    returnArrivalDate: null,
                 });
             }
-        }
-        else if (name === 'returnPreferredTime') {
-            // Find the selected option based on the name
-            const selectedOption = preferredTimeList.find(option => option.name === value);
-            if (selectedOption) {
+            else if (name === 'onwardPreferredTime') {
+                // Find the selected option based on the name
+                const selectedOption = preferredTimeList.find(option => option.name === value);
+                if (selectedOption) {
+                    setNewItinerary({
+                        ...newItinerary,
+                        [name]: selectedOption // Set the entire selected object
+                    });
+                }
+            }
+            else if (name === 'returnPreferredTime') {
+                // Find the selected option based on the name
+                const selectedOption = preferredTimeList.find(option => option.name === value);
+                if (selectedOption) {
+                    setNewItinerary({
+                        ...newItinerary,
+                        [name]: selectedOption // Set the entire selected object
+                    });
+                }
+            }
+            else {
                 setNewItinerary({
                     ...newItinerary,
-                    [name]: selectedOption // Set the entire selected object
+                    [name]: value
                 });
             }
-        }
-        else {
-            setNewItinerary({
-                ...newItinerary,
-                [name]: value
-            });
         }
     };
 
@@ -647,6 +655,7 @@ function EditTravelRequestForm() {
             onwardPreferredTime: '',
             onwardJourneyNote: '',
             onwardTransportNumber: '',
+            budget: null,
             returnJourney: '',
             returnArrivalDate: null,
             returnPreferredTime: '',
@@ -853,9 +862,9 @@ function EditTravelRequestForm() {
     useEffect(() => {
         console.log("Itenarary : ", newItinerary);
         console.log("show ", showReturnFields);
-        if (newItinerary.onwardJourney !== '' && newItinerary.onwardDepartureDate !== null && newItinerary.onwardPreferredTime !== null && newItinerary.onwardTransportNumber !== '' && !showReturnFields) {
+        if (newItinerary.onwardJourney !== '' && newItinerary.onwardDepartureDate !== null && newItinerary.onwardPreferredTime !== null && newItinerary.onwardTransportNumber !== ''  && newItinerary.budget > 0 && !showReturnFields) {
             setSaveItineraryFlag(false)
-        } else if (newItinerary.onwardJourney !== '' && newItinerary.onwardDepartureDate !== null && newItinerary.onwardPreferredTime !== null && newItinerary.onwardTransportNumber !== '' && showReturnFields && newItinerary.returnJourney !== '' && newItinerary.returnArrivalDate !== null && newItinerary.returnPreferredTime !== null && newItinerary.returnTransportNumber !== '') {
+        } else if (newItinerary.onwardJourney !== '' && newItinerary.onwardDepartureDate !== null && newItinerary.onwardPreferredTime !== null && newItinerary.onwardTransportNumber !== ''  && newItinerary.budget > 0 && showReturnFields && newItinerary.returnJourney !== '' && newItinerary.returnArrivalDate !== null && newItinerary.returnPreferredTime !== null && newItinerary.returnTransportNumber !== '') {
             setSaveItineraryFlag(false)
         } else {
             setSaveItineraryFlag(true)
@@ -892,6 +901,7 @@ function EditTravelRequestForm() {
                 onwardPreferredTime: itinerary.onwardPreferredTime,
                 onwardJourneyNote: itinerary.onwardJourneyNote,
                 onwardTransportNumber: itinerary.onwardTransportNumber,
+                budget: itinerary.budget,
                 returnJourney: itinerary.returnJourney,
                 returnArrivalDate: itinerary.returnArrivalDate ? setTimeZone(new Date(itinerary.returnArrivalDate).toISOString()) : null,
                 returnPreferredTime: itinerary.returnPreferredTime,
@@ -1521,8 +1531,8 @@ function EditTravelRequestForm() {
                                             const travelArrivalDate = formData.travelArrivalDate ? new Date(formData.travelArrivalDate).setHours(0, 0, 0, 0) : null;
                                             const travelDepartureDate = formData.travelDepartureDate ? new Date(formData.travelDepartureDate).setHours(0, 0, 0, 0) : null;
                                             // console.log("test : ", travelArrivalDate , " , ", travelDepartureDate    )
-                                            return (date > travelArrivalDate) || ( date < travelDepartureDate );// Disable dates before check-in
-                                            }
+                                            return (date > travelArrivalDate) || (date < travelDepartureDate);// Disable dates before check-in
+                                        }
                                         }
                                     />
                                     {errors.hotelCheckIn && !formData.hotelCheckIn && <span style={{ color: 'red' }}>{errors.hotelCheckIn}</span>}
@@ -1547,7 +1557,7 @@ function EditTravelRequestForm() {
                                         shouldDisableDate={(date) => {
                                             const checkInDate = formData.hotelCheckIn ? new Date(formData.hotelCheckIn) : (formData.travelDepartureDate ? new Date(formData.travelDepartureDate) : null);
                                             const travelArrivalDate = formData.travelArrivalDate ? new Date(formData.travelArrivalDate) : null;
-                                            return ( date <= checkInDate) || ( date > travelArrivalDate ); // Disable dates before check-in
+                                            return (date <= checkInDate) || (date > travelArrivalDate); // Disable dates before check-in
                                         }}
                                     />
                                     {errors.hotelCheckOut && !formData.hotelCheckOut && <span style={{ color: 'red' }}>{errors.hotelCheckOut}</span>}
@@ -1861,17 +1871,17 @@ function EditTravelRequestForm() {
                                             </div>
                                             <hr class="my-1" />
                                             <div className="itinerary-form">
-                                                <div className="form-row d-flex align-content-stretch gap-3">
-                                                    <div className="calendar-item">
-                                                        <FloatLabel>
-                                                            <InputText className="journeyField" id="onwardJourney" value={newItinerary.onwardJourney} onChange={e => handleInputChange('onwardJourney', e)} />
-                                                            <label htmlFor="onwardJourney">Onward Journey (From - To)</label>
+                                                <div className="form-row d-flex align-content-stretch gap-2">
+                                                    <div className="calendar-item flex-grow-1">
+                                                        <FloatLabel className="w-100">
+                                                            <InputText className="journeyField w-100" id="onwardJourney" value={newItinerary.onwardJourney} onChange={e => handleInputChange('onwardJourney', e)} />
+                                                            <label htmlFor="onwardJourney">Onward Journey (From - To)<span className="text-danger px-1">*</span></label>
                                                         </FloatLabel>
                                                     </div>
                                                     <div className="calendar-item col-width">
                                                         <FloatLabel >
                                                             <Calendar id="onwardDepartureDate" minDate={formData.travelDepartureDate} maxDate={formData.travelArrivalDate} dateFormat="dd-M-yy" value={newItinerary.onwardDepartureDate} onChange={(e) => handleInputChange('onwardDepartureDate', e)} showIcon />
-                                                            <label htmlFor="onwardDepartureDate">Departure Date</label>
+                                                            <label htmlFor="onwardDepartureDate">Departure Date<span className="text-danger px-1">*</span></label>
                                                         </FloatLabel>
                                                     </div>
                                                     <div className="calendar-item">
@@ -1879,13 +1889,19 @@ function EditTravelRequestForm() {
                                                             <Dropdown id="onwardPreferredTime" className="onwardPreferredTime"
                                                                 value={newItinerary.onwardPreferredTime.name}
                                                                 onChange={e => handleInputChange('onwardPreferredTime', e)} options={preferredTimeList} optionLabel="name" optionValue="name" />
-                                                            <label htmlFor="onwardPreferredTime">Preferred Time</label>
+                                                            <label htmlFor="onwardPreferredTime">Preferred Time<span className="text-danger px-1">*</span></label>
                                                         </FloatLabel>
                                                     </div>
                                                     <div className="calendar-item">
                                                         <FloatLabel>
-                                                            <InputText id="onwardTransportNumber" value={newItinerary.onwardTransportNumber} onChange={e => handleInputChange('onwardTransportNumber', e)} />
-                                                            <label htmlFor="onwardTransportNumber">Onward Flight/Train No</label>
+                                                            <InputText id="onwardTransportNumber" style={{width: '170px'}} value={newItinerary.onwardTransportNumber} onChange={e => handleInputChange('onwardTransportNumber', e)} />
+                                                            <label htmlFor="onwardTransportNumber">Onward Flight/Train No<span className="text-danger px-1">*</span></label>
+                                                        </FloatLabel>
+                                                    </div>
+                                                    <div className="calendar-item">
+                                                        <FloatLabel>
+                                                            <InputNumber id="onwardBudget" inputStyle={{width: '100px'}} maxLength={250} invalid={newItinerary.budget === 0} value={newItinerary.budget} onChange={e => handleInputChange('budget', e)} />
+                                                            <label htmlFor="onwardBudget">Fare<span className="text-danger px-1">*</span></label>
                                                         </FloatLabel>
                                                     </div>
                                                     <div className="calendar-item flex-grow-1">
@@ -1899,48 +1915,48 @@ function EditTravelRequestForm() {
                                                 <div className="form-row">
                                                     <div className="form-group SRT d-flex">
                                                         <label htmlFor="showReturnFields mr-2">Show Return Trip</label>
-                                                        <InputSwitch checked={showReturnFields} className="mx-2" 
-                                                        onChange={(e) => {
-                                                            setShowReturnFields(e.value)
-                                                            if(newItinerary.onwardJourney.includes("-") && e.value){
-                                                                const tempJourney = newItinerary.onwardJourney.split("-").reverse().join("-");
-                                                                console.log("temp : ", tempJourney);
-                                                                setNewItinerary({
-                                                                    ...newItinerary,
-                                                                    returnJourney: tempJourney,
-                                                                });
-                                                            }
-                                                        }} />
+                                                        <InputSwitch checked={showReturnFields} className="mx-2"
+                                                            onChange={(e) => {
+                                                                setShowReturnFields(e.value)
+                                                                if (newItinerary.onwardJourney.includes("-") && e.value) {
+                                                                    const tempJourney = newItinerary.onwardJourney.split("-").reverse().join("-");
+                                                                    console.log("temp : ", tempJourney);
+                                                                    setNewItinerary({
+                                                                        ...newItinerary,
+                                                                        returnJourney: tempJourney,
+                                                                    });
+                                                                }
+                                                            }} />
                                                     </div>
                                                 </div>
 
                                                 {showReturnFields && (
                                                     <>
-                                                        <div className="form-row2 gap-3">
-                                                            <div >
+                                                        <div className="form-row2 gap-2">
+                                                            <div className="calendar-item" >
                                                                 <FloatLabel>
-                                                                    <InputText className="journeyField" id="returnJourney" value={newItinerary.returnJourney} onChange={e => handleInputChange('returnJourney', e)} />
-                                                                    <label htmlFor="returnJourney">Return Journey (From - To)</label>
+                                                                    <InputText className="journeyField" style={{width : '265px'}} id="returnJourney" value={newItinerary.returnJourney} onChange={e => handleInputChange('returnJourney', e)} />
+                                                                    <label htmlFor="returnJourney">Return Journey (From - To)<span className="text-danger px-1">*</span></label>
                                                                 </FloatLabel>
                                                             </div>
-                                                            <div className="col-width">
+                                                            <div className="calendar-item col-width">
                                                                 <FloatLabel>
                                                                     <Calendar id="returnArrivalDate" minDate={newItinerary.onwardDepartureDate ? newItinerary.onwardDepartureDate : formData.travelDepartureDate} maxDate={formData.travelArrivalDate} dateFormat="dd-M-yy" value={newItinerary.returnArrivalDate} onChange={(e) => handleInputChange('returnArrivalDate', e)} showIcon />
-                                                                    <label htmlFor="returnArrivalDate">Arrival Date</label>
+                                                                    <label htmlFor="returnArrivalDate">Arrival Date<span className="text-danger px-1">*</span></label>
                                                                 </FloatLabel>
                                                             </div>
-                                                            <div className="returnpreferredTime">
+                                                            <div className="calendar-item">
                                                                 <FloatLabel>
                                                                     <Dropdown id="returnpreferredTime" className="onwardPreferredTime"
                                                                         value={newItinerary.returnPreferredTime?.name}
                                                                         onChange={e => handleInputChange('returnPreferredTime', e)} options={preferredTimeList} optionLabel="name" optionValue="name" />
-                                                                    <label htmlFor="returnpreferredTime">Preferred Time</label>
+                                                                    <label htmlFor="returnpreferredTime">Preferred Time<span className="text-danger px-1">*</span></label>
                                                                 </FloatLabel>
                                                             </div>
-                                                            <div >
+                                                            <div className="calendar-item">
                                                                 <FloatLabel>
-                                                                    <InputText id="returnTransportNumber" value={newItinerary.returnTransportNumber} onChange={e => handleInputChange('returnTransportNumber', e)} />
-                                                                    <label htmlFor="returnTransportNumber">Return Flight/Train No</label>
+                                                                    <InputText id="returnTransportNumber" style={{width: '170px'}} value={newItinerary.returnTransportNumber} onChange={e => handleInputChange('returnTransportNumber', e)} />
+                                                                    <label htmlFor="returnTransportNumber">Return Flight/Train No<span className="text-danger px-1">*</span></label>
                                                                 </FloatLabel>
                                                             </div>
                                                         </div>
@@ -1968,6 +1984,7 @@ function EditTravelRequestForm() {
                                                 <Column sortable field="returnArrivalDate" header="Arrival Date" body={(rowData) => formatDate(rowData.returnArrivalDate)} headerClassName="custom-header" />
                                                 <Column sortable field="returnPreferredTime" header="Return Preferred Time" body={(rowData) => formatPickList(rowData.returnPreferredTime)} headerClassName="custom-header" />
                                                 <Column sortable field="returnTransportNumber" header="Return Flight/Train No" headerClassName="custom-header" />
+                                                <Column sortable field="budget" header="Fare" headerClassName="custom-header" />
                                                 <Column sortable field="onwardJourneyNote" header="Remarks" headerClassName="custom-header" />
                                                 <Column header="Actions" headerClassName="custom-header"
                                                     body={(rowData, { rowIndex }) => (

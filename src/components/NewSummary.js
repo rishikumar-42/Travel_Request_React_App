@@ -12,7 +12,6 @@ import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrow
 import { Button } from "primereact/button";
 import TravelRequestFormService from "../service/TravelRequestFormService.js";
 import { useNavigate } from "react-router-dom";
-import html2pdf from "html2pdf.js";
 import ReportTemplate from "./reportTemplate.js";
 import { generatePDF } from "./PdfMakeTemplate.js";
 
@@ -405,6 +404,7 @@ const NewSummary = ({
         onwardPreferredTime: itinerary.onwardPreferredTime,
         onwardJourneyNote: itinerary.onwardJourneyNote,
         onwardTransportNumber: itinerary.onwardTransportNumber,
+        budget: itinerary.budget,
         returnJourney: itinerary.returnJourney,
         returnArrivalDate: itinerary.returnArrivalDate
           ? setTimeZone(new Date(itinerary.returnArrivalDate).toISOString())
@@ -560,11 +560,11 @@ const NewSummary = ({
 
       var msg = '';
       var header = '';
-      if(transitionName == 'ok' || transitionName == 'Approve'){
+      if (transitionName == 'ok' || transitionName == 'Approve') {
         msg = `Travel Request Id ${formData.travelRequestId} is Approved `;
         header = 'Approved';
       }
-      if(transitionName == 'reject' || transitionName == 'Reject'){
+      if (transitionName == 'reject' || transitionName == 'Reject') {
         msg = `Travel Request Id ${formData.travelRequestId} is Rejected `;
         header = 'Rejected';
       }
@@ -1098,6 +1098,12 @@ const NewSummary = ({
               />
               <Column
                 sortable
+                field="budget"
+                header="Fare"
+                headerClassName="custom-header"
+              />
+              <Column
+                sortable
                 field="onwardJourneyNote"
                 header="Remarks"
                 headerClassName="preview-custom-header"
@@ -1261,7 +1267,7 @@ const NewSummary = ({
                 </button>
                 <button
                   className="done-dialog"
-                  disabled={loadingNew || ((dialogType === "ok" || dialogType === "Approve") ? false : !comment ) }
+                  disabled={loadingNew || ((dialogType === "ok" || dialogType === "Approve") ? false : !comment)}
                   onClick={handleDialogSubmit}
                 >
                   Done

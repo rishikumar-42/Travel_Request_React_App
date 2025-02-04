@@ -30,19 +30,45 @@ const FormPreview = ({ item, travelInfo, attachments }) => {
     };
 
     const formatDateTime = (date) => {
+        // const date = new Date(dateString);
         if (!date) return '';
-        const options = {
+        const formattedDate = date.toLocaleDateString('en-US', {
             day: '2-digit',
             month: 'short',
             year: 'numeric',
             hour: '2-digit',
             minute: '2-digit',
             // second: '2-digit',
-            hour12: false, // You can set this to true if you want 12-hour time format
-            timeZone: 'Asia/Kolkata'
-        };
-        return new Intl.DateTimeFormat('en-GB', options).format(new Date(date));
+            hour12: false, 
+        });
+        return formattedDate;
     };
+    // const formatDateTime = (date) => {
+    //     // const date = new Date(dateString);
+
+    //     const currentDate = new Date();
+    //     console.log("test : ",date ," & ",currentDate)
+    //     const offsetInMinutes = currentDate.getTimezoneOffset();
+    //     const offsetInHours = Math.floor(offsetInMinutes / 60);
+    //     const offsetInMinutesOnly = Math.abs(offsetInMinutes % 60);
+
+    //     // Adjust the time by the offset
+    //     date.setMinutes(date.getMinutes() + offsetInMinutesOnly);
+    //     date.setHours(date.getHours() + offsetInHours);
+
+    //     if (!date) return '';
+    //     const options = {
+    //         day: '2-digit',
+    //         month: 'short',
+    //         year: 'numeric',
+    //         hour: '2-digit',
+    //         minute: '2-digit',
+    //         // second: '2-digit',
+    //         hour12: false, // You can set this to true if you want 12-hour time format
+    //         // timeZone: 'Asia/Kolkata'
+    //     };
+    //     return new Intl.DateTimeFormat('en-GB', options).format(new Date(date));
+    // };
 
     return (
         <div className="preview-summary-container">
@@ -338,6 +364,7 @@ const FormPreview = ({ item, travelInfo, attachments }) => {
                         <Column sortable field="returnArrivalDate" header="Arrival Date" body={(rowData) => formatDate(rowData.returnArrivalDate)} headerClassName="preview-custom-header" />
                         <Column sortable field="returnPreferredTime" header="Return Preferred Time" body={(rowData) => formatPickList(rowData.returnPreferredTime)} headerClassName="preview-custom-header" />
                         <Column sortable field="returnTransportNumber" header="Return Flight/Train No" headerClassName="preview-custom-header" />
+                        <Column sortable field="budget" header="Fare" headerClassName="preview-custom-header" />
                         <Column sortable field="onwardJourneyNote" header="Remarks" headerClassName="preview-custom-header" />
                     </DataTable>
                 </div>
