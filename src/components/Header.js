@@ -17,7 +17,7 @@ function Header() {
         // },
         {
             label: 'Home',
-            command: () => (window.location.href = 'http://gl-lrayapp-dev.fciconnect.com:8080/web/guest/home')
+            command: () => (window.location.href = 'https://eformstst.fciconnect.com/home')
         },        
         {
             label: 'Create Travel Request',
