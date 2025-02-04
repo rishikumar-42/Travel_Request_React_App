@@ -8,27 +8,27 @@ export const generatePDF = async (item = {}, travelInfo = [], attachmentInfo = [
 
     const convertToBase64 = (url) => {
         return new Promise((resolve, reject) => {
-          fetch(url)
-            .then(response => response.blob())
-            .then(blob => {
-              const reader = new FileReader();
-      
-              reader.onloadend = () => {
-                resolve(reader.result); // Resolve with Base64 string
-              };
-      
-              reader.onerror = (error) => {
-                reject(error); // Reject on error
-              };
-      
-              reader.readAsDataURL(blob); // Start reading the file as Base64
-            })
-            .catch(error => reject(error)); // Reject if fetch fails
+            fetch(url)
+                .then(response => response.blob())
+                .then(blob => {
+                    const reader = new FileReader();
+
+                    reader.onloadend = () => {
+                        resolve(reader.result); // Resolve with Base64 string
+                    };
+
+                    reader.onerror = (error) => {
+                        reject(error); // Reject on error
+                    };
+
+                    reader.readAsDataURL(blob); // Start reading the file as Base64
+                })
+                .catch(error => reject(error)); // Reject if fetch fails
         });
-      };
+    };
 
     const base64 = await convertToBase64(amphenolLogo);
-    
+
     const OnwardJourneyLink = (rowData) => {
         console.log("url : ", rowData.contentUrl);
         let urlObj = new URL(rowData.contentUrl, `${process.env.REACT_APP_API_LIFERAY_BASE_URL}`);
@@ -52,19 +52,33 @@ export const generatePDF = async (item = {}, travelInfo = [], attachmentInfo = [
         );
     };
 
+    // const formatDateTime = (date) => {
+    //     if (!date) return "N/A";
+    //     const options = {
+    //         day: "2-digit",
+    //         month: "short",
+    //         year: "numeric",
+    //         hour: "2-digit",
+    //         minute: "2-digit",
+    //         // second: '2-digit',
+    //         hour12: false, // You can set this to true if you want 12-hour time format
+    //         timeZone: "Asia/Kolkata",
+    //     };
+    //     return new Intl.DateTimeFormat("en-GB", options).format(new Date(date));
+    // };
     const formatDateTime = (date) => {
-        if (!date) return "N/A";
-        const options = {
-            day: "2-digit",
-            month: "short",
-            year: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
+        // const date = new Date(dateString);
+        if (!date) return '';
+        const formattedDate = new Date(date).toLocaleDateString('en-US', {
+            day: '2-digit',
+            month: 'short',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
             // second: '2-digit',
-            hour12: false, // You can set this to true if you want 12-hour time format
-            timeZone: "Asia/Kolkata",
-        };
-        return new Intl.DateTimeFormat("en-GB", options).format(new Date(date));
+            hour12: false,
+        });
+        return formattedDate;
     };
 
     const documentDefinition = {
@@ -666,14 +680,14 @@ export const generatePDF = async (item = {}, travelInfo = [], attachmentInfo = [
                                         margin: [10, 0, 0, 0],
                                         alignment: 'left',
                                     }],
-                                    ...attachmentInfo.map((attachment) => [{
-                                        text: `* ${attachment.title || "No Title"}`,
+                                    [{ul: [...attachmentInfo.map((attachment) => [{
+                                        text: `${attachment.title || "No Title"}`,
                                         link: OnwardJourneyLink(attachment),
                                         style: 'smallTextHeader',
                                         decoration: 'underline',
                                         color: '#0000EE',
                                         margin: [15, 5, 0, 5],
-                                    }])
+                                    }])]}]
                                 ]
                             },
                             layout: {
@@ -692,7 +706,7 @@ export const generatePDF = async (item = {}, travelInfo = [], attachmentInfo = [
                             table: {
                                 headerRows: 1,
                                 dontBreakRows: true,
-                                widths: [45, 45, 45, 45, 45, 45, 45, 45, 45],
+                                widths: [40, 40, 40, 40, 40, 40, 40, 40, 40, 40],
                                 body: [
                                     [
                                         { text: 'Onward Journey (From - To)', style: 'tableHeader' },
@@ -703,6 +717,7 @@ export const generatePDF = async (item = {}, travelInfo = [], attachmentInfo = [
                                         { text: 'Arrival Date', style: 'tableHeader' },
                                         { text: 'Return Preferred Time', style: 'tableHeader' },
                                         { text: 'Return Flight/Train No', style: 'tableHeader' },
+                                        { text: 'Fare', style: 'tableHeader' },
                                         { text: 'Remarks', style: 'tableHeader' }
                                     ],
                                     ...travelInfo.map((item) => [
@@ -714,6 +729,7 @@ export const generatePDF = async (item = {}, travelInfo = [], attachmentInfo = [
                                         { text: formatDate(item.returnArrivalDate) || 'N/A', style: 'tableData' },
                                         { text: formatPickList(item.returnPreferredTime) || 'N/A', style: 'tableData' },
                                         { text: item.returnTransportNumber || 'N/A', style: 'tableData' },
+                                        { text: item.budget || 'N/A', style: 'tableData' },
                                         { text: item.onwardJourneyNote || 'N/A', style: 'tableData' },
                                     ])
                                 ]
@@ -724,8 +740,8 @@ export const generatePDF = async (item = {}, travelInfo = [], attachmentInfo = [
                                 hLineColor: () => '#004085',
                                 vLineColor: () => '#004085',
                                 fillColor: (rowIndex) => rowIndex === 0 ? '#004085' : null,
-                                paddingLeft: () => 5,
-                                paddingRight: () => 5,
+                                paddingLeft: () => 4,
+                                paddingRight: () => 4,
                                 paddingTop: () => 5,
                                 paddingBottom: () => 5,
                             },
