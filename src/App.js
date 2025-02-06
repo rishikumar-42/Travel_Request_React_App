@@ -20,7 +20,7 @@ function App() {
         <Header />
           <Routes>
             {/* <Route path="/" element={<Home />} /> */}
-            <Route path="/" element={<MyList />} />
+            <Route path="/" element={<TravelRequestForm />} />
             <Route path="/MyList" element={<MyList />} />
              <Route path="/Dashboard" element={<Dashboard />} />
             <Route path="/EditTravelRequestForm" element={<EditTravelRequestForm />} />
