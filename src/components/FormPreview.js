@@ -39,7 +39,7 @@ const FormPreview = ({ item, travelInfo, attachments }) => {
             hour: '2-digit',
             minute: '2-digit',
             // second: '2-digit',
-            hour12: false, 
+            hour12: false,
         });
         return formattedDate;
     };
@@ -368,6 +368,16 @@ const FormPreview = ({ item, travelInfo, attachments }) => {
                         <Column sortable field="onwardJourneyNote" header="Remarks" headerClassName="preview-custom-header" />
                     </DataTable>
                 </div>
+
+                <hr className="separator mb-2 mt-2" />
+
+                <div className="summary-details">
+                    <div className="detail-item">
+                        <span className="preview-label">Total Ammount:</span>
+                        <span className="preview-value"> {item.totalFare || 'N/A'}</span>
+                    </div>
+                </div>
+
                 <hr className="separator mb-2 mt-2" />
 
                 <div className="summary-details">

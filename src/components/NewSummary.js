@@ -25,7 +25,7 @@ const NewSummary = ({
   const [workflowTasks, setWorkflowTasks] = useState([]);
   const [currentTask, setCurrentTask] = useState(null);
   const [isTaskCompleted, setIsTaskCompleted] = useState(false);
-  const [cancelFlag, setCancelFlag] = useState(true);
+  const [buttonFlag, setButtonFlag] = useState(true);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [dialogType, setDialogType] = useState(""); // 'approve' or 'reject'
   const [comment, setComment] = useState("");
@@ -450,9 +450,10 @@ const NewSummary = ({
           `Successfully updated Id : ${response.data.travelRequestId}`
         );
         console.log("Navigating to MyList");
+        setButtonFlag(false);
         setTimeout(() => {
           onBack();
-          handleBack();
+          // handleBack();
         }, 3000);
       }
       // setOpen(true);
@@ -679,7 +680,7 @@ const NewSummary = ({
         "Success",
         `Successfully Cancelled ${item.travelRequestId}`
       );
-      setCancelFlag(false);
+      setButtonFlag(false);
       setTimeout(() => {
         onBack();
       }, 3000);
@@ -1115,6 +1116,17 @@ const NewSummary = ({
 
           <div className="summary-details">
             <div className="detail-item">
+              <span className="summary-label">Total Fare :</span>
+              <span className="value">
+                {item.totalFare || "N/A"}
+              </span>
+            </div>
+          </div>
+
+          <hr className="separator mb-2 mt-2" />
+
+          <div className="summary-details">
+            <div className="detail-item">
               <span className="summary-label">Reason:</span>
               <span className="value">
                 {" "}
@@ -1138,7 +1150,7 @@ const NewSummary = ({
               onClick={handleRefresh}
             />
             {item.approveStatus?.key === "draft" &&
-              cancelFlag &&
+              buttonFlag &&
               !isDashboardNavigate && (
                 // <button className="back-button" onClick={handleCancel}>Cancel</button>
                 <Button
@@ -1151,7 +1163,7 @@ const NewSummary = ({
               )}
             {(item.approveStatus?.key === "draft" ||
               item.approveStatus?.key === "pendingAtApprover1") &&
-              cancelFlag &&
+              buttonFlag &&
               !isDashboardNavigate && (
                 // <button className="back-button" onClick={handleCancel}>Cancel</button>
                 <Button
@@ -1253,8 +1265,8 @@ const NewSummary = ({
             <div className="dialog">
               <h2>
                 {dialogType === "ok" || dialogType === "Approve"
-                  ? "Approve"
-                  : <>Reject<span className="text-danger px-1">*</span></>}
+                  ? "Comments"
+                  : <>Comments<span className="text-danger px-1">*</span></>}
               </h2>
               <textarea
                 value={comment}

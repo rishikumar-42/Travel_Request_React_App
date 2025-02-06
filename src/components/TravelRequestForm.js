@@ -271,6 +271,7 @@ function TravelRequestForm() {
             onwardPreferredTime: '',
             onwardTransportNumber: '',
             onwardJourneyNote: '',
+            budget: null,
             returnJourney: '',
             returnArrivalDate: null,
             returnPreferredTime: '',
@@ -279,6 +280,8 @@ function TravelRequestForm() {
         setShowItinerary(false);
         setShowReturnFields(false);
     };
+
+
 
     const handleRemoveItinerary = (index) => {
         setItineraries(itineraries.filter((_, i) => i !== index));
@@ -616,6 +619,7 @@ function TravelRequestForm() {
         travelBudget: null,
         flightTicketReason: {},
         foodPreference: '',
+        totalFare: "",
         flightTicketType: {},
         carRentalFrom: "",
         carRentalTo: "",
@@ -647,6 +651,27 @@ function TravelRequestForm() {
         creationDate: new Date(),
         submit: "yes",
     });
+
+    //calculateTotalFare();
+
+    useEffect(() => {
+        var amount = 0;
+        var currency = '';
+        var totalAmount = "";
+        if (itineraries.length > 0) {
+            itineraries.forEach(itinerary => {
+                amount += itinerary.budget;
+            })
+        }
+        if (formData.travelCurrency.name) {
+            currency = formData.travelCurrency.name;
+        }
+        totalAmount = `${currency} ${amount}`;
+        setFormData({
+            ...formData,
+            totalFare: totalAmount
+        })
+    }, [formData.travelCurrency]);
 
     const [errors, setErrors] = useState({});
 
@@ -746,9 +771,26 @@ function TravelRequestForm() {
     }, [formData]);
 
     useEffect(() => {
+        var amount = 0;
+        var currency = '';
+        var totalAmount = "";
+        if (itineraries.length > 0) {
+            itineraries.forEach(itinerary => {
+                amount += itinerary.budget;
+            })
+        }
+        if (formData.travelCurrency.name) {
+            currency = formData.travelCurrency.name;
+        }
+        totalAmount = `${currency} ${amount}`;
+        // setFormData({
+        //     ...formData,
+        //     totalFare: totalAmount
+        // })
         setFormData({
             ...formData,
-            itineraryRelation: itineraries
+            itineraryRelation: itineraries,
+            totalFare: totalAmount
         })
     }, [itineraries]);
     useEffect(() => {
@@ -1717,7 +1759,7 @@ function TravelRequestForm() {
                                                     <div className="form-row d-flex align-content-stretch gap-2">
                                                         <div className="calendar-item flex-grow-1">
                                                             <FloatLabel className="w-100">
-                                                                <InputText className="journeyField w-100" id="onwardJourney" maxLength={250} value={newItinerary.onwardJourney} onChange={e => handleInputChange('onwardJourney', e) } placeholder="SG-IND"/>
+                                                                <InputText className="journeyField w-100" id="onwardJourney" maxLength={250} value={newItinerary.onwardJourney} onChange={e => handleInputChange('onwardJourney', e)} placeholder="SG-IND" />
                                                                 <label htmlFor="onwardJourney">Onward Journey (From - To)<span className="text-danger px-1">*</span></label>
                                                             </FloatLabel>
                                                         </div>
@@ -1738,13 +1780,13 @@ function TravelRequestForm() {
                                                         </div>
                                                         <div className="calendar-item">
                                                             <FloatLabel>
-                                                                <InputText id="onwardTransportNumber" style={{width: '170px'}} maxLength={250} value={newItinerary.onwardTransportNumber} onChange={e => handleInputChange('onwardTransportNumber', e)} />
+                                                                <InputText id="onwardTransportNumber" style={{ width: '170px' }} maxLength={250} value={newItinerary.onwardTransportNumber} onChange={e => handleInputChange('onwardTransportNumber', e)} />
                                                                 <label htmlFor="onwardTransportNumber">Onward Flight/Train No<span className="text-danger px-1">*</span></label>
                                                             </FloatLabel>
                                                         </div>
                                                         <div className="calendar-item">
                                                             <FloatLabel>
-                                                                <InputNumber id="onwardBudget" inputStyle={{width: '100px'}} maxLength={250} value={newItinerary.budget} invalid={newItinerary.budget === 0} onChange={e => handleInputChange('budget', e)} />
+                                                                <InputNumber id="onwardBudget" inputStyle={{ width: '100px' }} maxLength={250} value={newItinerary.budget} invalid={newItinerary.budget === 0} onChange={e => handleInputChange('budget', e)} />
                                                                 <label htmlFor="onwardBudget">Fare<span className="text-danger px-1">*</span></label>
                                                             </FloatLabel>
                                                         </div>
@@ -1780,7 +1822,7 @@ function TravelRequestForm() {
                                                             <div className="form-row2 gap-2">
                                                                 <div className="calendar-item">
                                                                     <FloatLabel>
-                                                                        <InputText className="journeyField" style={{width : '265px'}}  id="returnJourney" maxLength={250} value={newItinerary.returnJourney} onChange={e => handleInputChange('returnJourney', e)} />
+                                                                        <InputText className="journeyField" style={{ width: '265px' }} id="returnJourney" maxLength={250} value={newItinerary.returnJourney} onChange={e => handleInputChange('returnJourney', e)} />
                                                                         <label htmlFor="returnJourney">Return Journey (From - To)<span className="text-danger px-1">*</span></label>
                                                                     </FloatLabel>
                                                                 </div>
@@ -1801,7 +1843,7 @@ function TravelRequestForm() {
                                                                 </div>
                                                                 <div className="calendar-item">
                                                                     <FloatLabel>
-                                                                        <InputText id="returnTransportNumber" style={{width: '170px'}} maxLength={250} value={newItinerary.returnTransportNumber} onChange={e => handleInputChange('returnTransportNumber', e)} />
+                                                                        <InputText id="returnTransportNumber" style={{ width: '170px' }} maxLength={250} value={newItinerary.returnTransportNumber} onChange={e => handleInputChange('returnTransportNumber', e)} />
                                                                         <label htmlFor="returnTransportNumber">Return Flight/Train No<span className="text-danger px-1">*</span></label>
                                                                     </FloatLabel>
                                                                 </div>
@@ -1861,6 +1903,13 @@ function TravelRequestForm() {
                                             </DataTable>
                                         </div>
                                     )}
+                                    <div className="form-dropdown-container d-flex gap-3 mx-2 reason-dropdown align-items-center mt-3">
+                                        <label htmlFor="reason">Total Fare</label>
+                                        <InputText type="text" maxLength={250} id="totalFare" name="totalFare"
+                                            value={formData.totalFare}
+                                            className="w-full"
+                                            readOnly />
+                                    </div>
 
                                     <br></br><br></br>
                                     <hr className="separator mb-2" />

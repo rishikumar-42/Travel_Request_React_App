@@ -54,7 +54,7 @@ function Header() {
         <header className="header-travelform">
             <Logo />
             {!isHome && (
-                <h5 className='travel-request-header'>Travel Request</h5>
+                <h5 className='travel-request-header'>Travel Request Form</h5>
             )}
             {!isHome && (
                 <Menubar model={items} className="small-menubar" itemTemplate={itemTemplate} />

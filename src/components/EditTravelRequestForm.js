@@ -708,6 +708,7 @@ function EditTravelRequestForm() {
         flightTicketReason: item.flightTicketReason,
         flightTicketType: item.flightTicketType,
         foodPreference: item.foodPreference || "",
+        totalFare: item.totalFare || "",
         carRentalFrom: item.carRentalFrom || "",
         carRentalTo: item.carRentalTo || "",
         carRentalOn: new Date(item.carRentalOn) || null,
@@ -734,6 +735,25 @@ function EditTravelRequestForm() {
         submit: "no",
         // itineraryRelation: Array.isArray(travelInfo) ? travelInfo : []
     });
+
+    useEffect(() => {
+        var amount = 0;
+        var currency = '';
+        var totalAmount = "";
+        if (itineraries.length > 0) {
+            itineraries.forEach(itinerary => {
+                amount += itinerary.budget;
+            })
+        }
+        if (formData.travelCurrency.name) {
+            currency = formData.travelCurrency.name;
+        }
+        totalAmount = `${currency} ${amount}`;
+        setFormData({
+            ...formData,
+            totalFare: totalAmount
+        })
+    }, [formData.travelCurrency]);
 
     const [errors, setErrors] = useState({});
 
@@ -850,9 +870,23 @@ function EditTravelRequestForm() {
 
     useEffect(() => {
         // Update itineraryRelation in formData when itineraries change
+        var amount = 0;
+        var currency = '';
+        var totalAmount = "";
+        if (itineraries.length > 0) {
+            itineraries.forEach(itinerary => {
+                amount += itinerary.budget;
+            })
+        }
+        if (formData.travelCurrency.name) {
+            currency = formData.travelCurrency.name;
+        }
+        totalAmount = `${currency} ${amount}`;
+
         setFormData(prevData => ({
             ...prevData,
-            itineraryRelation: itineraries
+            itineraryRelation: itineraries,
+            totalFare: totalAmount
         }));
     }, [itineraries]);
 
@@ -862,9 +896,9 @@ function EditTravelRequestForm() {
     useEffect(() => {
         console.log("Itenarary : ", newItinerary);
         console.log("show ", showReturnFields);
-        if (newItinerary.onwardJourney !== '' && newItinerary.onwardDepartureDate !== null && newItinerary.onwardPreferredTime !== null && newItinerary.onwardTransportNumber !== ''  && newItinerary.budget > 0 && !showReturnFields) {
+        if (newItinerary.onwardJourney !== '' && newItinerary.onwardDepartureDate !== null && newItinerary.onwardPreferredTime !== null && newItinerary.onwardTransportNumber !== '' && newItinerary.budget > 0 && !showReturnFields) {
             setSaveItineraryFlag(false)
-        } else if (newItinerary.onwardJourney !== '' && newItinerary.onwardDepartureDate !== null && newItinerary.onwardPreferredTime !== null && newItinerary.onwardTransportNumber !== ''  && newItinerary.budget > 0 && showReturnFields && newItinerary.returnJourney !== '' && newItinerary.returnArrivalDate !== null && newItinerary.returnPreferredTime !== null && newItinerary.returnTransportNumber !== '') {
+        } else if (newItinerary.onwardJourney !== '' && newItinerary.onwardDepartureDate !== null && newItinerary.onwardPreferredTime !== null && newItinerary.onwardTransportNumber !== '' && newItinerary.budget > 0 && showReturnFields && newItinerary.returnJourney !== '' && newItinerary.returnArrivalDate !== null && newItinerary.returnPreferredTime !== null && newItinerary.returnTransportNumber !== '') {
             setSaveItineraryFlag(false)
         } else {
             setSaveItineraryFlag(true)
@@ -1894,13 +1928,13 @@ function EditTravelRequestForm() {
                                                     </div>
                                                     <div className="calendar-item">
                                                         <FloatLabel>
-                                                            <InputText id="onwardTransportNumber" style={{width: '170px'}} value={newItinerary.onwardTransportNumber} onChange={e => handleInputChange('onwardTransportNumber', e)} />
+                                                            <InputText id="onwardTransportNumber" style={{ width: '170px' }} value={newItinerary.onwardTransportNumber} onChange={e => handleInputChange('onwardTransportNumber', e)} />
                                                             <label htmlFor="onwardTransportNumber">Onward Flight/Train No<span className="text-danger px-1">*</span></label>
                                                         </FloatLabel>
                                                     </div>
                                                     <div className="calendar-item">
                                                         <FloatLabel>
-                                                            <InputNumber id="onwardBudget" inputStyle={{width: '100px'}} maxLength={250} invalid={newItinerary.budget === 0} value={newItinerary.budget} onChange={e => handleInputChange('budget', e)} />
+                                                            <InputNumber id="onwardBudget" inputStyle={{ width: '100px' }} maxLength={250} invalid={newItinerary.budget === 0} value={newItinerary.budget} onChange={e => handleInputChange('budget', e)} />
                                                             <label htmlFor="onwardBudget">Fare<span className="text-danger px-1">*</span></label>
                                                         </FloatLabel>
                                                     </div>
@@ -1935,7 +1969,7 @@ function EditTravelRequestForm() {
                                                         <div className="form-row2 gap-2">
                                                             <div className="calendar-item" >
                                                                 <FloatLabel>
-                                                                    <InputText className="journeyField" style={{width : '265px'}} id="returnJourney" value={newItinerary.returnJourney} onChange={e => handleInputChange('returnJourney', e)} />
+                                                                    <InputText className="journeyField" style={{ width: '265px' }} id="returnJourney" value={newItinerary.returnJourney} onChange={e => handleInputChange('returnJourney', e)} />
                                                                     <label htmlFor="returnJourney">Return Journey (From - To)<span className="text-danger px-1">*</span></label>
                                                                 </FloatLabel>
                                                             </div>
@@ -1955,7 +1989,7 @@ function EditTravelRequestForm() {
                                                             </div>
                                                             <div className="calendar-item">
                                                                 <FloatLabel>
-                                                                    <InputText id="returnTransportNumber" style={{width: '170px'}} value={newItinerary.returnTransportNumber} onChange={e => handleInputChange('returnTransportNumber', e)} />
+                                                                    <InputText id="returnTransportNumber" style={{ width: '170px' }} value={newItinerary.returnTransportNumber} onChange={e => handleInputChange('returnTransportNumber', e)} />
                                                                     <label htmlFor="returnTransportNumber">Return Flight/Train No<span className="text-danger px-1">*</span></label>
                                                                 </FloatLabel>
                                                             </div>
@@ -2004,6 +2038,14 @@ function EditTravelRequestForm() {
                                         </div>
                                     </div>
                                 )}
+
+                                <div className="form-dropdown-container d-flex gap-3 mx-2 reason-dropdown align-items-center mt-3">
+                                    <label htmlFor="reason">Total Fare</label>
+                                    <InputText type="text" maxLength={250} id="totalFare" name="totalFare"
+                                        value={formData.totalFare}
+                                        className="w-full"
+                                        readOnly />
+                                </div>
 
 
 
