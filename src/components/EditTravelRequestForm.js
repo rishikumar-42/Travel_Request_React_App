@@ -1086,7 +1086,7 @@ function EditTravelRequestForm() {
                 <Toast ref={toast} position="top-center" />
                 <form className="travel-form p-0" onSubmit={handleFormSubmit} onKeyDown={handleKeyDown}>
                     <div className="bg-color px-3 py-1 rounded-top-2 d-flex justify-content-between align-items-center w-100">
-                        <div className="align-items-start"><h5 className="text-white text-left mt-2">Edit Travel Request</h5></div>
+                        <div className="align-items-start"><h5 className="text-white text-left mt-2">Travel Request Form</h5></div>
                         <div className="align-items-end">
                             {/* <HelpIcon onClick={() => setVisible(true)} sx={{ color: primary }} />
                             <Dialog header="Helps" visible={visible} style={{ width: '50vw' }} onHide={() => { if (!visible) return; setVisible(false); }}>
@@ -1874,7 +1874,7 @@ function EditTravelRequestForm() {
                                                 <div className="form-row d-flex align-content-stretch gap-2">
                                                     <div className="calendar-item flex-grow-1">
                                                         <FloatLabel className="w-100">
-                                                            <InputText className="journeyField w-100" id="onwardJourney" value={newItinerary.onwardJourney} onChange={e => handleInputChange('onwardJourney', e)} />
+                                                            <InputText className="journeyField w-100" id="onwardJourney" value={newItinerary.onwardJourney} onChange={e => handleInputChange('onwardJourney', e)} placeholder="SG-IND" />
                                                             <label htmlFor="onwardJourney">Onward Journey (From - To)<span className="text-danger px-1">*</span></label>
                                                         </FloatLabel>
                                                     </div>
@@ -2106,7 +2106,7 @@ function EditTravelRequestForm() {
                         />
                         <div>
 
-                            <Dialog header="Preview" visible={previewVisible} style={{ width: '80vw' }} onHide={() => { if (!previewVisible) return; setPreviewVisible(false); }}>
+                            <Dialog header="Summary Report" visible={previewVisible} style={{ width: '80vw' }} onHide={() => { if (!previewVisible) return; setPreviewVisible(false); }}>
                                 {/* {previewVisible && { NewSummary(formData,itineraries) }} */}
                                 <FormPreview item={formData} travelInfo={itineraries} attachments={attachments} />
                                 <div className="gap-3 mt-3" style={{ display: 'flex', justifyContent: 'end' }} >
