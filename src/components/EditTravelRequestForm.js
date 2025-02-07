@@ -587,7 +587,6 @@ function EditTravelRequestForm() {
                 carRentalTo: "",
                 carRentalOn: null,
                 carRentalUntil: null,
-                carRentalBirthDate: null,
                 carDrivingLicense: "",
                 carRentalCategory: "",
                 carRentalNote: ""
@@ -704,16 +703,13 @@ function EditTravelRequestForm() {
         travelEstimatedDuration: item.travelEstimatedDuration || null,
         travelCurrency: item.travelCurrency,
         travelNote: item.travelNote || null,
-        travelBudget: item.travelBudget || null,
         flightTicketReason: item.flightTicketReason,
         flightTicketType: item.flightTicketType,
-        foodPreference: item.foodPreference || "",
         totalFare: item.totalFare || "",
         carRentalFrom: item.carRentalFrom || "",
         carRentalTo: item.carRentalTo || "",
         carRentalOn: new Date(item.carRentalOn) || null,
         carRentalUntil: new Date(item.carRentalUntil) || null,
-        carRentalBirthDate: new Date(item.carRentalBirthDate) || null,
         carDrivingLicense: item.carDrivingLicense || "",
         carRentalCategory: item.carRentalCategory || "",
         carRentalNote: item.carRentalNote || "",
@@ -772,8 +768,6 @@ function EditTravelRequestForm() {
         if (!formData.travelDepartureDate) newErrors.travelDepartureDate = "Departure date is required.";
         if (!formData.travelArrivalDate) newErrors.travelArrivalDate = "Arrival date is required.";
         if (formData.travelCurrency.key === undefined) newErrors.travelCurrency = "Travel Currency is required.";
-        // if (!formData.travelBudget) newErrors.travelBudget = "Travel Budget is required.";
-
         if (!isEmployeeEmailValid) newErrors.email = "Email not valid.";
         if (!isManagerEmailValid) newErrors.manager = "Email not valid.";
         if (!isHODEmailValid) newErrors.hod = "Email not valid.";
@@ -791,7 +785,6 @@ function EditTravelRequestForm() {
             if (!formData.carRentalTo) newErrors.carRentalTo = "Car rental to is required.";
             if (!formData.carRentalOn) newErrors.carRentalOn = "Car rental on is required.";
             if (!formData.carRentalUntil) newErrors.carRentalUntil = "Car rental until is required.";
-            if (!formData.carRentalBirthDate) newErrors.carRentalBirthDate = "Car rental birthday is required.";
             if (!formData.carDrivingLicense) newErrors.carDrivingLicense = "Car rental driving License is required.";
             if (!formData.carRentalCategory) newErrors.carRentalCategory = "Car rental category is required.";
         }
@@ -1405,17 +1398,6 @@ function EditTravelRequestForm() {
                                 {errors.travelCurrency && formData.travelCurrency.key === undefined && <span style={{ color: 'red' }}>{errors.travelCurrency}</span>}
 
                             </div>
-                            <div>
-                                <FloatLabel>
-                                    <InputNumber id="budgetAmount" value={formData.travelBudget}
-                                        onValueChange={(e) => setFormData({
-                                            ...formData,
-                                            travelBudget: e.target.value
-                                        })} />
-                                    <label htmlFor="budgetAmount" className="small">Budget Amount</label>
-                                </FloatLabel>
-                                {/* {errors.travelBudget && !formData.travelBudget && <span style={{ color: 'red' }}>{errors.travelBudget}</span>} */}
-                            </div>
                             <div className="flex-grow-1">
                                 <FloatLabel >
                                     <InputText id="Note" className="w-100" value={formData.travelNote}
@@ -1707,17 +1689,6 @@ function EditTravelRequestForm() {
                                 <div className="calendar-container d-flex align-items-stretch gap-3 my-4 mx-2">
                                     <div className="calendar-item">
                                         <FloatLabel>
-                                            <Calendar id="birthDate" dateFormat="dd-M-yy" value={formData.carRentalBirthDate}
-                                                onChange={(e) => setFormData({
-                                                    ...formData,
-                                                    carRentalBirthDate: setTimeZone(e.value)
-                                                })} showIcon />
-                                            <label for="birthDate">Birth Date<span className="text-danger px-1">*</span></label>
-                                        </FloatLabel>
-                                        {errors.carRentalBirthDate && !formData.carRentalBirthDate && <span style={{ color: 'red' }}>{errors.carRentalBirthDate}</span>}
-                                    </div>
-                                    <div className="calendar-item">
-                                        <FloatLabel>
                                             <label htmlFor="drivingLicense">Driving License<span className="text-danger px-1">*</span></label>
                                             <InputText type="text" id="drivingLicense" name="drivingLicense"
                                                 value={formData.carDrivingLicense}
@@ -1877,15 +1848,6 @@ function EditTravelRequestForm() {
 
 
                                 <br></br>
-                                <div className="form-dropdown-container d-flex gap-3 mx-2 reason-dropdown align-items-center mt-1">
-                                    <label htmlFor="reason">Food Preference</label>
-                                    <InputText type="text" maxLength={250} id="foodPreference" name="foodPreference"
-                                        value={formData.foodPreference}
-                                        onChange={(e) => setFormData({
-                                            ...formData,
-                                            foodPreference: e.target.value
-                                        })} className="w-full" />
-                                </div>
                                 <div className="addbutton mx-2">
                                     <Button onClick={() => {
                                         setShowItinerary(!showItinerary);

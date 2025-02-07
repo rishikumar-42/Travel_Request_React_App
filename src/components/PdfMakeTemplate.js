@@ -326,14 +326,6 @@ export const generatePDF = async (item = {}, travelInfo = [], attachmentInfo = [
                                 {
                                     width: 112,
                                     stack: [
-                                        { text: 'Budget', bold: true, style: 'smallTextHeader' },
-                                        { text: `${item.travelBudget || 'N/A'}`, style: 'smallText', noWrap: false }
-                                    ],
-                                    margin: [10, 0, 0, 0] // Left margin added
-                                },
-                                {
-                                    width: 112,
-                                    stack: [
                                         { text: 'Remarks', bold: true, style: 'smallTextHeader' },
                                         { text: `${item.travelNote || 'N/A'}`, style: 'smallText', noWrap: false },
                                     ],
@@ -498,14 +490,6 @@ export const generatePDF = async (item = {}, travelInfo = [], attachmentInfo = [
                                 {
                                     width: 112,
                                     stack: [
-                                        { text: 'Birth Date', bold: true, style: 'smallTextHeader' },
-                                        { text: `${formatDate(item.carRentalBirthDate) || 'N/A'}`, style: 'smallText', noWrap: false },
-                                    ],
-                                    margin: [10, 0, 0, 0] // Left margin added
-                                },
-                                {
-                                    width: 112,
-                                    stack: [
                                         { text: 'Driving License No.', bold: true, style: 'smallTextHeader' },
                                         { text: `${item.carDrivingLicense || 'N/A'}`, style: 'smallText', noWrap: false }
                                     ],
@@ -651,22 +635,6 @@ export const generatePDF = async (item = {}, travelInfo = [], attachmentInfo = [
                                 paddingTop: () => 2,
                                 paddingBottom: () => 2
                             },
-                            margin: [0, 5, 0, 5]
-                        }],
-                        [{
-                            columns: [
-                                {
-                                    width: 120,
-                                    stack: [
-                                        { text: 'Food Preference:', bold: true, style: 'smallTextHeader' },
-                                        {
-                                            text: `${item.foodPreference || 'N/A'}`, style: 'smallText', noWrap: false
-                                        }
-                                    ],
-                                    margin: [10, 0, 0, 0]
-                                },
-                            ],
-                            columnGap: 5,
                             margin: [0, 5, 0, 5]
                         }],
                         attachmentInfo.length > 0 ? [{

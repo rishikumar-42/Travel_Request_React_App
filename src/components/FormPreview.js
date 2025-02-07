@@ -171,10 +171,6 @@ const FormPreview = ({ item, travelInfo, attachments }) => {
                             <span className="preview-value">{item.travelCurrency === null ? 'N/A' : item.travelCurrency.name}</span>
                         </div>
                         <div className="preview-detail-item">
-                            <span className="preview-label">Budget Amount:</span>
-                            <span className="preview-value">{item.travelBudget || 'N/A'}</span>
-                        </div>
-                        <div className="preview-detail-item">
                             <span className="preview-label">Remarks:</span>
                             <span className="preview-value">{item.travelNote || 'N/A'}</span>
                         </div>
@@ -252,10 +248,6 @@ const FormPreview = ({ item, travelInfo, attachments }) => {
                             <span className="preview-value">{item.carRentalUntil instanceof Date && !isNaN(item.carRentalUntil) ? formatDate(item.carRentalUntil) : 'N/A'}</span>
                         </div>
                         <div className="preview-detail-item">
-                            <span className="preview-label">BirthDate:</span>
-                            <span className="preview-value">{item.carRentalBirthDate instanceof Date && !isNaN(item.carRentalBirthDate) ? formatDate(item.carRentalBirthDate) : 'N/A'}</span>
-                        </div>
-                        <div className="preview-detail-item">
                             <span className="preview-label">Driving License:</span>
                             <span className="preview-value">{item.carDrivingLicense || 'N/A'}</span>
                         </div>
@@ -322,14 +314,6 @@ const FormPreview = ({ item, travelInfo, attachments }) => {
                 {/* <div className="preview-toolbar">
                     <span className="preview-title">Attachments</span>
                 </div> */}
-                <hr className="separator mb-2 mt-2" />
-
-                <div className="summary-details">
-                    <div className="detail-item">
-                        <span className="preview-label">Food Preference:</span>
-                        <span className="preview-value"> {item.foodPreference || 'N/A'}</span>
-                    </div>
-                </div>
 
                 <hr className="separator mb-2 mt-2" />
 

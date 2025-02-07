@@ -343,14 +343,12 @@ const NewSummary = ({
     travelEstimatedDuration: item.travelEstimatedDuration || null,
     travelCurrency: item.travelCurrency,
     travelNote: item.travelNote || null,
-    travelBudget: item.travelBudget || null,
     flightTicketReason: item.flightTicketReason,
     flightTicketType: item.flightTicketType,
     carRentalFrom: item.carRentalFrom || "",
     carRentalTo: item.carRentalTo || "",
     carRentalOn: new Date(item.carRentalOn) || null,
     carRentalUntil: new Date(item.carRentalUntil) || null,
-    carRentalBirthDate: new Date(item.carRentalBirthDate) || null,
     carDrivingLicense: item.carDrivingLicense || "",
     carRentalCategory: item.carRentalCategory || "",
     carRentalNote: item.carRentalNote || "",
@@ -820,10 +818,6 @@ const NewSummary = ({
                 </span>
               </div>
               <div className="detail-item">
-                <span className="summary-label">Budget:</span>
-                <span className="value">{item.travelBudget || "N/A"}</span>
-              </div>
-              <div className="detail-item">
                 <span className="summary-label">Remarks:</span>
                 <span className="value">{item.travelNote || "N/A"}</span>
               </div>
@@ -914,12 +908,6 @@ const NewSummary = ({
                 </span>
               </div>
               <div className="detail-item">
-                <span className="summary-label">Birth Date:</span>
-                <span className="value">
-                  {formatDate(item.carRentalBirthDate) || "N/A"}
-                </span>
-              </div>
-              <div className="detail-item">
                 <span className="summary-label">Driving License:</span>
                 <span className="value">{item.carDrivingLicense || "N/A"}</span>
               </div>
@@ -1000,16 +988,6 @@ const NewSummary = ({
           {/* <div className="toolbar-summary">
           <span className="title">Attachments</span>
         </div> */}
-          <hr className="separator mb-2 mt-2" />
-
-          <div className="summary-details">
-            <div className="detail-item">
-              <span className="summary-label">Food Preference :</span>
-              <span className="value">
-                {item.foodPreference || "N/A"}
-              </span>
-            </div>
-          </div>
 
           <hr className="separator mb-2 mt-2" />
 
