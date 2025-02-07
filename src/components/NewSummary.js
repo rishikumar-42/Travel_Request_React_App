@@ -401,7 +401,7 @@ const NewSummary = ({
         onwardDepartureDate: itinerary.onwardDepartureDate
           ? setTimeZone(new Date(itinerary.onwardDepartureDate).toISOString())
           : null,
-        onwardPreferredTime: itinerary.onwardPreferredTime,
+        onwardTime: itinerary.onwardTime,
         onwardJourneyNote: itinerary.onwardJourneyNote,
         onwardTransportNumber: itinerary.onwardTransportNumber,
         budget: itinerary.budget,
@@ -409,7 +409,7 @@ const NewSummary = ({
         returnArrivalDate: itinerary.returnArrivalDate
           ? setTimeZone(new Date(itinerary.returnArrivalDate).toISOString())
           : null,
-        returnPreferredTime: itinerary.returnPreferredTime,
+        returnTime: itinerary.returnTime,
         returnTransportNumber: itinerary.returnTransportNumber,
       })),
       attachmentRelation: attachments.map((attachment) => ({
@@ -1060,9 +1060,9 @@ const NewSummary = ({
               />
               <Column
                 sortable
-                field="onwardPreferredTime"
-                header="Onward Preferred Time"
-                body={(rowData) => formatPickList(rowData.onwardPreferredTime)}
+                field="onwardTime"
+                header="Onward Time"
+                // body={(rowData) => formatPickList(rowData.onwardTime)}
                 headerClassName="preview-custom-header"
               />
               <Column
@@ -1086,9 +1086,9 @@ const NewSummary = ({
               />
               <Column
                 sortable
-                field="returnPreferredTime"
-                header="Return Preferred Time"
-                body={(rowData) => formatPickList(rowData.returnPreferredTime)}
+                field="returnTime"
+                header="Return Time"
+                // body={(rowData) => formatPickList(rowData.returnTime)}
                 headerClassName="preview-custom-header"
               />
               <Column

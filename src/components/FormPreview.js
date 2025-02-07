@@ -358,11 +358,13 @@ const FormPreview = ({ item, travelInfo, attachments }) => {
                     <DataTable value={travelInfo} className='previewDataTable' showGridlines tableStyle={{ minWidth: '50rem' }}>
                         <Column sortable field="onwardJourney" header="Onward Journey (From - To)" headerClassName="preview-custom-header" />
                         <Column sortable field="onwardDepartureDate" header="Departure Date" body={(rowData) => formatDate(rowData.onwardDepartureDate)} headerClassName="preview-custom-header" />
-                        <Column sortable field="onwardPreferredTime" header="Onward Preferred Time" body={(rowData) => formatPickList(rowData.onwardPreferredTime)} headerClassName="preview-custom-header" />
+                        {/* <Column sortable field="onwardPreferredTime" header="Onward Preferred Time" body={(rowData) => formatPickList(rowData.onwardPreferredTime)} headerClassName="preview-custom-header" /> */}
+                        <Column sortable field="onwardTime" header="Onward Time" headerClassName="preview-custom-header" />
                         <Column sortable field="onwardTransportNumber" header="Onward Flight/Train No" headerClassName="preview-custom-header" />
                         <Column sortable field="returnJourney" header="Return Journey (From - To)" headerClassName="preview-custom-header" />
                         <Column sortable field="returnArrivalDate" header="Arrival Date" body={(rowData) => formatDate(rowData.returnArrivalDate)} headerClassName="preview-custom-header" />
-                        <Column sortable field="returnPreferredTime" header="Return Preferred Time" body={(rowData) => formatPickList(rowData.returnPreferredTime)} headerClassName="preview-custom-header" />
+                        {/* <Column sortable field="returnPreferredTime" header="Return Preferred Time" body={(rowData) => formatPickList(rowData.returnPreferredTime)} headerClassName="preview-custom-header" /> */}
+                        <Column sortable field="returnTime" header="Return Preferred Time" headerClassName="preview-custom-header" />
                         <Column sortable field="returnTransportNumber" header="Return Flight/Train No" headerClassName="preview-custom-header" />
                         <Column sortable field="budget" header="Fare" headerClassName="preview-custom-header" />
                         <Column sortable field="onwardJourneyNote" header="Remarks" headerClassName="preview-custom-header" />

@@ -68,13 +68,15 @@ function TravelRequestForm() {
     const [newItinerary, setNewItinerary] = useState({
         onwardJourney: '',
         onwardDepartureDate: null,
-        onwardPreferredTime: '',
+        // onwardPreferredTime: '',
+        onwardTime: '',
         onwardJourneyNote: '',
         onwardTransportNumber: '',
         budget: null,
         returnJourney: '',
         returnArrivalDate: null,
-        returnPreferredTime: '',
+        // returnPreferredTime: '',
+        returnTime: '',
         returnTransportNumber: '',
     });
     const [editingItinerary, setEditingItinerary] = useState(null);
@@ -268,13 +270,15 @@ function TravelRequestForm() {
         setNewItinerary({
             onwardJourney: '',
             onwardDepartureDate: null,
-            onwardPreferredTime: '',
+            // onwardPreferredTime: '',
+            onwardTime: '',
             onwardTransportNumber: '',
             onwardJourneyNote: '',
             budget: null,
             returnJourney: '',
             returnArrivalDate: null,
-            returnPreferredTime: '',
+            // returnPreferredTime: '',
+            returnTime: '',
             returnTransportNumber: '',
         });
         setShowItinerary(false);
@@ -567,13 +571,15 @@ function TravelRequestForm() {
         setNewItinerary({
             onwardJourney: '',
             onwardDepartureDate: null,
-            onwardPreferredTime: '',
+            // onwardPreferredTime: '',
+            onwardTime: '',
             onwardJourneyNote: '',
             onwardTransportNumber: '',
             budget: null,
             returnJourney: '',
             returnArrivalDate: null,
-            returnPreferredTime: '',
+            // returnPreferredTime: '',
+            returnTime: '',
             returnTransportNumber: '',
         });
         setShowReturnFields(false);
@@ -807,9 +813,9 @@ function TravelRequestForm() {
     useEffect(() => {
         console.log("Itenarary : ", newItinerary);
         console.log("show ", showReturnFields);
-        if (newItinerary.onwardJourney !== '' && newItinerary.onwardDepartureDate !== null && newItinerary.onwardPreferredTime !== null && newItinerary.onwardTransportNumber !== '' && newItinerary.budget > 0 && !showReturnFields) {
+        if (newItinerary.onwardJourney !== '' && newItinerary.onwardDepartureDate !== null && newItinerary.onwardTime !== null && newItinerary.onwardTransportNumber !== '' && newItinerary.budget > 0 && !showReturnFields) {
             setSaveItineraryFlag(false)
-        } else if (newItinerary.onwardJourney !== '' && newItinerary.onwardDepartureDate !== null && newItinerary.onwardPreferredTime !== null && newItinerary.onwardTransportNumber !== '' && newItinerary.budget > 0 && showReturnFields && newItinerary.returnJourney !== '' && newItinerary.returnArrivalDate !== null && newItinerary.returnPreferredTime !== null && newItinerary.returnTransportNumber !== '') {
+        } else if (newItinerary.onwardJourney !== '' && newItinerary.onwardDepartureDate !== null && newItinerary.onwardTime !== null && newItinerary.onwardTransportNumber !== '' && newItinerary.budget > 0 && showReturnFields && newItinerary.returnJourney !== '' && newItinerary.returnArrivalDate !== null && newItinerary.returnTime !== null && newItinerary.returnTransportNumber !== '') {
             setSaveItineraryFlag(false)
         } else {
             setSaveItineraryFlag(true)
@@ -1771,11 +1777,12 @@ function TravelRequestForm() {
                                                         </div>
                                                         <div className="calendar-item">
                                                             <FloatLabel>
-                                                                <Dropdown id="onwardPreferredTime" className="onwardPreferredTime"
+                                                                {/* <Dropdown id="onwardPreferredTime" className="onwardPreferredTime"
                                                                     value={newItinerary.onwardPreferredTime}
                                                                     style={{ width: '9vw' }}
-                                                                    onChange={e => handleInputChange('onwardPreferredTime', e)} options={preferredTimeList} optionLabel="name" />
-                                                                <label htmlFor="onwardPreferredTime">Preferred Time<span className="text-danger px-1">*</span></label>
+                                                                    onChange={e => handleInputChange('onwardPreferredTime', e)} options={preferredTimeList} optionLabel="name" /> */}
+                                                                <InputText id="onwardTime" className="onwardPreferredTime"  maxLength={250} value={newItinerary.onwardTime} onChange={e => handleInputChange('onwardTime', e)} />
+                                                                <label htmlFor="onwardTime">Preferred Time<span className="text-danger px-1">*</span></label>
                                                             </FloatLabel>
                                                         </div>
                                                         <div className="calendar-item">
@@ -1834,11 +1841,12 @@ function TravelRequestForm() {
                                                                 </div>
                                                                 <div className="calendar-item">
                                                                     <FloatLabel>
-                                                                        <Dropdown id="returnpreferredTime" className="onwardPreferredTime"
+                                                                        {/* <Dropdown id="returnpreferredTime" className="onwardPreferredTime"
                                                                             style={{ width: '9vw' }}
                                                                             value={newItinerary.returnPreferredTime}
-                                                                            onChange={e => handleInputChange('returnPreferredTime', e)} options={preferredTimeList} optionLabel="name" />
-                                                                        <label htmlFor="returnpreferredTime">Preferred Time<span className="text-danger px-1">*</span></label>
+                                                                            onChange={e => handleInputChange('returnPreferredTime', e)} options={preferredTimeList} optionLabel="name" /> */}
+                                                                        <InputText id="returnTime" className="onwardPreferredTime"  maxLength={250} value={newItinerary.returnTime} onChange={e => handleInputChange('returnTime', e)} />
+                                                                        <label htmlFor="returnTime">Preferred Time<span className="text-danger px-1">*</span></label>
                                                                     </FloatLabel>
                                                                 </div>
                                                                 <div className="calendar-item">
@@ -1867,11 +1875,13 @@ function TravelRequestForm() {
                                                 {/*<Column sortable field="price" header="Price incl. VAT" /> */}
                                                 <Column sortable field="onwardJourney" header="Onward Journey (From - To)" headerClassName="custom-header" />
                                                 <Column sortable field="onwardDepartureDate" header="Departure Date" body={(rowData) => formatDate(rowData.onwardDepartureDate)} headerClassName="custom-header" />
-                                                <Column sortable field="onwardPreferredTime" header="Onward Preferred Time" body={(rowData) => formatPickList(rowData.onwardPreferredTime)} headerClassName="custom-header" />
+                                                {/* <Column sortable field="onwardPreferredTime" header="Onward Time" body={(rowData) => formatPickList(rowData.onwardPreferredTime)} headerClassName="custom-header" /> */}
+                                                <Column sortable field="onwardTime" header="Onward Time" headerClassName="custom-header" />
                                                 <Column sortable field="onwardTransportNumber" header="Onward Flight/Train No" headerClassName="custom-header" />
                                                 <Column sortable field="returnJourney" header="Return Journey (From - To)" headerClassName="custom-header" />
                                                 <Column sortable field="returnArrivalDate" header="Arrival Date" body={(rowData) => formatDate(rowData.returnArrivalDate)} headerClassName="custom-header" />
-                                                <Column sortable field="returnPreferredTime" header="Return Preferred Time" body={(rowData) => formatPickList(rowData.returnPreferredTime)} headerClassName="custom-header" />
+                                                {/* <Column sortable field="returnPreferredTime" header="Return Time" body={(rowData) => formatPickList(rowData.returnPreferredTime)} headerClassName="custom-header" /> */}
+                                                <Column sortable field="returnTime" header="Return Time" headerClassName="custom-header" />
                                                 <Column sortable field="returnTransportNumber" header="Return Flight/Train No" headerClassName="custom-header" />
                                                 <Column sortable field="budget" header="Fare" headerClassName="custom-header" />
                                                 <Column sortable field="onwardJourneyNote" header="Remarks" headerClassName="custom-header" />

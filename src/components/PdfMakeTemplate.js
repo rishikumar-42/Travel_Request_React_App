@@ -701,7 +701,37 @@ export const generatePDF = async (item = {}, travelInfo = [], attachmentInfo = [
                                 paddingBottom: () => 2
                             },
                             margin: [0, 5, 0, 5]
-                        }] : [],
+                        }] : [{
+                            table: {
+                                widths: ['*'],
+                                dontBreakRows: true,
+                                body: [
+                                    [{
+                                        text: 'Attachments',
+                                        style: 'sectionTextHeader',
+                                        margin: [10, 0, 0, 0],
+                                        alignment: 'left',
+                                    }],
+                                    [{
+                                        text: 'no attachments',
+                                        style: 'smallText',
+                                        margin: [10, 0, 0, 0],
+                                        alignment: 'left',
+                                    }],
+                                ]
+                            },
+                            layout: {
+                                hLineWidth: () => 0,
+                                vLineWidth: () => 0,
+                                hLineColor: () => '#cccccc',
+                                vLineColor: () => '#cccccc',
+                                paddingLeft: () => 2,
+                                paddingRight: () => 2,
+                                paddingTop: () => 2,
+                                paddingBottom: () => 2
+                            },
+                            margin: [0, 5, 0, 5]
+                        }],
                         travelInfo.length > 0 ? [{
                             table: {
                                 headerRows: 1,
@@ -711,11 +741,11 @@ export const generatePDF = async (item = {}, travelInfo = [], attachmentInfo = [
                                     [
                                         { text: 'Onward Journey (From - To)', style: 'tableHeader' },
                                         { text: 'Departure Date', style: 'tableHeader' },
-                                        { text: 'Onward Preferred Time', style: 'tableHeader' },
+                                        { text: 'Onward Time', style: 'tableHeader' },
                                         { text: 'Onward Flight/Train No', style: 'tableHeader' },
                                         { text: 'Return Journey (From - To)', style: 'tableHeader' },
                                         { text: 'Arrival Date', style: 'tableHeader' },
-                                        { text: 'Return Preferred Time', style: 'tableHeader' },
+                                        { text: 'Return Time', style: 'tableHeader' },
                                         { text: 'Return Flight/Train No', style: 'tableHeader' },
                                         { text: 'Fare', style: 'tableHeader' },
                                         { text: 'Remarks', style: 'tableHeader' }
@@ -723,11 +753,11 @@ export const generatePDF = async (item = {}, travelInfo = [], attachmentInfo = [
                                     ...travelInfo.map((item) => [
                                         { text: item.onwardJourney || 'N/A', style: 'tableData' },
                                         { text: formatDate(item.onwardDepartureDate) || 'N/A', style: 'tableData' },
-                                        { text: formatPickList(item.onwardPreferredTime) || 'N/A', style: 'tableData' },
+                                        { text: item.onwardTime || 'N/A', style: 'tableData' },
                                         { text: item.onwardTransportNumber || 'N/A', style: 'tableData' },
                                         { text: item.returnJourney || 'N/A', style: 'tableData' },
                                         { text: formatDate(item.returnArrivalDate) || 'N/A', style: 'tableData' },
-                                        { text: formatPickList(item.returnPreferredTime) || 'N/A', style: 'tableData' },
+                                        { text: item.returnTime || 'N/A', style: 'tableData' },
                                         { text: item.returnTransportNumber || 'N/A', style: 'tableData' },
                                         { text: item.budget || 'N/A', style: 'tableData' },
                                         { text: item.onwardJourneyNote || 'N/A', style: 'tableData' },
@@ -746,7 +776,53 @@ export const generatePDF = async (item = {}, travelInfo = [], attachmentInfo = [
                                 paddingBottom: () => 5,
                             },
                             margin: [10, 0, 0, 0]
-                        }] : [],
+                        }] : [{
+                            table: {
+                                widths: ['*'],
+                                dontBreakRows: true,
+                                body: [
+                                    [{
+                                        text: ' Itineraries',
+                                        style: 'sectionTextHeader',
+                                        margin: [10, 0, 0, 0],
+                                        alignment: 'left',
+                                    }],
+                                    [{
+                                        text: ' no Data',
+                                        style: 'smallText',
+                                        margin: [10, 0, 0, 0],
+                                        alignment: 'left',
+                                    }],
+                                ]
+                            },
+                            layout: {
+                                hLineWidth: () => 0,
+                                vLineWidth: () => 0,
+                                hLineColor: () => '#cccccc',
+                                vLineColor: () => '#cccccc',
+                                paddingLeft: () => 2,
+                                paddingRight: () => 2,
+                                paddingTop: () => 2,
+                                paddingBottom: () => 2
+                            },
+                            margin: [0, 5, 0, 5]
+                        }],
+                        [{
+                            columns: [
+                                {
+                                    width: 120,
+                                    stack: [
+                                        { text: 'Total Fare:', bold: true, style: 'smallTextHeader' },
+                                        {
+                                            text: `${item.totalFare || 'N/A'}`, style: 'smallText', noWrap: false
+                                        }
+                                    ],
+                                    margin: [10, 0, 0, 0]
+                                },
+                            ],
+                            columnGap: 5,
+                            margin: [0, 5, 0, 5]
+                        }],
                         item.flightTicketReason && item.flightTicketReason.name ? [{
                             columns: [
                                 {
@@ -769,7 +845,7 @@ export const generatePDF = async (item = {}, travelInfo = [], attachmentInfo = [
                 },
                 layout: {
                     hLineWidth: (i, node) => (i === 0 || i === node.table.body.length) ? 1 : 0,
-                    vLineWidth: () => 0.5,
+                    vLineWidth: () => 1,
                     hLineColor: () => '#cccccc',
                     vLineColor: () => '#cccccc',
                     // fillColor: (rowIndex) => rowIndex === 0 ? '#004085' : null,
@@ -783,6 +859,7 @@ export const generatePDF = async (item = {}, travelInfo = [], attachmentInfo = [
             {
                 table: {
                     widths: ['*'],
+                    dontBreakRows: true,
                     body: [
                         [{
                             text: 'Approval History',
