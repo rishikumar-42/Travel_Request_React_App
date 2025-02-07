@@ -1261,7 +1261,7 @@ function TravelRequestForm() {
                                         value={selectedItem}
                                         suggestions={dropDownSuggestions}
                                         completeMethod={searchItem}
-                                        field="email"
+                                        field="name"
                                         className="w-100"
                                         // onBlur={handleBlur2}
                                         onChange={(e) => {
@@ -1303,7 +1303,7 @@ function TravelRequestForm() {
                                         value={selectedItem2}
                                         suggestions={dropDownSuggestions2}
                                         completeMethod={searchItem2}
-                                        field="email"
+                                        field="name"
                                         // onBlur={handleBlur3}
                                         className="w-100"
                                         onChange={(e) => {

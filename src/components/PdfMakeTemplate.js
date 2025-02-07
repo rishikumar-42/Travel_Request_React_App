@@ -868,13 +868,13 @@ export const generatePDF = async (item = {}, travelInfo = [], attachmentInfo = [
                                         ],
                                         [
                                             { text: 'Manager', style: 'tableData' },
-                                            { text: item.manager || 'N/A', style: 'tableData' },
+                                            { text: item.managerName || 'N/A', style: 'tableData' },
                                             { text: item.approver1Comment || 'N/A', style: 'tableData' },
                                             { text: formatDateTime(item.managerActionTime) || 'N/A', style: 'tableData' },
                                         ],
                                         [
                                             { text: 'HOD', style: 'tableData' },
-                                            { text: item.hod || 'N/A', style: 'tableData' },
+                                            { text: item.hodName || 'N/A', style: 'tableData' },
                                             { text: item.approver2Comment || 'N/A', style: 'tableData' },
                                             { text: formatDateTime(item.hodActionTime) || 'N/A', style: 'tableData' },
                                         ]

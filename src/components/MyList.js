@@ -469,7 +469,7 @@ const MyList = () => {
                       <th className="th">Travel Purpose</th>
                       <th className="th">Approver 1</th>
                       <th className="th">Approver 2</th>
-                      <th className="th">Budget</th>
+                      <th className="th">Total Fare</th>
                       <th className="th">Status</th>
                       {(activeTab === 'draft' || activeTab === 'pendingAtApprover1 || pendingAtApprover2' || activeTab === 'all') && <th className="th">Action</th>}
                     </tr>
@@ -489,9 +489,9 @@ const MyList = () => {
                           {/* <td className="td-mylist">{`${item.firstName || 'N/A'} ${item.lastName || 'N/A'}`}</td> */}
                           <td className="td-mylist">{`${item.name || 'N/A'}`}</td>
                           <td className="td-mylist">{item.travelPurpose || 'N/A'}</td>
-                          <td className="td-mylist">{item.manager || 'N/A'}</td>
-                          <td className="td-mylist">{item.hod || 'N/A'}</td>
-                          <td className="td-mylist">{item.travelBudget || 'N/A'}</td>
+                          <td className="td-mylist">{item.managerName || 'N/A'}</td>
+                          <td className="td-mylist">{item.hodName || 'N/A'}</td>
+                          <td className="td-mylist">{item.totalFare || 'N/A'}</td>
                           <td className="td-mylist">{item.approveStatus?.name || 'N/A'}</td>
                           {/* <td className="td-mylist">{item.status?.label || 'N/A'}</td> */}
                           {/* {(activeTab === 'draft' || activeTab === 'pendingAtApprover1 || pendingAtApprover2')  && (

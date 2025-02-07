@@ -326,7 +326,7 @@ const Dashboard = () => {
                       <th className="th">Travel Purpose</th>
                       <th className="th">Approver 1</th>
                       <th className="th">Approver 2</th>
-                      <th className="th">Budget</th>
+                      <th className="th">Total Fare</th>
                       <th className="th">Status</th>
                     </tr>
                   </thead>
@@ -345,9 +345,9 @@ const Dashboard = () => {
                           {/* <td className="td">{`${item.firstName || 'N/A'} ${item.lastName || 'N/A'}`}</td> */}
                           <td className="td">{`${item.name || 'N/A'}`}</td>
                           <td className="td">{item.travelPurpose || 'N/A'}</td>
-                          <td className="td">{item.manager || 'N/A'}</td>
-                          <td className="td">{item.hod || 'N/A'}</td>
-                          <td className="td">{item.travelBudget || 'N/A'}</td>
+                          <td className="td">{item.managerName || 'N/A'}</td>
+                          <td className="td">{item.hodName || 'N/A'}</td>
+                          <td className="td">{item.totalFare || 'N/A'}</td>
                           <td className="td">{item.approveStatus?.name || 'N/A'}</td>
                         </tr>
                       ))

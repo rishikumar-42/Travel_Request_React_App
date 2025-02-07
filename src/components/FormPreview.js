@@ -184,11 +184,11 @@ const FormPreview = ({ item, travelInfo, attachments }) => {
                     <div className="preview-details-grid">
                         <div className="preview-detail-item">
                             <span className="preview-label">Manager:</span>
-                            <span className="preview-value">{item.manager || 'N/A'}</span>
+                            <span className="preview-value">{item.managerName || 'N/A'}</span>
                         </div>
                         <div className="preview-detail-item">
                             <span className="preview-label">Head Of Department/GM/VP:</span>
-                            <span className="preview-value">{item.hod || 'N/A'}</span>
+                            <span className="preview-value">{item.hodName || 'N/A'}</span>
                         </div>
                     </div>
                 </div>

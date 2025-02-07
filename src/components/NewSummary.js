@@ -831,11 +831,11 @@ const NewSummary = ({
             <div className="details-grid">
               <div className="detail-item">
                 <span className="summary-label">Approver 1:</span>
-                <span className="value">{item.manager || "N/A"}</span>
+                <span className="value">{item.managerName || "N/A"}</span>
               </div>
               <div className="detail-item">
                 <span className="summary-label">Approver 2:</span>
-                <span className="value">{item.hod || "N/A"}</span>
+                <span className="value">{item.hodName || "N/A"}</span>
               </div>
               <div className="detail-item">
                 <span className="summary-label">Status:</span>
