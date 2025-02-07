@@ -681,10 +681,10 @@ function TravelRequestForm() {
         const newErrors = {};
 
         // Required fields validation
-        if (!formData.issuer) newErrors.issuer = "Issuer is required.";
-        if (!formData.issuerDate) newErrors.issuerDate = "Issuer Date is required.";
-        if (!isTelephoneNumberValid) newErrors.issuerNumber = "Issuer Number is not valid.";
-        if (!formData.issuerNumber) newErrors.issuerNumber = "Issuer Number is required.";
+        // if (!formData.issuer) newErrors.issuer = "Issuer is required.";
+        // if (!formData.issuerDate) newErrors.issuerDate = "Issuer Date is required.";
+        // if (!isTelephoneNumberValid) newErrors.issuerNumber = "Issuer Number is not valid.";
+        // if (!formData.issuerNumber) newErrors.issuerNumber = "Issuer Number is required.";
         if (!formData.email) newErrors.email = "Email is required.";
         if (!formData.travelType) newErrors.travelType = "Travel type is required.";
         if (!formData.travelPurpose) newErrors.travelPurpose = "Travel Purpose is required.";
@@ -975,9 +975,9 @@ function TravelRequestForm() {
                                         ...formData,
                                         issuer: e.target.value
                                     })} />
-                                <label htmlFor="issuer" className="small">Issuer<span className="text-danger px-1">*</span></label>
+                                <label htmlFor="issuer" className="small">Issuer</label>
                             </FloatLabel>
-                            {errors.issuer && !formData.issuer && <span style={{ color: 'red' }}>{errors.issuer}</span>}
+                            {/* {errors.issuer && !formData.issuer && <span style={{ color: 'red' }}>{errors.issuer}</span>} */}
                         </div>
                         <div className="p-inputgroup d-block">
                             <FloatLabel>
@@ -986,16 +986,16 @@ function TravelRequestForm() {
                                         ...formData,
                                         issuerDate: setTimeZone(e.value)
                                     })} showIcon />
-                                <label htmlFor="issuerDate" className="small">Issue Date<span className="text-danger px-1">*</span></label>
+                                <label htmlFor="issuerDate" className="small">Issue Date</label>
                             </FloatLabel>
-                            {errors.issuerDate && !formData.issuerDate && <span style={{ color: 'red' }}>{errors.issuerDate}</span>}
+                            {/* {errors.issuerDate && !formData.issuerDate && <span style={{ color: 'red' }}>{errors.issuerDate}</span>} */}
                         </div>
                         <div className="p-inputgroup d-block">
                             <FloatLabel>
                                 <InputNumber id="number-input" value={formData.issuerNumber}
                                     useGrouping={false}
                                     onChange={(e) => {
-                                        validateTelephoneNumber(e.value)
+                                        // validateTelephoneNumber(e.value)
                                         setFormData({
                                             ...formData,
                                             issuerNumber: e.value
@@ -1005,10 +1005,10 @@ function TravelRequestForm() {
                                     }}
                                 // onBlur={validateTelephoneNumber} 
                                 />
-                                <label htmlFor="number-input" className="small">Telephone Number<span className="text-danger px-1">*</span></label>
+                                <label htmlFor="number-input" className="small">Telephone Number</label>
                             </FloatLabel>
-                            {(!isTelephoneNumberValid && formData.issuerNumber !== null) && <span htmlFor="number-input" className="mt-1" style={{ color: 'red' }}>Number must be between 9 and 15 digits</span>}
-                            {errors.issuerNumber && !formData.issuerNumber && <span style={{ color: 'red' }}>{errors.issuerNumber}</span>}
+                            {/* {(!isTelephoneNumberValid && formData.issuerNumber !== null) && <span htmlFor="number-input" className="mt-1" style={{ color: 'red' }}>Number must be between 9 and 15 digits</span>}
+                            {errors.issuerNumber && !formData.issuerNumber && <span style={{ color: 'red' }}>{errors.issuerNumber}</span>} */}
                         </div>
                     </div>
                     <div className="px-3 pt-3">
