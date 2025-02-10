@@ -395,7 +395,8 @@ const NewSummary = ({
         id: itinerary.id || null,
         r_itineraryRelation_c_travelInfoId:
           itinerary.r_itineraryRelation_c_travelInfoId,
-        onwardJourney: itinerary.onwardJourney,
+        onwardJourneyFrom: itinerary.onwardJourneyFrom,
+        onwardJourneyTo: itinerary.onwardJourneyTo,
         onwardDepartureDate: itinerary.onwardDepartureDate
           ? setTimeZone(new Date(itinerary.onwardDepartureDate).toISOString())
           : null,
@@ -403,7 +404,8 @@ const NewSummary = ({
         onwardJourneyNote: itinerary.onwardJourneyNote,
         onwardTransportNumber: itinerary.onwardTransportNumber,
         budget: itinerary.budget,
-        returnJourney: itinerary.returnJourney,
+        returnJourneyFrom: itinerary.returnJourneyFrom,
+        returnJourneyTo: itinerary.returnJourneyTo,
         returnArrivalDate: itinerary.returnArrivalDate
           ? setTimeZone(new Date(itinerary.returnArrivalDate).toISOString())
           : null,
@@ -1025,8 +1027,14 @@ const NewSummary = ({
             >
               <Column
                 sortable
-                field="onwardJourney"
-                header="Onward Journey (From - To)"
+                field="onwardJourneyFrom"
+                header="Onward From"
+                headerClassName="preview-custom-header"
+              />
+              <Column
+                sortable
+                field="onwardJourneyTo"
+                header="Onward To"
                 headerClassName="preview-custom-header"
               />
               <Column
@@ -1051,8 +1059,14 @@ const NewSummary = ({
               />
               <Column
                 sortable
+                field="returnJourneyFrom"
+                header="Return From"
+                headerClassName="preview-custom-header"
+              />
+              <Column
+                sortable
                 field="returnJourney"
-                header="Return Journey (From - To)"
+                header="Return To"
                 headerClassName="preview-custom-header"
               />
               <Column

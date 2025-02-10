@@ -110,13 +110,15 @@ function EditTravelRequestForm() {
     const [isManagerEmailValid, setIsManagerEmailValid] = useState(true);
     const [isHODEmailValid, setIsHODEmailValid] = useState(true);
     const [newItinerary, setNewItinerary] = useState({
-        onwardJourney: '',
+        onwardJourneyFrom: '',
+        onwardJourneyTo: '',
         onwardDepartureDate: null,
         onwardTime: '',
         onwardJourneyNote: '',
         onwardTransportNumber: '',
         budget: null,
-        returnJourney: '',
+        returnJourneyFrom: '',
+        returnJourneyTo: '',
         returnArrivalDate: null,
         returnTime: '',
         returnTransportNumber: '',
@@ -307,12 +309,14 @@ function EditTravelRequestForm() {
             setItineraries([...itineraries, newItinerary]);
         }
         setNewItinerary({
-            onwardJourney: '',
+            onwardJourneyFrom: '',
+            onwardJourneyTo: '',
             onwardDepartureDate: null,
             onwardTime: '',
             onwardTransportNumber: '',
             onwardJourneyNote: '',
-            returnJourney: '',
+            returnJourneyFrom: '',
+            returnJourneyTo: '',
             returnArrivalDate: null,
             returnTime: '',
             returnTransportNumber: '',
@@ -649,13 +653,15 @@ function EditTravelRequestForm() {
         setShowItinerary(false);
         setEditingItinerary(null);
         setNewItinerary({
-            onwardJourney: '',
+            onwardJourneyFrom: '',
+            onwardJourneyTo: '',
             onwardDepartureDate: null,
             onwardTime: '',
             onwardJourneyNote: '',
             onwardTransportNumber: '',
             budget: null,
-            returnJourney: '',
+            returnJourneyFrom: '',
+            returnJourneyTo: '',
             returnArrivalDate: null,
             returnTime: '',
             returnTransportNumber: '',
@@ -889,9 +895,9 @@ function EditTravelRequestForm() {
     useEffect(() => {
         console.log("Itenarary : ", newItinerary);
         console.log("show ", showReturnFields);
-        if (newItinerary.onwardJourney !== '' && newItinerary.onwardDepartureDate !== null && newItinerary.onwardTime !== null && newItinerary.onwardTransportNumber !== '' && newItinerary.budget > 0 && !showReturnFields) {
+        if (newItinerary.onwardJourneyFrom !== '' && newItinerary.onwardJourneyTo !== '' && newItinerary.onwardDepartureDate !== null && newItinerary.onwardTime !== null && newItinerary.onwardTransportNumber !== '' && newItinerary.budget > 0 && !showReturnFields) {
             setSaveItineraryFlag(false)
-        } else if (newItinerary.onwardJourney !== '' && newItinerary.onwardDepartureDate !== null && newItinerary.onwardTime !== null && newItinerary.onwardTransportNumber !== '' && newItinerary.budget > 0 && showReturnFields && newItinerary.returnJourney !== '' && newItinerary.returnArrivalDate !== null && newItinerary.returnTime !== null && newItinerary.returnTransportNumber !== '') {
+        } else if (newItinerary.onwardJourneyFrom !== '' && newItinerary.onwardJourneyTo !== '' && newItinerary.onwardDepartureDate !== null && newItinerary.onwardTime !== null && newItinerary.onwardTransportNumber !== '' && newItinerary.budget > 0 && showReturnFields && newItinerary.returnJourneyFrom !== '' && newItinerary.returnJourneyTo !== '' && newItinerary.returnArrivalDate !== null && newItinerary.returnTime !== null && newItinerary.returnTransportNumber !== '') {
             setSaveItineraryFlag(false)
         } else {
             setSaveItineraryFlag(true)
@@ -923,13 +929,15 @@ function EditTravelRequestForm() {
             itineraryRelation: data.itineraryRelation.map(itinerary => ({
                 id: itinerary.id || null,
                 r_itineraryRelation_c_travelInfoId: itinerary.r_itineraryRelation_c_travelInfoId,
-                onwardJourney: itinerary.onwardJourney,
+                onwardJourneyFrom: itinerary.onwardJourneyFrom,
+                onwardJourneyTo: itinerary.onwardJourneyTo,
                 onwardDepartureDate: itinerary.onwardDepartureDate ? setTimeZone(new Date(itinerary.onwardDepartureDate).toISOString()) : null,
                 onwardTime: itinerary.onwardTime,
                 onwardJourneyNote: itinerary.onwardJourneyNote,
                 onwardTransportNumber: itinerary.onwardTransportNumber,
                 budget: itinerary.budget,
-                returnJourney: itinerary.returnJourney,
+                returnJourneyFrom: itinerary.returnJourneyFrom,
+                returnJourneyTo: itinerary.returnJourneyTo,
                 returnArrivalDate: itinerary.returnArrivalDate ? setTimeZone(new Date(itinerary.returnArrivalDate).toISOString()) : null,
                 returnTime: itinerary.returnTime,
                 returnTransportNumber: itinerary.returnTransportNumber,
@@ -1868,10 +1876,16 @@ function EditTravelRequestForm() {
                                             <hr class="my-1" />
                                             <div className="itinerary-form">
                                                 <div className="form-row d-flex align-content-stretch gap-2">
-                                                    <div className="calendar-item flex-grow-1">
-                                                        <FloatLabel className="w-100">
-                                                            <InputText className="journeyField w-100" id="onwardJourney" value={newItinerary.onwardJourney} onChange={e => handleInputChange('onwardJourney', e)} placeholder="SG-IND" />
-                                                            <label htmlFor="onwardJourney">Onward Journey (From - To)<span className="text-danger px-1">*</span></label>
+                                                    <div className="calendar-item">
+                                                        <FloatLabel>
+                                                            <InputText className="journeyField" id="onwardJourneyFrom" value={newItinerary.onwardJourneyFrom} onChange={e => handleInputChange('onwardJourneyFrom', e)} />
+                                                            <label htmlFor="onwardJourneyFrom">Onward From<span className="text-danger px-1">*</span></label>
+                                                        </FloatLabel>
+                                                    </div>
+                                                    <div className="calendar-item">
+                                                        <FloatLabel>
+                                                            <InputText className="journeyField" id="onwardJourneyTo" value={newItinerary.onwardJourneyTo} onChange={e => handleInputChange('onwardJourneyTo', e)} />
+                                                            <label htmlFor="onwardJourneyTo">Onward To<span className="text-danger px-1">*</span></label>
                                                         </FloatLabel>
                                                     </div>
                                                     <div className="calendar-item col-width">
@@ -1886,7 +1900,7 @@ function EditTravelRequestForm() {
                                                                 value={newItinerary.onwardPreferredTime.name}
                                                                 onChange={e => handleInputChange('onwardPreferredTime', e)} options={preferredTimeList} optionLabel="name" optionValue="name" /> */}
                                                             <InputText id="onwardTime" className="onwardPreferredTime" maxLength={250} value={newItinerary.onwardTime} onChange={e => handleInputChange('onwardTime', e)} />
-                                                            <label htmlFor="onwardTime">Preferred Time<span className="text-danger px-1">*</span></label>
+                                                            <label htmlFor="onwardTime">Onward Time<span className="text-danger px-1">*</span></label>
                                                         </FloatLabel>
                                                     </div>
                                                     <div className="calendar-item">
@@ -1915,12 +1929,19 @@ function EditTravelRequestForm() {
                                                         <InputSwitch checked={showReturnFields} className="mx-2"
                                                             onChange={(e) => {
                                                                 setShowReturnFields(e.value)
-                                                                if (newItinerary.onwardJourney.includes("-") && e.value) {
-                                                                    const tempJourney = newItinerary.onwardJourney.split("-").reverse().join("-");
-                                                                    console.log("temp : ", tempJourney);
+                                                                // if (newItinerary.onwardJourney.includes("-") && e.value) {
+                                                                //     const tempJourney = newItinerary.onwardJourney.split("-").reverse().join("-");
+                                                                //     console.log("temp : ", tempJourney);
+                                                                //     setNewItinerary({
+                                                                //         ...newItinerary,
+                                                                //         returnJourney: tempJourney,
+                                                                //     });
+                                                                // }
+                                                                if (newItinerary.onwardJourneyFrom !== null && newItinerary.onwardJourneyTo !== null) {
                                                                     setNewItinerary({
                                                                         ...newItinerary,
-                                                                        returnJourney: tempJourney,
+                                                                        returnJourneyFrom: onwardJourneyTo,
+                                                                        returnJourneyTo: onwardJourneyFrom
                                                                     });
                                                                 }
                                                             }} />
@@ -1932,8 +1953,14 @@ function EditTravelRequestForm() {
                                                         <div className="form-row2 gap-2">
                                                             <div className="calendar-item" >
                                                                 <FloatLabel>
-                                                                    <InputText className="journeyField" style={{ width: '265px' }} id="returnJourney" value={newItinerary.returnJourney} onChange={e => handleInputChange('returnJourney', e)} />
-                                                                    <label htmlFor="returnJourney">Return Journey (From - To)<span className="text-danger px-1">*</span></label>
+                                                                    <InputText className="journeyField" id="returnJourneyFrom" value={newItinerary.returnJourneyFrom} onChange={e => handleInputChange('returnJourneyFrom', e)} />
+                                                                    <label htmlFor="returnJourneyFrom">Return From<span className="text-danger px-1">*</span></label>
+                                                                </FloatLabel>
+                                                            </div>
+                                                            <div className="calendar-item" >
+                                                                <FloatLabel>
+                                                                    <InputText className="journeyField" id="returnJourneyTo" value={newItinerary.returnJourneyTo} onChange={e => handleInputChange('returnJourneyTo', e)} />
+                                                                    <label htmlFor="returnJourneyTo">Return To<span className="text-danger px-1">*</span></label>
                                                                 </FloatLabel>
                                                             </div>
                                                             <div className="calendar-item col-width">
@@ -1948,7 +1975,7 @@ function EditTravelRequestForm() {
                                                                         value={newItinerary.returnPreferredTime?.name}
                                                                         onChange={e => handleInputChange('returnPreferredTime', e)} options={preferredTimeList} optionLabel="name" optionValue="name" /> */}
                                                                     <InputText id="returnTime" className="onwardPreferredTime" maxLength={250} value={newItinerary.returnTime} onChange={e => handleInputChange('returnTime', e)} />
-                                                                    <label htmlFor="returnTime">Preferred Time<span className="text-danger px-1">*</span></label>
+                                                                    <label htmlFor="returnTime">Return Time<span className="text-danger px-1">*</span></label>
                                                                 </FloatLabel>
                                                             </div>
                                                             <div className="calendar-item">
@@ -1974,11 +2001,13 @@ function EditTravelRequestForm() {
                                     <div className="itinerary-table">
                                         <div>
                                             <DataTable value={itineraries} showGridlines tableStyle={{ minWidth: '50rem' }}>
-                                                <Column sortable field="onwardJourney" header="Onward Journey (From - To)" headerClassName="custom-header" />
+                                                <Column sortable field="onwardJourneyFrom" header="Onward From" headerClassName="custom-header" />
+                                                <Column sortable field="onwardJourneyTo" header="Onward To" headerClassName="custom-header" />
                                                 <Column sortable field="onwardDepartureDate" header="Departure Date" body={(rowData) => formatDate(rowData.onwardDepartureDate)} headerClassName="custom-header" />
                                                 <Column sortable field="onwardTime" header="Onward Time" headerClassName="custom-header" />
                                                 <Column sortable field="onwardTransportNumber" header="Onward Flight/Train No" headerClassName="custom-header" />
-                                                <Column sortable field="returnJourney" header="Return Journey (From - To)" headerClassName="custom-header" />
+                                                <Column sortable field="returnJourneyFrom" header="Return From" headerClassName="custom-header" />
+                                                <Column sortable field="returnJourneyTo" header="Return To" headerClassName="custom-header" />
                                                 <Column sortable field="returnArrivalDate" header="Arrival Date" body={(rowData) => formatDate(rowData.returnArrivalDate)} headerClassName="custom-header" />
                                                 <Column sortable field="returnTime" header="Return Time" headerClassName="custom-header" />
                                                 <Column sortable field="returnTransportNumber" header="Return Flight/Train No" headerClassName="custom-header" />

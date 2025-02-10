@@ -704,14 +704,16 @@ export const generatePDF = async (item = {}, travelInfo = [], attachmentInfo = [
                             table: {
                                 headerRows: 1,
                                 dontBreakRows: true,
-                                widths: [40, 40, 40, 40, 40, 40, 40, 40, 40, 40],
+                                widths: [30,30, 40, 30, 30, 30, 30, 40, 30, 30, 25, 40],
                                 body: [
                                     [
-                                        { text: 'Onward Journey (From - To)', style: 'tableHeader' },
+                                        { text: 'Onward From', style: 'tableHeader' },
+                                        { text: 'Onward To', style: 'tableHeader' },
                                         { text: 'Departure Date', style: 'tableHeader' },
                                         { text: 'Onward Time', style: 'tableHeader' },
                                         { text: 'Onward Flight/Train No', style: 'tableHeader' },
-                                        { text: 'Return Journey (From - To)', style: 'tableHeader' },
+                                        { text: 'Return From', style: 'tableHeader' },
+                                        { text: 'Return To', style: 'tableHeader' },
                                         { text: 'Arrival Date', style: 'tableHeader' },
                                         { text: 'Return Time', style: 'tableHeader' },
                                         { text: 'Return Flight/Train No', style: 'tableHeader' },
@@ -719,11 +721,13 @@ export const generatePDF = async (item = {}, travelInfo = [], attachmentInfo = [
                                         { text: 'Remarks', style: 'tableHeader' }
                                     ],
                                     ...travelInfo.map((item) => [
-                                        { text: item.onwardJourney || 'N/A', style: 'tableData' },
+                                        { text: item.onwardJourneyFrom || 'N/A', style: 'tableData' },
+                                        { text: item.onwardJourneyTo || 'N/A', style: 'tableData' },
                                         { text: formatDate(item.onwardDepartureDate) || 'N/A', style: 'tableData' },
                                         { text: item.onwardTime || 'N/A', style: 'tableData' },
                                         { text: item.onwardTransportNumber || 'N/A', style: 'tableData' },
-                                        { text: item.returnJourney || 'N/A', style: 'tableData' },
+                                        { text: item.returnJourneyFrom || 'N/A', style: 'tableData' },
+                                        { text: item.returnJourneyTo || 'N/A', style: 'tableData' },
                                         { text: formatDate(item.returnArrivalDate) || 'N/A', style: 'tableData' },
                                         { text: item.returnTime || 'N/A', style: 'tableData' },
                                         { text: item.returnTransportNumber || 'N/A', style: 'tableData' },
