@@ -783,7 +783,7 @@ function EditTravelRequestForm() {
         if (!isManagerEmailValid) newErrors.manager = "Email not valid.";
         if (!isHODEmailValid) newErrors.hod = "Email not valid.";
         if (!formData.manager) newErrors.manager = "Email is required.";
-        if (formData.travelType === 'international' && !formData.hod) newErrors.hod = "Email is required.";
+        if ((formData.travelType === 'international' || formData.travelType === 'both') && !formData.hod) newErrors.hod = "Email is required.";
 
         if (showNights) {
             if (!formData.hotelLocation) newErrors.hotelLocation = "Hotel location is required.";
@@ -920,7 +920,7 @@ function EditTravelRequestForm() {
         var newId = formData.travelRequestId;
         if (item.approveStatus?.key === 'draft') {
             if (item.travelType !== formData.travelType) {
-                const prefix = (formData.travelType === 'international') ? 'I' : (formData.travelType === 'domestic') ? 'D' : '';
+                const prefix = (formData.travelType === 'international' || formData.travelType === 'both') ? 'I' : (formData.travelType === 'domestic') ? 'D' : '';
                 newId = prefix + item.travelRequestId.slice(1);
                 setFormData({
                     ...formData,
@@ -1319,6 +1319,15 @@ function EditTravelRequestForm() {
                                     checked={formData.travelType === 'international'}
                                     disabled={item.approveStatus?.key !== 'draft'} />
                                 <label htmlFor="international" className="mr-1 small">International</label>
+                                <label htmlFor="domestic" className="mr-1 small">Domestic</label>
+                                <RadioButton inputId="both" name="travelType" value="both"
+                                    onChange={(e) => setFormData({
+                                        ...formData,
+                                        travelType: e.value
+                                    })}
+                                    checked={formData.travelType === 'both'}
+                                    disabled={item.approveStatus?.key !== 'draft'} />
+                                <label htmlFor="both" className="mr-1 small">Both</label>
                             </div>
                         </div>
                         {errors.travelType && !formData.travelType && <span style={{ color: 'red' }}>{errors.travelType}</span>}
@@ -1502,7 +1511,7 @@ function EditTravelRequestForm() {
                                     // readOnly={formData.approveStatus?.key !== 'draft'}
                                     // tooltip="Disabled"
                                     />
-                                    <label htmlFor="hod" className="small">Head Of Department/GM/VP{formData.travelType === 'international' && <span className="text-danger px-1">*</span>}</label>
+                                    <label htmlFor="hod" className="small">Head Of Department/GM/VP{(formData.travelType === 'international' || formData.travelType === 'both') && <span className="text-danger px-1">*</span>}</label>
 
                                     {!isHODEmailValid && <span htmlFor="hod" style={{ color: 'red' }}>Invalid Email</span>}
                                     {errors.hod && !formData.hod && isHODEmailValid && <span style={{ color: 'red' }}>{errors.hod}</span>}

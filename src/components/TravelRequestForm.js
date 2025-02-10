@@ -707,7 +707,7 @@ function TravelRequestForm() {
         if (!isManagerEmailValid) newErrors.manager = "Email not valid.";
         if (!isHODEmailValid) newErrors.hod = "Email not valid.";
         if (!formData.manager) newErrors.manager = "Email is required.";
-        if (formData.travelType === 'international' && !formData.hod) newErrors.hod = "Email is required.";
+        if ((formData.travelType === 'international' || formData.travelType === 'both') && !formData.hod) newErrors.hod = "Email is required.";
 
         if (showNights) {
             if (!formData.hotelLocation) newErrors.hotelLocation = "Hotel location is required.";
@@ -761,7 +761,7 @@ function TravelRequestForm() {
         const year = String(now.getFullYear()).slice(-2); // Last two digits of the year
         const month = String(now.getMonth() + 1).padStart(2, '0'); // Month, zero-padded
         const finalSeq = String(seq).padStart(4, '0');
-        const prefix = (formData.travelType === 'international') ? 'I' : (formData.travelType === 'domestic') ? 'D' : '';
+        const prefix = (formData.travelType === 'international' || formData.travelType === 'both') ? 'I' : (formData.travelType === 'domestic') ? 'D' : '';
         const uniqId = `${prefix}TR${year}${month}${finalSeq}`;
         return uniqId;
     };
@@ -1156,6 +1156,13 @@ function TravelRequestForm() {
                                     })}
                                     checked={formData.travelType === 'international'} />
                                 <label htmlFor="international" className="mr-1 small">International</label>
+                                <RadioButton inputId="both" name="travelType" value="both"
+                                    onChange={(e) => setFormData({
+                                        ...formData,
+                                        travelType: e.value
+                                    })}
+                                    checked={formData.travelType === 'both'} />
+                                <label htmlFor="both" className="mr-1 small">Both</label>
                             </div>
                         </div>
                         {errors.travelType && !formData.travelType && <span style={{ color: 'red' }}>{errors.travelType}</span>}
@@ -1338,7 +1345,7 @@ function TravelRequestForm() {
                                     // tooltipOptions={{ showOnDisabled: true, position: 'bottom' }}
                                     // tooltip="Disabled"
                                     />
-                                    <label htmlFor="hod" className="small">Head Of Department/GM/VP{formData.travelType === 'international' && <span className="text-danger px-1">*</span>}</label>
+                                    <label htmlFor="hod" className="small">Head Of Department/GM/VP{(formData.travelType === 'international' || formData.travelType === 'both') && <span className="text-danger px-1">*</span>}</label>
 
                                     {!isHODEmailValid && <span htmlFor="hod" style={{ color: 'red' }}>Invalid Email</span>}
                                     {errors.hod && !formData.hod && isHODEmailValid && <span style={{ color: 'red' }}>{errors.hod}</span>}
