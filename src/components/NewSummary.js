@@ -1173,30 +1173,17 @@ const NewSummary = ({
                   label="Cancel"
                 />
               )}
-            {(item.approveStatus?.key === "approved" && (
-              // <button className="back-button" onClick={handleCancel}>Cancel</button>
+            {/* {(item.approveStatus?.key === "approved" && ( */}
               <Button
                 className="export-button"
                 disabled={loadingNew}
                 onClick={() => {
                   console.log("exporting....")
-                  // const element = document.getElementById('report');
-
-                  // var opt = {
-                  //   margin: 4,
-                  //   filename: `${item.travelRequestId}`,
-                  //   image: { type: 'jpeg', quality: 0.98 },
-                  //   html2canvas: { scale: 2, dpi: 192, letterRendering: true },
-                  //   jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-                  // };
-
-                  // // New Promise-based usage:
-                  // html2pdf().set(opt).from(element).save();
                   generatePDF(item, travelInfo, attachmentInfo);
                 }}
                 label="Download PDF"
               />
-            ))}
+            {/* ))} */}
             {loadingNew && (
               <div className="loader-container">
                 <div className="loader"></div>

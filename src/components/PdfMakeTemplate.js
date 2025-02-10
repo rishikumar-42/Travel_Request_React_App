@@ -873,7 +873,7 @@ export const generatePDF = async (item = {}, travelInfo = [], attachmentInfo = [
                                             { text: 'Role', style: 'tableHeader' },
                                             { text: 'Approver', style: 'tableHeader' },
                                             { text: 'Comment', style: 'tableHeader' },
-                                            { text: 'Approved On', style: 'tableHeader' }
+                                            { text: 'Time Of Action', style: 'tableHeader' }
                                         ],
                                         [
                                             { text: 'Manager', style: 'tableData' },
