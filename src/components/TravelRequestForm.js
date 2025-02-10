@@ -253,6 +253,11 @@ function TravelRequestForm() {
         return new Intl.DateTimeFormat('en-GB', options).format(new Date(date));
     };
 
+    const formatFare = (fare) => {
+        if (!formData.travelCurrency.name) return fare;
+        return `${formData.travelCurrency.name} ${fare}`;
+    };
+
     const formatPickList = (data) => {
         if (!data) return '';
         return data.name;
@@ -1793,8 +1798,8 @@ function TravelRequestForm() {
                                                                     if (newItinerary.onwardJourneyFrom !== null && newItinerary.onwardJourneyTo !== null) {
                                                                         setNewItinerary({
                                                                             ...newItinerary,
-                                                                            returnJourneyFrom: onwardJourneyTo,
-                                                                            returnJourneyTo: onwardJourneyFrom
+                                                                            returnJourneyFrom: newItinerary.onwardJourneyTo,
+                                                                            returnJourneyTo: newItinerary.onwardJourneyFrom
                                                                         });
                                                                     }
                                                                 }}
@@ -1869,7 +1874,7 @@ function TravelRequestForm() {
                                                 {/* <Column sortable field="returnPreferredTime" header="Return Time" body={(rowData) => formatPickList(rowData.returnPreferredTime)} headerClassName="custom-header" /> */}
                                                 <Column sortable field="returnTime" header="Return Time" headerClassName="custom-header" />
                                                 <Column sortable field="returnTransportNumber" header="Return Flight/Train No" headerClassName="custom-header" />
-                                                <Column sortable field="budget" header="Fare" headerClassName="custom-header" />
+                                                <Column sortable field="budget" header="Fare" body={(rowData) => formatFare(rowData.budget)} headerClassName="custom-header" />
                                                 <Column sortable field="onwardJourneyNote" header="Remarks" headerClassName="custom-header" />
                                                 <Column header="Actions" headerClassName="custom-header"
                                                     body={(rowData, { rowIndex }) => (

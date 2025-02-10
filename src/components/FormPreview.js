@@ -24,6 +24,11 @@ const FormPreview = ({ item, travelInfo, attachments }) => {
         const options = { day: '2-digit', month: 'short', year: 'numeric' };
         return new Intl.DateTimeFormat('en-GB', options).format(new Date(date));
     };
+    const formatFare = (fare) => {
+        if (!item.travelCurrency.name) return fare;
+        return `${item.travelCurrency.name} ${fare}`;
+    };
+
     const formatPickList = (data) => {
         if (!data) return '';
         return data.name;
@@ -352,7 +357,7 @@ const FormPreview = ({ item, travelInfo, attachments }) => {
                         {/* <Column sortable field="returnPreferredTime" header="Return Preferred Time" body={(rowData) => formatPickList(rowData.returnPreferredTime)} headerClassName="preview-custom-header" /> */}
                         <Column sortable field="returnTime" header="Return Time" headerClassName="preview-custom-header" />
                         <Column sortable field="returnTransportNumber" header="Return Flight/Train No" headerClassName="preview-custom-header" />
-                        <Column sortable field="budget" header="Fare" headerClassName="preview-custom-header" />
+                        <Column sortable field="budget" header="Fare" body={(rowData) => formatFare(rowData.budget)} headerClassName="preview-custom-header" />
                         <Column sortable field="onwardJourneyNote" header="Remarks" headerClassName="preview-custom-header" />
                     </DataTable>
                 </div>

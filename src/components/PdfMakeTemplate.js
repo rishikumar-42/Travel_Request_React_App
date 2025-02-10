@@ -52,6 +52,11 @@ export const generatePDF = async (item = {}, travelInfo = [], attachmentInfo = [
         );
     };
 
+    const formatFare = (fare) => {
+        if (!item.travelCurrency.name) return fare;
+        return `${item.travelCurrency.name} ${fare}`;
+    };
+
     // const formatDateTime = (date) => {
     //     if (!date) return "N/A";
     //     const options = {
@@ -731,7 +736,7 @@ export const generatePDF = async (item = {}, travelInfo = [], attachmentInfo = [
                                         { text: formatDate(item.returnArrivalDate) || 'N/A', style: 'tableData' },
                                         { text: item.returnTime || 'N/A', style: 'tableData' },
                                         { text: item.returnTransportNumber || 'N/A', style: 'tableData' },
-                                        { text: item.budget || 'N/A', style: 'tableData' },
+                                        { text: formatFare(item.budget) || 'N/A', style: 'tableData' },
                                         { text: item.onwardJourneyNote || 'N/A', style: 'tableData' },
                                     ])
                                 ]

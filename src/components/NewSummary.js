@@ -512,6 +512,11 @@ const NewSummary = ({
     );
   };
 
+  const formatFare = (fare) => {
+    if (!formData.travelCurrency.name) return fare;
+    return `${formData.travelCurrency.name} ${fare}`;
+  };
+
   const formatDateTime = (date) => {
     if (!date) return "";
     const options = {
@@ -1093,6 +1098,7 @@ const NewSummary = ({
                 sortable
                 field="budget"
                 header="Fare"
+                body={(rowData) => formatFare(rowData.budget)}
                 headerClassName="custom-header"
               />
               <Column
