@@ -250,7 +250,7 @@ function TravelRequestForm() {
     const formatDate = (date) => {
         if (!date) return '';
         const options = { day: '2-digit', month: 'short', year: 'numeric' };
-        return new Intl.DateTimeFormat('en-GB', options).format(new Date(date));
+        return (new Intl.DateTimeFormat('en-GB', options).format(new Date(date)))?.replaceAll(' ', '-');
     };
 
     const formatFare = (fare) => {
@@ -1385,7 +1385,7 @@ function TravelRequestForm() {
                                 <div className="calendar-item col-width">
                                     {/* <FloatLabel> */}
                                     <lable className="startdate">Check In<span className="text-danger px-1">*</span></lable>
-                                    <DatePicker format="dd/MMM/yyyy hh:mm aa" showMeridian id="checkIn" value={formData.hotelCheckIn}
+                                    <DatePicker format="dd-MMM-yyyy hh:mm aa" showMeridian id="checkIn" value={formData.hotelCheckIn}
                                         onChange={(e) => {
                                             console.log("date : ", e)
                                             setFormData({
@@ -1424,7 +1424,7 @@ function TravelRequestForm() {
                                             }} 
                                             minDate={formData.hotelCheckIn} required /> */}
                                     <DatePicker
-                                        format="dd/MMM/yyyy hh:mm aa"
+                                        format="dd-MMM-yyyy hh:mm aa"
                                         showMeridian
                                         id="checkOut"
                                         value={formData.hotelCheckOut}

@@ -47,9 +47,9 @@ export const generatePDF = async (item = {}, travelInfo = [], attachmentInfo = [
     const formatDate = (dateString) => {
         if (!dateString) return "N/A";
         const options = { year: "numeric", month: "short", day: "2-digit" };
-        return new Intl.DateTimeFormat("en-GB", options).format(
+        return (new Intl.DateTimeFormat("en-GB", options).format(
             new Date(dateString)
-        );
+        ))?.replaceAll(' ', '-');
     };
 
     const formatFare = (fare) => {
@@ -72,19 +72,25 @@ export const generatePDF = async (item = {}, travelInfo = [], attachmentInfo = [
     //     return new Intl.DateTimeFormat("en-GB", options).format(new Date(date));
     // };
     const formatDateTime = (date) => {
-        // const date = new Date(dateString);
-        if (!date) return '';
-        const formattedDate = new Date(date).toLocaleDateString('en-US', {
-            day: '2-digit',
-            month: 'short',
-            year: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-            // second: '2-digit',
-            hour12: false,
-        });
-        return formattedDate;
-    };
+        if (!date) return "";
+        const dateOption = {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        }
+        const timeOption ={
+          hour: "2-digit",
+          minute: "2-digit",
+          // second: '2-digit',
+          hour12: false, // You can set this to true if you want 12-hour time format
+          timeZone: "Asia/Kolkata",
+        };
+        const dateString = (new Intl.DateTimeFormat("en-GB", dateOption).format(new Date(date)))?.replaceAll(' ', '-');
+        const timeString = new Intl.DateTimeFormat("en-GB", timeOption).format(new Date(date));
+    
+        return `${dateString} ${timeString}`
+    
+      };
 
     const documentDefinition = {
         pageMargins: [40, 40, 40, 40],

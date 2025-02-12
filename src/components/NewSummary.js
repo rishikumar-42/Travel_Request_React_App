@@ -507,9 +507,9 @@ const NewSummary = ({
   const formatDate = (dateString) => {
     if (!dateString) return "N/A";
     const options = { year: "numeric", month: "short", day: "2-digit" };
-    return new Intl.DateTimeFormat("en-GB", options).format(
+    return (new Intl.DateTimeFormat("en-GB", options).format(
       new Date(dateString)
-    );
+    ))?.replaceAll(' ', '-');
   };
 
   const formatFare = (fare) => {
@@ -519,17 +519,23 @@ const NewSummary = ({
 
   const formatDateTime = (date) => {
     if (!date) return "";
-    const options = {
+    const dateOption = {
       day: "2-digit",
       month: "short",
       year: "numeric",
+    }
+    const timeOption ={
       hour: "2-digit",
       minute: "2-digit",
       // second: '2-digit',
       hour12: false, // You can set this to true if you want 12-hour time format
       timeZone: "Asia/Kolkata",
     };
-    return new Intl.DateTimeFormat("en-GB", options).format(new Date(date));
+    const dateString = (new Intl.DateTimeFormat("en-GB", dateOption).format(new Date(date)))?.replaceAll(' ', '-');
+    const timeString = new Intl.DateTimeFormat("en-GB", timeOption).format(new Date(date));
+
+    return `${dateString} ${timeString}`
+
   };
 
   const handleTransition = async (transitionName) => {
